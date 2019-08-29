@@ -1,0 +1,4 @@
+Maximum Health,Name,Description,Strength,Dexterity,Wisdom,Weapon,Dungeon Type
+20,Goblin,a small nimble creature who favours the short sword,2,4,1,ShortSword,All
+30,Werewolf,glowing red eyes peer our from behind a long nose and sharp teeth,5,2,1,Fists,BasicDungeon
+20,Evil Wizard,"cackling over an old tome, this wizard seems insanely evil;\n or maybe just insane? it is hard to tell",1,2,5,WizardsStaff,MagicalDungeon

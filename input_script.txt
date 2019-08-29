@@ -1,0 +1,76 @@
+character
+play
+Test Script: Bail
+5
+1
+0
+basic
+character
+weapon
+item
+main
+menu
+play
+Test Script: Bail 2
+5
+1
+0
+basic
+north
+play
+Test Script: Die
+0
+0
+0
+y
+basic
+east
+back
+west
+south
+east
+a
+l use special
+character
+menu
+l use special
+l use special
+l use special
+l use special
+l use special
+l use special
+l use special
+play
+Test Script: Complete Level
+5
+1
+0
+basic
+east
+south
+attack
+attack
+attack
+o compare items
+pickup
+south
+west
+o compare items
+pickup
+no
+pickup
+yes
+east
+east
+i use item
+attack
+attack
+attack
+east
+character
+main
+play
+back
+character
+quit
+yes
