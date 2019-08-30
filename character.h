@@ -1,7 +1,7 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 #include <string>
-
+#include "creatures.h"
 namespace core {
 
 // TODO: define Character class.
@@ -10,12 +10,10 @@ namespace core {
 /**
  * @brief TODO The Complete the Character class, following is just a small example
  */
-class Character
+class Character : public core::creatures::Creature
 {
 public:
   Character(const std::string &name);
-
-  const std::string& name() const;
 
 private:
   std::string _name;

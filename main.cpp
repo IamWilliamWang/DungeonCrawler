@@ -4,8 +4,8 @@
 
 #include "testingsettings.h"
 
-#define AUTHOR "<your name>"
-#define TITLE "<your game name>"
+#define AUTHOR "Bohua Chen"
+#define TITLE "Dungeon crawler"
 
 #if INPUT_SCRIPT
 #define SCRIPT_PATH "../assignment1-dungeon_crawler/input_script.txt"

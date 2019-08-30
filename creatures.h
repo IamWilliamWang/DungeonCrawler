@@ -17,9 +17,20 @@ public:
   Creature(const std::string &name);
 
   const std::string& name() const;
+  int getStrength() { return _strength; }
+  int getDexterity() { return _dexterity; }
+  int getWisdom() { return _wisdom; }
+  int getHealthPoint() { return _health; }
+  bool setAttribute(int strength, int dexterity, int wisdom);
+  int damage();
+  int dodgeChance();
 
 private:
   std::string _name;
+  int _strength;
+  int _dexterity;
+  int _wisdom;
+  int _health = -1;
 };
 
 } // namespace creatures
