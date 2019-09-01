@@ -2,7 +2,7 @@
 
 using namespace core::dungeon;
 
-Door::Door()
-{
+//Door::Door()
+//{
 
-}
+//}

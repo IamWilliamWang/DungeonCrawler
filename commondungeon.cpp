@@ -2,7 +2,7 @@
 
 using namespace core::dungeon;
 
-OpenDoorway::OpenDoorway()
-{
+//OpenDoorway::OpenDoorway()
+//{
 
-}
+//}

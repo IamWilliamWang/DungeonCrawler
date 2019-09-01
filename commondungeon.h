@@ -16,7 +16,7 @@ namespace dungeon {
 class OpenDoorway
 {
 public:
-  OpenDoorway();
+    OpenDoorway(){}
 };
 
 } // namespace dungeon

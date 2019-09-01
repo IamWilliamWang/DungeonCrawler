@@ -14,16 +14,39 @@ namespace creatures {
 class Creature
 {
 public:
-  Creature(const std::string &name);
+    Creature(const std::string &name) : _name(name){}
 
-  const std::string& name() const;
-  int getStrength() { return _strength; }
-  int getDexterity() { return _dexterity; }
-  int getWisdom() { return _wisdom; }
-  int getHealthPoint() { return _health; }
-  bool setAttribute(int strength, int dexterity, int wisdom);
-  int damage();
-  int dodgeChance();
+    const std::string& name() {return _name; }
+    int getStrength() { return _strength; }
+    int getDexterity() { return _dexterity; }
+    int getWisdom() { return _wisdom; }
+    int getHealthPoint() { return _health; }
+    bool isAlive(){ return _health > 0; }
+
+    bool setAttribute(int strength, int dexterity, int wisdom)
+    {
+      if(strength < 1 || strength > 6)
+          return false;
+      if(dexterity < 1 || dexterity > 6)
+          return false;
+      if(wisdom < 1 || wisdom > 6)
+          return false;
+      _strength = strength;
+      _dexterity = dexterity;
+      _wisdom = wisdom;
+      _health = 50;
+      return true;
+    }
+
+    int damage()
+    {
+      return 2*(_strength-1);
+    }
+
+    int dodgeChance()
+    {
+      return 20*(_dexterity-1);
+    }
 
 private:
   std::string _name;

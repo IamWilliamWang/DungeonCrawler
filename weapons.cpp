@@ -10,66 +10,66 @@ using namespace core::weapons;
  * Weapon member implementations
  * -----------------------------------------------------------------------------*/
 
-Weapon::Weapon()
-{
+//Weapon::Weapon()
+//{
 
-}
+//}
 
-Fists::Fists()
-{
+//Fists::Fists()
+//{
 
-}
+//}
 
-Boomerang::Boomerang()
-{
+//Boomerang::Boomerang()
+//{
 
-}
+//}
 
-ShortSword::ShortSword()
-{
+//ShortSword::ShortSword()
+//{
 
-}
+//}
 
-BattleAxe::BattleAxe()
-{
+//BattleAxe::BattleAxe()
+//{
 
-}
+//}
 
-WizardsStaff::WizardsStaff()
-{
+//WizardsStaff::WizardsStaff()
+//{
 
-}
+//}
 
-MagicWand::MagicWand()
-{
+//MagicWand::MagicWand()
+//{
 
-}
+//}
 
 /* ------------------------------------------------------------------------------
  * Enchantment member implementations
  * -----------------------------------------------------------------------------*/
 
-Enchantment::Enchantment()
-{
+//Enchantment::Enchantment()
+//{
 
-}
+//}
 
-FlameEnchantment::FlameEnchantment()
-{
+//FlameEnchantment::FlameEnchantment()
+//{
 
-}
+//}
 
-ElectricityEnchantment::ElectricityEnchantment()
-{
+//ElectricityEnchantment::ElectricityEnchantment()
+//{
 
-}
+//}
 
-HealingEnchantment::HealingEnchantment()
-{
+//HealingEnchantment::HealingEnchantment()
+//{
 
-}
+//}
 
-VampirismEnchantment::VampirismEnchantment()
-{
+//VampirismEnchantment::VampirismEnchantment()
+//{
 
-}
+//}

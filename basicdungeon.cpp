@@ -6,34 +6,34 @@ using namespace core::dungeon;
  * BasicDungeon member implementations
  * -----------------------------------------------------------------------------*/
 
-BasicDungeon::BasicDungeon()
-{
+//BasicDungeon::BasicDungeon()
+//{
 
-}
+//}
 
 /* ------------------------------------------------------------------------------
  * RockChamber member implementations
  * -----------------------------------------------------------------------------*/
 
-RockChamber::RockChamber()
-{
+//RockChamber::RockChamber()
+//{
 
-}
+//}
 
 /* ------------------------------------------------------------------------------
  * QuartzChamber member implementations
  * -----------------------------------------------------------------------------*/
 
-QuartzChamber::QuartzChamber()
-{
+//QuartzChamber::QuartzChamber()
+//{
 
-}
+//}
 
 /* ------------------------------------------------------------------------------
  * BasicWall member implementations
  * -----------------------------------------------------------------------------*/
 
-RockWall::RockWall()
-{
+//RockWall::RockWall()
+//{
 
-}
+//}

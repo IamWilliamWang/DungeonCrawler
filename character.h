@@ -16,7 +16,7 @@ public:
   Character(const std::string &name);
 
 private:
-  std::string _name;
+
 };
 
 } // namespace core

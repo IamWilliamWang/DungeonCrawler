@@ -10,6 +10,7 @@ macx:QMAKE_CXXFLAGS += -std=c++17 # override for clang > 3.4 on mac (latest vers
 
 HEADERS += \
     csvfile.h \
+    dungeonbuilder.h \
     game.h \
     menuinterface.h \
     testingsettings.h \
@@ -27,6 +28,7 @@ HEADERS += \
 
 SOURCES += \
     csvfile.cpp \
+    dungeonbuilder.cpp \
     main.cpp \
     game.cpp \
     menuinterface.cpp \

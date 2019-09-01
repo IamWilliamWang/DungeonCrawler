@@ -10,7 +10,7 @@ namespace dungeon {
 class Door
 {
 public:
-  Door();
+    Door(){}
 };
 
 } // namespace dungeon

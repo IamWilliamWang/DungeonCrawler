@@ -10,10 +10,10 @@ namespace dungeon {
 /**
  * @brief TODO The BasicDungeon class
  */
-class BasicDungeon
+class BasicDungeon : public Dungeon
 {
 public:
-  BasicDungeon();
+    BasicDungeon(){}
 };
 
 /**
@@ -22,7 +22,7 @@ public:
 class RockChamber
 {
 public:
-  RockChamber();
+    RockChamber(){}
 };
 
 /**
@@ -31,7 +31,7 @@ public:
 class QuartzChamber
 {
 public:
-  QuartzChamber();
+    QuartzChamber(){}
 };
 
 /**
@@ -40,7 +40,7 @@ public:
 class RockWall
 {
 public:
-  RockWall();
+    RockWall(){}
 };
 
 } // namespace dungeon

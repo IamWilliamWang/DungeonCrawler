@@ -10,7 +10,7 @@ namespace weapons {
 class Weapon
 {
 public:
-  Weapon();
+    Weapon(){}
 };
 
 /**
@@ -19,7 +19,7 @@ public:
 class Fists : public Weapon
 {
 public:
-  Fists();
+    Fists(){}
 };
 
 /**
@@ -28,7 +28,7 @@ public:
 class Boomerang : public Weapon
 {
 public:
-  Boomerang();
+    Boomerang(){}
 };
 
 /**
@@ -37,7 +37,7 @@ public:
 class ShortSword : public Weapon
 {
 public:
-  ShortSword();
+    ShortSword(){}
 };
 
 /**
@@ -46,7 +46,7 @@ public:
 class BattleAxe : public Weapon
 {
 public:
-  BattleAxe();
+    BattleAxe(){}
 };
 
 /**
@@ -55,7 +55,7 @@ public:
 class WizardsStaff : public Weapon
 {
 public:
-  WizardsStaff();
+    WizardsStaff(){}
 };
 
 /**
@@ -64,7 +64,7 @@ public:
 class MagicWand : public Weapon
 {
 public:
-  MagicWand();
+    MagicWand(){}
 };
 
 /**
@@ -73,7 +73,7 @@ public:
 class Enchantment
 {
 public:
-  Enchantment();
+    Enchantment(){}
 };
 
 /**
@@ -82,7 +82,7 @@ public:
 class FlameEnchantment : public Enchantment
 {
 public:
-  FlameEnchantment();
+    FlameEnchantment(){}
 };
 
 /**
@@ -91,7 +91,7 @@ public:
 class ElectricityEnchantment : public Enchantment
 {
 public:
-  ElectricityEnchantment();
+    ElectricityEnchantment(){}
 };
 
 /**
@@ -100,7 +100,7 @@ public:
 class HealingEnchantment : public Enchantment
 {
 public:
-  HealingEnchantment();
+    HealingEnchantment(){}
 };
 
 /**
@@ -109,7 +109,7 @@ public:
 class VampirismEnchantment : public Enchantment
 {
 public:
-  VampirismEnchantment();
+    VampirismEnchantment(){}
 };
 
 } // namespace items
