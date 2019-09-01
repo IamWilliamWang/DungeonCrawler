@@ -32,8 +32,7 @@ class Game
 public:
 
   // TODO implement the Game class
-
-  Game(); ///< You may need to change the parameters, accessibility, etc. of this.
+  Game();
 
   /**
    * @brief player Retrieves the player's Character, if any.
@@ -43,7 +42,10 @@ public:
   /**
    * @brief setPlayer Sets the current player character for the game.
    */
-  void setPlayer();
+  void setPlayer(std::shared_ptr<Character> character)
+  {
+	  _character = character;
+  }
 
   /**
    * @brief dungeon Returns the current dungeon level, if any.
@@ -140,13 +142,21 @@ public:
   {
 	  _dungeon = dungeon;
 	  std::shared_ptr<dungeon::BasicDungeon> basicDungeon = std::static_pointer_cast<dungeon::BasicDungeon>(_dungeon);
-	  _nowRoom = basicDungeon->getEntrance();
+	  _nowRoom = basicDungeon->getEntranceRoom();
   }
+
+  static std::shared_ptr<Game> instance()
+  {
+	  return _game;
+  }
+
+  static std::shared_ptr<Game> _game;
 private:
   std::mt19937 _randomGenerator; //!< Mersenne Twister random number generator seeded by current time
   std::uniform_real_distribution<double> _realDistribution; //!< For random numbers between 0.0 & 1.0
   std::shared_ptr<dungeon::Dungeon> _dungeon;
   std::shared_ptr<dungeon::Room> _nowRoom;
+  std::shared_ptr<Character> _character;
 };
 
 } // namespace core

@@ -5,7 +5,7 @@
 using namespace core;
 
 // TODO: Add additional implementation here
-
+std::shared_ptr<Game> Game::_game = std::make_shared<Game>();
 
 
 // Do not change/remove the initialisation of _randomGenerator and _realDistribution, otherwise change as needed.

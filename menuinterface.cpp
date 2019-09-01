@@ -1,4 +1,5 @@
 #include "menuinterface.h"
+#include "game.h"
 #include <string>
 #include <algorithm>
 
@@ -131,11 +132,60 @@ bool MenuInterface::processMainMenu(char selection) {
 }
 
 void MenuInterface::playGame() {
-  // TODO: implement this member function.
+	createCharacter();
+
 }
 
 void MenuInterface::createCharacter() {
-  // TODO: implement this member function.
+	_display << "You need to create a character... what is your name?" << std::endl;
+	std::string name;
+	std::getline(_input, name);
+	_display << std::endl;
+	int restPoints = 6, strength = 0, dexterity = 0, wisdom = 0;
+	_display << "Welcome " << name << ", you have *" << restPoints << "* stat points to allocate." << std::endl;
+	while (true)
+	{
+		_display << "A high Strength stat will boost your damage in combat." << std::endl;
+		_display << "How many points do you want to add to your Strength (cannot exceed 5)?" << std::endl;
+		int strength_tmp = getIntInput();
+		strength += strength_tmp;
+		restPoints -= strength_tmp;
+		if (restPoints <= 0)
+			break;
+		_display << std::endl;
+		_display << "You have *" << restPoints << "* stat points remaining." << std::endl;
+		_display << "A high Dexterity stat will increase your ability to dodge creature attacks." << std::endl;
+		_display << "How many points do you want to add to your Dexterity (cannot exceed 5)?" << std::endl;
+		int dexterity_tmp = getIntInput();
+		dexterity += dexterity_tmp;
+		restPoints -= dexterity_tmp;
+		_display << std::endl;
+		if (restPoints <= 0)
+			break;
+		_display << "You have *" << restPoints << "* stat points remaining." << std::endl;
+		_display << "A high Wisdom stat will boost the effectiveness of magical items." << std::endl;
+		_display << "How many points do you want to add to your Wisdom (cannot exceed 5)?" << std::endl;
+		int wisdom_tmp = getIntInput();
+		wisdom += wisdom_tmp;
+		restPoints -= wisdom_tmp;
+		_display << std::endl;
+		if (restPoints <= 0)
+			break;
+		_display << "You have *" << restPoints << "* stat points remaining." << std::endl;
+		_display << "Are you sure you do not want to allocate the remaining points? (y/n)" << std::endl;
+		char choice = getCharacterInput();
+		if (choice == 'n')
+		{
+			_display << std::endl;
+			_display << "You have *" << restPoints << "* stat points remaining." << std::endl;
+			continue;
+		}
+		break;
+	}
+	std::shared_ptr<Character> myCharacter = std::make_shared<Character>(name);
+	myCharacter->setAttribute(strength, dexterity, wisdom);
+    Game::instance()->setPlayer(myCharacter);
+	switchToCharacterMenu();
 }
 
 void MenuInterface::dungeonTypeMenu() const {

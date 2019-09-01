@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <limits>
 #include "testingsettings.h"
+#include "character.h"
 
 namespace core {
 
