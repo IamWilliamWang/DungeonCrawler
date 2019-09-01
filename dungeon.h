@@ -44,7 +44,7 @@ public:
    */
   bool addRoom(std::shared_ptr<Room> newRoom);
 
-private:
+protected:
   std::map<int, std::shared_ptr<Room>> _rooms; //!< stores the rooms of the Dungeon
 };
 

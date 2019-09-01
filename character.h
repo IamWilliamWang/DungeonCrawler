@@ -1,7 +1,10 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 #include <string>
+#include <memory>
 #include "creatures.h"
+#include "room.h"
+#include "basicdungeon.h"
 namespace core {
 
 // TODO: define Character class.
@@ -10,17 +13,19 @@ namespace core {
 /**
  * @brief TODO The Complete the Character class, following is just a small example
  */
-class Character : public core::creatures::Creature
+class Character : public creatures::Creature
 {
 public:
-  Character(const std::string &name);
-
+    Character(const std::string &name) : creatures::Creature(name) {}
+    
 private:
-
+    
 };
 
 } // namespace core
 
-std::ostream& operator<<(std::ostream &stream, const core::Character &character);
-
+//std::ostream& operator<<(std::ostream &stream, core::Character &character) {
+//  stream << character.name();
+//  return stream;
+//}
 #endif // CHARACTER_H

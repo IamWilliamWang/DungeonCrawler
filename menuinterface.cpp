@@ -1,4 +1,5 @@
 #include "menuinterface.h"
+#include <string>
 #include <algorithm>
 
 using namespace core;

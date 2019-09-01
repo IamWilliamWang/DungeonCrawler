@@ -52,6 +52,24 @@ public:
         _entranceOrExit[direction] = "exit";
         return true;
     }
+    char getEntranceDirection()
+    {
+        for(auto& pair : _entranceOrExit)
+        {
+            if(pair.second == "entrance")
+                return pair.first;
+        }
+        return '\0';
+    }
+    char getExitDirection()
+    {
+        for(auto& pair : _entranceOrExit)
+        {
+            if(pair.second == "exit")
+                return pair.first;
+        }
+        return '\0';
+    }
 private:
     bool checkDirection(char& direction)
     {

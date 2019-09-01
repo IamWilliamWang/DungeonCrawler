@@ -136,9 +136,17 @@ public:
    */
   double randomDouble();
 
+  void setDungeon(std::shared_ptr<dungeon::Dungeon> dungeon)
+  {
+	  _dungeon = dungeon;
+	  std::shared_ptr<dungeon::BasicDungeon> basicDungeon = std::static_pointer_cast<dungeon::BasicDungeon>(_dungeon);
+	  _nowRoom = basicDungeon->getEntrance();
+  }
 private:
   std::mt19937 _randomGenerator; //!< Mersenne Twister random number generator seeded by current time
   std::uniform_real_distribution<double> _realDistribution; //!< For random numbers between 0.0 & 1.0
+  std::shared_ptr<dungeon::Dungeon> _dungeon;
+  std::shared_ptr<dungeon::Room> _nowRoom;
 };
 
 } // namespace core

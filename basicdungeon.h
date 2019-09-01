@@ -14,6 +14,15 @@ class BasicDungeon : public Dungeon
 {
 public:
     BasicDungeon(){}
+    std::shared_ptr<Room> getEntranceRoom()
+    {
+        for(auto &pair : _rooms)
+        {
+            if(pair.second->getEntranceDirection() != '\0')
+                return pair.second;
+        }
+        return nullptr;
+    }
 };
 
 /**
