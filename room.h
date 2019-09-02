@@ -2,11 +2,15 @@
 #define ROOM_H
 #include <map>
 #include <memory>
+#include <list>
 #include "wall.h"
 #include "door.h"
 namespace core {
 namespace dungeon {
-
+#define NORTH 'N'
+#define SOUTH 'S'
+#define WEST 'W'
+#define EAST 'E'
 /**
  * @brief TODO The Room class
  */
@@ -36,6 +40,14 @@ public:
         _doors[direction] = door;
         return true;
     }
+	std::shared_ptr<dungeon::Door> getDoor(char direction)
+	{
+		if (!checkDirection(direction))
+			return nullptr;
+		if (_doors.count(direction) == 0)
+			return nullptr;
+		return _doors[direction];
+	}
     bool setEntrance(char direction)
     {
         if(!checkDirection(direction))
@@ -52,6 +64,22 @@ public:
         _entranceOrExit[direction] = "exit";
         return true;
     }
+
+	std::list<char> findDoorDirections()
+	{
+		std::list<char> directionList;
+		for (auto& pair : _doors)
+		{
+			directionList.emplace_back(pair);
+		}
+		return directionList;
+	}
+
+	bool existEntranceOrExit()
+	{
+		return getEntranceDirection() != '\0' || getExitDirection() != '\0';
+	}
+
     char getEntranceDirection()
     {
         for(auto& pair : _entranceOrExit)
@@ -70,13 +98,14 @@ public:
         }
         return '\0';
     }
+	bool checkDirection(char& direction)
+	{
+		if (direction >= 'a' && direction <= 'z')
+			direction -= 'a' - 'A';
+		return (direction == NORTH || direction == SOUTH || direction == WEST || direction == EAST);
+	}
 private:
-    bool checkDirection(char& direction)
-    {
-        if(direction >= 'a' && direction <= 'z')
-            direction -= 'a'-'A';
-        return (direction == 'N' || direction == 'S' || direction == 'W' || direction == 'E');
-    }
+    
     int _id;
     std::map<char, std::shared_ptr<Wall>> _walls; // the walls of this room
     std::map<char, std::shared_ptr<Door>> _doors;

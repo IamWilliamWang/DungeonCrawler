@@ -23,6 +23,16 @@ public:
         }
         return nullptr;
     }
+	auto getNowRoom()
+	{
+		return _nowRoom;
+	}
+	void setNowRoom(std::shared_ptr<dungeon::Room> nowRoom)
+	{
+		_nowRoom = nowRoom;
+	}
+private:
+	std::shared_ptr<dungeon::Room> _nowRoom;
 };
 
 /**

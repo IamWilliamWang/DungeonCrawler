@@ -53,7 +53,15 @@ public:
   /**
    * @brief dungeon Returns the current dungeon level, if any.
    */
-  void dungeon() const;
+  std::shared_ptr<dungeon::Dungeon> dungeon()
+  {
+	  return _dungeon;
+  }
+
+  std::shared_ptr<dungeon::BasicDungeon> dungeon_basic() // ±ã½Ýº¯Êý
+  {
+	  return std::static_pointer_cast<dungeon::BasicDungeon>(_dungeon);
+  }
 
   /**
    * @brief createDungeon Initiates the creation of a new dungeon level.
@@ -65,19 +73,36 @@ public:
    * @brief start Initialises the game to the starting state, i.e.,
    * the character has just entered the first room of the dungeon.
    */
-  void enterDungeon();
+  void enterDungeon()
+  {
+	  auto basicDungeon = dungeon_basic();
+	  basicDungeon->setNowRoom(basicDungeon->getEntranceRoom());
+  }
 
   /**
    * @brief currentRoom Answers the current room the player's character is in.
    * @return the Room the player is in
    */
-  void currentRoom() const;
+  auto currentRoom()
+  {
+	  return dungeon_basic()->getNowRoom();
+  }
 
   /**
    * @brief navigate Move the player's character to a neighbouring
    * Room of the current room.
    */
-  void navigate();
+  bool navigate(char direction)
+  {
+	  auto basic_dungeon = dungeon_basic();
+	  auto room = currentRoom();
+	  room->checkDirection(direction);
+	  auto door = room->getDoor(direction);
+	  if (door == nullptr)
+		  return false;
+	  basic_dungeon->setNowRoom(door->getNeighbourRoom(room));
+	  return true;
+  }
 
   /**
    * @brief navigateBack Move the character to the previous room.
@@ -144,8 +169,7 @@ public:
   void setDungeon(std::shared_ptr<dungeon::Dungeon> dungeon)
   {
 	  _dungeon = dungeon;
-	  std::shared_ptr<dungeon::BasicDungeon> basicDungeon = std::static_pointer_cast<dungeon::BasicDungeon>(_dungeon);
-	  _nowRoom = basicDungeon->getEntranceRoom();
+	  enterDungeon();
   }
 
   static std::shared_ptr<Game> instance()
@@ -158,7 +182,6 @@ private:
   std::mt19937 _randomGenerator; //!< Mersenne Twister random number generator seeded by current time
   std::uniform_real_distribution<double> _realDistribution; //!< For random numbers between 0.0 & 1.0
   std::shared_ptr<dungeon::Dungeon> _dungeon;
-  std::shared_ptr<dungeon::Room> _nowRoom;
   std::shared_ptr<Character> _character;
 };
 
