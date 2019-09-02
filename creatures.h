@@ -40,12 +40,12 @@ public:
 
     int damage()
     {
-      return 2*(_strength-1);
+      return 2*(_strength+1); //不确定是加还是减
     }
 
     int dodgeChance()
     {
-      return 20*(_dexterity-1);
+		return _dexterity > 0 ? 20 * (_dexterity - 1) : 0;
     }
 
 private:

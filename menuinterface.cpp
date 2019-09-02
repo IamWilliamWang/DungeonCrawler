@@ -137,7 +137,7 @@ void MenuInterface::playGame() {
 }
 
 void MenuInterface::createCharacter() {
-	_display << "You need to create a character... what is your name?" << std::endl;
+	_display << std::endl << "You need to create a character... what is your name?" << std::endl;
 	std::string name;
 	std::getline(_input, name);
 	_display << std::endl;
@@ -151,7 +151,10 @@ void MenuInterface::createCharacter() {
 		strength += strength_tmp;
 		restPoints -= strength_tmp;
 		if (restPoints <= 0)
+		{
+			_display << "Create player failed! You dont have enough points." << std::endl;
 			break;
+		}
 		_display << std::endl;
 		_display << "You have *" << restPoints << "* stat points remaining." << std::endl;
 		_display << "A high Dexterity stat will increase your ability to dodge creature attacks." << std::endl;
@@ -161,7 +164,10 @@ void MenuInterface::createCharacter() {
 		restPoints -= dexterity_tmp;
 		_display << std::endl;
 		if (restPoints <= 0)
+		{
+			_display << "Create player failed! You dont have enough points." << std::endl;
 			break;
+		}
 		_display << "You have *" << restPoints << "* stat points remaining." << std::endl;
 		_display << "A high Wisdom stat will boost the effectiveness of magical items." << std::endl;
 		_display << "How many points do you want to add to your Wisdom (cannot exceed 5)?" << std::endl;
@@ -183,7 +189,8 @@ void MenuInterface::createCharacter() {
 		break;
 	}
 	std::shared_ptr<Character> myCharacter = std::make_shared<Character>(name);
-	myCharacter->setAttribute(strength, dexterity, wisdom);
+	if (!myCharacter->setAttribute(strength+1, dexterity+1, wisdom+1))
+		_display << "Create player failed!" << std::endl;
     Game::instance()->setPlayer(myCharacter);
 	switchToCharacterMenu();
 }
@@ -201,6 +208,7 @@ void MenuInterface::processDungeonType(char selection) {
 void MenuInterface::switchToCharacterMenu() {
   // TODO: implement this member function
   setMenu(Menu::CharacterDetails);
+  processCharacterDetails('c');
 }
 
 bool MenuInterface::quitGame() const {
@@ -215,8 +223,24 @@ void MenuInterface::characterDetailsMenu() const {
 }
 
 void MenuInterface::processCharacterDetails(char selection) {
-  // TODO: implement this member function.
-  setMenu(Menu::Main);
+	// TODO: implement this member function.
+	auto character = Game::instance()->player();
+	if (character == nullptr)
+		_display << "There is currently no character to display." << std::endl;
+	else
+	{
+		_display << "***Character Summary***" << std::endl;
+		_display << character->name() << std::endl;
+		printf("Strength:%10d\n", character->getStrength());
+		printf("Dexterity:%9d\n", character->getDexterity());
+		printf("Wisdom:%12d\n", character->getWisdom());
+		printf("Health:%7d / 50\n", character->getHealthPoint());
+		printf("Damage:%7d - %2d\n", character->damage(), character->damage());
+		printf("Dodge:%12d%%\n", character->dodgeChance());
+		printf("Weapon:\n");
+		printf("Item:\n");
+	}
+	setMenu(Menu::Main);
 }
 
 void MenuInterface::displayWeaponDetails() {

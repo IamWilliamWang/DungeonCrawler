@@ -37,7 +37,10 @@ public:
   /**
    * @brief player Retrieves the player's Character, if any.
    */
-  void player() const;
+  std::shared_ptr<Character> player()
+  {
+	  return _character;
+  }
 
   /**
    * @brief setPlayer Sets the current player character for the game.
