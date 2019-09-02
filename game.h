@@ -107,7 +107,11 @@ public:
   /**
    * @brief navigateBack Move the character to the previous room.
    */
-  bool navigateBack();
+  bool navigateBack()
+  {
+	  auto basic_dungeon = dungeon_basic();
+	  basic_dungeon->setNowRoom(basic_dungeon->path(-2));
+  }
 
   /**
    * @brief exitLevel update the game state with successful completion

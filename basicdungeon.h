@@ -30,8 +30,32 @@ public:
 	void setNowRoom(std::shared_ptr<dungeon::Room> nowRoom)
 	{
 		_nowRoom = nowRoom;
+		_path.emplace_back(nowRoom);
+	}
+	std::shared_ptr<dungeon::Room> path(int index)
+	{
+		if (index < 0)
+		{
+			auto it = _path.rbegin();
+			for (; index < -1 && it!=_path.rend(); index++)
+				it++;
+			if (it == _path.rend())
+				return nullptr;
+			return *it;
+		}
+		else
+		{
+			auto it = _path.begin();
+			for (; index > 0 && it != _path.end(); index--)
+				it++;
+			if (it == _path.end())
+				return nullptr;
+			return *it;
+		}
+		return nullptr;
 	}
 private:
+	std::list<std::shared_ptr<dungeon::Room>> _path;
 	std::shared_ptr<dungeon::Room> _nowRoom;
 };
 

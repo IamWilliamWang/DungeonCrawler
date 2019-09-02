@@ -5,6 +5,7 @@
 #include "creatures.h"
 #include "room.h"
 #include "basicdungeon.h"
+#include "weapons.h"
 namespace core {
 
 // TODO: define Character class.
@@ -19,7 +20,7 @@ public:
     Character(const std::string &name) : creatures::Creature(name) {}
     
 private:
-    
+	weapons::Weapon _weapon;
 };
 
 } // namespace core
