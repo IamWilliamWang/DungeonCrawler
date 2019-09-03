@@ -106,7 +106,7 @@ std::string Testing::testDungeon() {
 std::string Testing::testGame() {
   _failure = false;
 
-  Game game{};
+  Game game = *Game::instance(); //changed to singleton
 
   // TODO: implement the testing of the Game class
 

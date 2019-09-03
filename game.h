@@ -32,7 +32,7 @@ class Game
 public:
 
   // TODO implement the Game class
-  Game();
+  
 
   /**
    * @brief player Retrieves the player's Character, if any.
@@ -181,10 +181,11 @@ public:
 	  return _game;
   }
 
-  static std::shared_ptr<Game> _game;
 private:
+  Game();
   std::mt19937 _randomGenerator; //!< Mersenne Twister random number generator seeded by current time
   std::uniform_real_distribution<double> _realDistribution; //!< For random numbers between 0.0 & 1.0
+  static std::shared_ptr<Game> _game;
   std::shared_ptr<dungeon::Dungeon> _dungeon;
   std::shared_ptr<Character> _character;
 };

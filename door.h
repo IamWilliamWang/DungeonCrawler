@@ -1,8 +1,10 @@
 #ifndef DOOR_H
 #define DOOR_H
-
+#include <memory>
+#include "room.h"
 namespace core {
 namespace dungeon {
+class Room; //predeclaration
 
 /**
  * @brief TODO The Door class

@@ -7,6 +7,8 @@
 #include "door.h"
 namespace core {
 namespace dungeon {
+class Door; //predeclaration
+
 #define NORTH 'N'
 #define SOUTH 'S'
 #define WEST 'W'
@@ -64,22 +66,19 @@ public:
         _entranceOrExit[direction] = "exit";
         return true;
     }
-
 	std::list<char> findDoorDirections()
 	{
 		std::list<char> directionList;
 		for (auto& pair : _doors)
 		{
-			directionList.emplace_back(pair);
+			directionList.emplace_back(pair.first);
 		}
 		return directionList;
 	}
-
 	bool existEntranceOrExit()
 	{
 		return getEntranceDirection() != '\0' || getExitDirection() != '\0';
 	}
-
     char getEntranceDirection()
     {
         for(auto& pair : _entranceOrExit)
