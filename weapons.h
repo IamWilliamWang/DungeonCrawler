@@ -11,6 +11,61 @@ class Weapon
 {
 public:
     Weapon(){}
+	Weapon(std::string &name, std::string &description) : _name(name),_description(description){}
+	Weapon(std::string &name, std::string &description, std::string &longDescription) : _name(name), _description(description), _longDescription(longDescription) {}
+	Weapon(std::string &name, std::string &description, std::string &longDescription, int minDamage, int maxDamage)
+		: _name(name), _description(description), _longDescription(longDescription), _minDamage(minDamage), _maxDamage(maxDamage){}
+	std::string getName()
+	{
+		return _name;
+	}
+	void setName(std::string name)
+	{
+		_name = name;
+	}
+	std::string getDescription()
+	{
+		return _description;
+	}
+	void setDescription(std::string description)
+	{
+		_description = description;
+	}
+	std::string getLongDescription()
+	{
+		return _longDescription;
+	}
+	void setLongDescription(std::string longDescription)
+	{
+		_longDescription = longDescription;
+	}
+	int* getDamageRange()
+	{
+		int range[2];
+		range[0] = _minDamage;
+		range[1] = _maxDamage;
+		return range;
+	}
+	void setDamageRange(int minDamage, int maxDamage)
+	{
+		_minDamage = minDamage;
+		_maxDamage = maxDamage;
+	}
+	std::string getSpecialAbilityDescription()
+	{
+		return _specialAbilityDescription;
+	}
+	void setSpecialAbilityDescription(std::string specialAbilityDescription)
+	{
+		_specialAbilityDescription = specialAbilityDescription;
+	}
+private:
+	std::string _name;
+	std::string _description;
+	std::string _longDescription;
+	int _minDamage;
+	int _maxDamage;
+	std::string _specialAbilityDescription;
 };
 
 /**
