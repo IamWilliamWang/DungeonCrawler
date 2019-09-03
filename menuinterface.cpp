@@ -188,7 +188,7 @@ void MenuInterface::createCharacter() {
 		}
 		break;
 	}
-	std::shared_ptr<Character> myCharacter = std::make_shared<Character>(name);
+	std::shared_ptr<Character> myCharacter = std::shared_ptr<Character>(new Character(name));
 	if (!myCharacter->setAttribute(strength+1, dexterity+1, wisdom+1))
 		_display << "Create player failed!" << std::endl;
     Game::instance()->setPlayer(myCharacter);
@@ -238,7 +238,7 @@ void MenuInterface::processCharacterDetails(char selection) {
 		int* characterDamageWeaponed = character->damageWeaponed();
 		printf("Damage:%7d - %2d\n", characterDamageWeaponed[0], characterDamageWeaponed[1]);
 		printf("Dodge:%12d%%\n", character->dodgeChance());
-		_display << "Weapon:        " << character->getWeapon()->getDescription() << std::endl;
+		_display << "Weapon:    " << character->getWeapon()->getDescription() << std::endl;
 		printf("Item:\n");
 	}
 	setMenu(Menu::Main);

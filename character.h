@@ -17,20 +17,23 @@ namespace core {
 class Character : public creatures::Creature
 {
 public:
-    Character(const std::string &name) : creatures::Creature(name) {}
+    Character(const std::string &name) : creatures::Creature(name) 
+	{
+		_weapon = new weapons::Fists();
+	}
 	int* damageWeaponed()
 	{
-		int* result = _weapon.getDamageRange();
+		int* result = _weapon->getDamageRange();
 		result[0] += damage();
 		result[1] += damage();
 		return result;
 	}
 	weapons::Weapon* getWeapon()
 	{
-		return &_weapon;
+		return _weapon;
 	}
 private:
-	weapons::Weapon _weapon = weapons::Fists();
+	weapons::Weapon* _weapon;
 };
 
 } // namespace core

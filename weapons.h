@@ -11,7 +11,7 @@ class Enchantment; //predeclaration
 class Weapon
 {
 public:
-    Weapon(){}
+	Weapon() {}
 	Weapon(std::string &name, std::string &description) : _name(name),_description(description){}
 	Weapon(std::string &name, std::string &description, std::string &longDescription) : _name(name), _description(description), _longDescription(longDescription) {}
 	Weapon(std::string &name, std::string &description, std::string &longDescription, int minDamage, int maxDamage)
@@ -42,7 +42,7 @@ public:
 	}
 	int* getDamageRange()
 	{
-		int range[2];
+		int* range = new int[2];
 		range[0] = _minDamage;
 		range[1] = _maxDamage;
 		return range;
@@ -61,14 +61,14 @@ public:
 		_specialAbilityDescription = specialAbilityDescription;
 	}
 private:
-	std::string _name;
-	std::string _description;
-	std::string _longDescription;
-	int _minDamage;
-	int _maxDamage;
-	std::string _specialAbilityDescription = nullptr;
-	std::shared_ptr<Enchantment> _prefixEnchantment = nullptr;
-	std::shared_ptr<Enchantment> _suffixEnchantment = nullptr;
+	std::string _name = "";
+	std::string _description = "";
+	std::string _longDescription = "";
+	int _minDamage = -1;
+	int _maxDamage = -1;
+	std::string _specialAbilityDescription = "";
+	std::shared_ptr<Enchantment> _prefixEnchantment;
+	std::shared_ptr<Enchantment> _suffixEnchantment;
 };
 
 /**
