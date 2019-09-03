@@ -19,7 +19,7 @@ class Character : public creatures::Creature
 public:
     Character(const std::string &name) : creatures::Creature(name) 
 	{
-		_weapon = new weapons::Fists();
+		_weapon = std::make_shared<weapons::Fists>();
 	}
 	int* damageWeaponed()
 	{
@@ -28,12 +28,16 @@ public:
 		result[1] += damage();
 		return result;
 	}
-	weapons::Weapon* getWeapon()
+	auto getWeapon()
 	{
 		return _weapon;
 	}
+	void setWeapon(std::shared_ptr<weapons::Weapon> weapon)
+	{
+		_weapon = weapon;
+	}
 private:
-	weapons::Weapon* _weapon;
+	std::shared_ptr<weapons::Weapon> _weapon;
 };
 
 } // namespace core

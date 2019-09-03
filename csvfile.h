@@ -1,9 +1,14 @@
 #ifndef CSVFILE_H
 #define CSVFILE_H
+#define USE_QTCORE // use QString to split string.
 
 #include <iostream>
 #include <string>
 
+#ifdef USE_QTCORE
+#include <qstring.h>
+#include <qregularexpression.h>
+#endif
 namespace data {
 
 /**
@@ -40,7 +45,30 @@ public:
    *
    * @param input the stream from which to read the data
    */
-  CsvFile(std::istream &input);
+  CsvFile(std::istream &input)
+  {
+#ifdef USE_QTCORE
+      constexpr int bufferLength = 200;
+      char buffer[bufferLength]; // 读取时的buffer
+      QVector<QStringList> table; // 二维String数组
+      int columnCount = -1; // 有多少列
+      while(input.getline(buffer, bufferLength)) // 读取一行内容
+      {
+          QStringList rowList = QString(buffer).split(QRegularExpression(",|\""), QString::SkipEmptyParts); // split(",\"")获得单行内容的每一格
+          if (columnCount == -1) // 如果读的是表头，记录有多少列
+              columnCount = rowList.size();
+          else
+          {
+              while (rowList.size() < columnCount) // 保证后面的每一行的列数和第一行相同，不同的话插入""
+                  rowList.append("");
+          }
+          table.append(rowList); // 插入一行
+      }
+      _dataTable = std::shared_ptr<QVector<QStringList>>(&table); // 保存二维String
+#else
+
+#endif
+  }
 
   /**
    * @brief numberOfColumns Returns the number of columns in the CSV file,
@@ -48,7 +76,16 @@ public:
    *
    * @return number of columns or -1
    */
-  int numberOfColumns() const;
+  int numberOfColumns()
+  {
+#ifdef USE_QTCORE
+      if (_dataTable == nullptr)
+          return -1;
+      return _dataTable->at(0).size();
+#else
+      return -1;
+#endif
+  }
 
   /**
    * @brief numberOfRows returns the number of rows in the CSV file,
@@ -58,7 +95,16 @@ public:
    *
    * @return number of rows or -1
    */
-  int numberOfRows() const;
+  int numberOfRows()
+  {
+#ifdef USE_QTCORE
+      if(_dataTable == nullptr)
+          return -1;
+      return _dataTable->size();
+#else
+      return -1;
+#endif
+  }
 
   /**
    * @brief at Returns the content of the cell at the given row, column.
@@ -71,7 +117,22 @@ public:
    * @param column the column from whcih to retrieve the data
    * @return the cell data at row, column
    */
-  std::string at(int row, int column) const;
+  std::string at(int row, int column)
+  {
+#ifdef USE_QTCORE
+      row++;
+      column++;
+      int rowCount = numberOfRows(), columnCount = numberOfColumns();
+      if (row > rowCount || row < 1)
+          return "";
+      if (column > columnCount || column < 1)
+          return "";
+      auto result = _dataTable->at(row).at(column-1);
+      return result.toStdString();
+#else
+      return "";
+#endif
+  }
 
   /**
    * @brief headerAt Returns the column name at the given index.
@@ -83,7 +144,14 @@ public:
    * @param column the index of the column
    * @return the column name
    */
-  std::string headerAt(int column) const;
+  std::string headerAt(int column)
+  {
+#ifdef USE_QTCORE
+      return at(1, column);
+#else
+      return "";
+#endif
+  }
 
   /**
    * @brief columnIndexOf Returns the column index for the given column name.
@@ -94,7 +162,21 @@ public:
    * @param columnName the name of the column
    * @return the index of the named column, or -1
    */
-  int columnIndexOf(const std::string &columnName) const;
+  int columnIndexOf(const std::string &columnName)
+  {
+#ifdef USE_QTCORE
+      if (_dataTable->size() == 0)
+          return -1;
+      int index = _dataTable->at(0).indexOf(QString::fromStdString(columnName));
+      return index == -1 ? -1 : index + 1;
+#else
+      return -1;
+#endif
+  }
+private:
+#ifdef USE_QTCORE
+  std::shared_ptr<QVector<QStringList>> _dataTable;
+#endif
 };
 
 } // namespace data
