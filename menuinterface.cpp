@@ -235,9 +235,10 @@ void MenuInterface::processCharacterDetails(char selection) {
 		printf("Dexterity:%9d\n", character->getDexterity());
 		printf("Wisdom:%12d\n", character->getWisdom());
 		printf("Health:%7d / 50\n", character->getHealthPoint());
-		printf("Damage:%7d - %2d\n", character->damage(), character->damage());
+		int* characterDamageWeaponed = character->damageWeaponed();
+		printf("Damage:%7d - %2d\n", characterDamageWeaponed[0], characterDamageWeaponed[1]);
 		printf("Dodge:%12d%%\n", character->dodgeChance());
-		printf("Weapon:\n");
+		_display << "Weapon:        " << character->getWeapon()->getDescription() << std::endl;
 		printf("Item:\n");
 	}
 	setMenu(Menu::Main);

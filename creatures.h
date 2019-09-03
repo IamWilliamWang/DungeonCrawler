@@ -40,7 +40,7 @@ public:
 
     int damage()
     {
-      return 2*(_strength+1); //不确定是加还是减
+      return 2*(_strength-1);
     }
 
     int dodgeChance()

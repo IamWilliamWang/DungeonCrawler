@@ -18,9 +18,19 @@ class Character : public creatures::Creature
 {
 public:
     Character(const std::string &name) : creatures::Creature(name) {}
-    
+	int* damageWeaponed()
+	{
+		int* result = _weapon.getDamageRange();
+		result[0] += damage();
+		result[1] += damage();
+		return result;
+	}
+	weapons::Weapon* getWeapon()
+	{
+		return &_weapon;
+	}
 private:
-	weapons::Weapon _weapon;
+	weapons::Weapon _weapon = weapons::Fists();
 };
 
 } // namespace core
