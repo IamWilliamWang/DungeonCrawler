@@ -1,12 +1,14 @@
 #ifndef CSVFILE_H
 #define CSVFILE_H
-#define USE_QTCORE // use QString to split string.
+#define USE_QTCORE // QString, QStringList, QVector, QRegularExpress will be used.
 
 #include <iostream>
 #include <string>
 
 #ifdef USE_QTCORE
+#include <qvector.h>
 #include <qstring.h>
+#include <qstringlist.h>
 #include <qregularexpression.h>
 #endif
 namespace data {
@@ -50,21 +52,27 @@ public:
 #ifdef USE_QTCORE
       constexpr int bufferLength = 200;
       char buffer[bufferLength]; // 读取时的buffer
-      QVector<QStringList> table; // 二维String数组
+      std::shared_ptr<QVector<QStringList>> table = std::make_shared<QVector<QStringList>>(); // 二维String数组
       int columnCount = -1; // 有多少列
       while(input.getline(buffer, bufferLength)) // 读取一行内容
       {
-          QStringList rowList = QString(buffer).split(QRegularExpression(",|\""), QString::SkipEmptyParts); // split(",\"")获得单行内容的每一格
+          QString line(buffer);
+          QStringList rowList = line.split(QRegularExpression(",|\""), QString::SkipEmptyParts); // split(",\"")获得单行内容的每一格
           if (columnCount == -1) // 如果读的是表头，记录有多少列
               columnCount = rowList.size();
+          if (columnCount < rowList.size()) // 存在extra column，终止读取
+              return;
+          if (line.count(',') < columnCount-1) // 如果这一行是完整数据，应该有列数-1个逗号
+              return;
           else
           {
               while (rowList.size() < columnCount) // 保证后面的每一行的列数和第一行相同，不同的话插入""
                   rowList.append("");
           }
-          table.append(rowList); // 插入一行
+          table->append(rowList); // 插入一行
       }
-      _dataTable = std::shared_ptr<QVector<QStringList>>(&table); // 保存二维String
+      if(table->size() != 0)
+          _dataTable = table; // 保存二维String
 #else
 
 #endif
@@ -100,7 +108,7 @@ public:
 #ifdef USE_QTCORE
       if(_dataTable == nullptr)
           return -1;
-      return _dataTable->size();
+      return _dataTable->size() - 1;
 #else
       return -1;
 #endif
@@ -120,15 +128,16 @@ public:
   std::string at(int row, int column)
   {
 #ifdef USE_QTCORE
-      row++;
-      column++;
-      int rowCount = numberOfRows(), columnCount = numberOfColumns();
-      if (row > rowCount || row < 1)
+      if (_dataTable == nullptr) // load CSV file failed.
           return "";
-      if (column > columnCount || column < 1)
+
+      int rowCount = numberOfRows() + 1, columnCount = numberOfColumns(); // 记录_dataTable的行数和列数
+      if (row >= rowCount || row < 1) // 防止数组越界
           return "";
-      auto result = _dataTable->at(row).at(column-1);
-      return result.toStdString();
+      if (column > columnCount || column < 1) // 防止数组越界
+          return "";
+
+      return _dataTable->at(row).at(column-1).toStdString(); // 取值
 #else
       return "";
 #endif
@@ -147,7 +156,11 @@ public:
   std::string headerAt(int column)
   {
 #ifdef USE_QTCORE
-      return at(1, column);
+      if (column > numberOfColumns() || column < 1)
+          return "";
+      if (numberOfRows() >= 0) // 有表头
+          return _dataTable->at(0).at(column-1).toStdString();
+      return "";
 #else
       return "";
 #endif
@@ -165,7 +178,7 @@ public:
   int columnIndexOf(const std::string &columnName)
   {
 #ifdef USE_QTCORE
-      if (_dataTable->size() == 0)
+      if (_dataTable == nullptr)
           return -1;
       int index = _dataTable->at(0).indexOf(QString::fromStdString(columnName));
       return index == -1 ? -1 : index + 1;
