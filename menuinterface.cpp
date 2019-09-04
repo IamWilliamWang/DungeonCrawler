@@ -246,6 +246,13 @@ void MenuInterface::processCharacterDetails(char selection) {
 
 void MenuInterface::displayWeaponDetails() {
   // TODO: implement this member function
+	auto character = Game::instance()->player();
+	auto weapon = character->getWeapon();
+	_display << "\"" << weapon->getName() << "\"" << std::endl;
+	int* damages = weapon->getDamageRange();
+	printf("Min. Damage:%7d\n", damages[0]);
+	printf("Max. Damage:%7d\n", damages[1]);
+	_display << weapon->getLongDescription() << std::endl;
 }
 
 void MenuInterface::actionMenu() const {

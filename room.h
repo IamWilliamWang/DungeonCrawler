@@ -3,10 +3,17 @@
 #include <map>
 #include <memory>
 #include <list>
+#include <random>
+#include <ctime>
+#include <vector>
 #include "wall.h"
 #include "door.h"
+#include "creatures.h"
+
 namespace core {
 namespace dungeon {
+
+class Wall;
 class Door; //predeclaration
 
 #define NORTH 'N'
@@ -103,12 +110,19 @@ public:
 			direction -= 'a' - 'A';
 		return (direction == NORTH || direction == SOUTH || direction == WEST || direction == EAST);
 	}
+	bool createCreature(std::vector<std::shared_ptr<core::creatures::Creature>> possibleCreatures)
+	{
+        std::default_random_engine randomEngine(static_cast<unsigned>(time(nullptr)));
+        std::uniform_int_distribution<unsigned> rand(0, possibleCreatures.size() - 1);
+        _creature = possibleCreatures.at(rand(randomEngine));
+		return true;
+	}
 private:
-    
     int _id;
     std::map<char, std::shared_ptr<Wall>> _walls; // the walls of this room
     std::map<char, std::shared_ptr<Door>> _doors;
     std::map<char, std::string> _entranceOrExit; // save the direction of entrance or exit in this room
+	std::shared_ptr<core::creatures::Creature> _creature;
 };
 
 } // namespace dungeon

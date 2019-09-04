@@ -1,6 +1,6 @@
 #ifndef CSVFILE_H
 #define CSVFILE_H
-#define USE_QTCORE // QString, QStringList, QVector, QRegularExpress will be used.
+//#define USE_QTCORE // QString, QStringList, QVector, QRegularExpress will be used.
 
 #include <iostream>
 #include <string>

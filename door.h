@@ -2,8 +2,10 @@
 #define DOOR_H
 #include <memory>
 #include "room.h"
+
 namespace core {
 namespace dungeon {
+
 class Room; //predeclaration
 
 /**
@@ -12,11 +14,11 @@ class Room; //predeclaration
 class Door
 {
 public:
-    Door(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2) 
-	{
-		_room1 = room1;
-		_room2 = room2;
-	}
+    Door(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2)
+    {
+        _room1 = room1;
+        _room2 = room2;
+    }
 
 	std::shared_ptr<Room> getNeighbourRoom(std::shared_ptr<Room> thisRoom)
 	{

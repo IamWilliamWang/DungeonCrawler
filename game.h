@@ -67,7 +67,10 @@ public:
    * @brief createDungeon Initiates the creation of a new dungeon level.
    * Any previous dungeon level is destroyed.
    */
-  void createDungeon();
+  void createDungeon()
+  {
+	  _dungeon = std::make_shared<dungeon::BasicDungeon>();
+  }
 
   /**
    * @brief start Initialises the game to the starting state, i.e.,
