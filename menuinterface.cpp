@@ -237,6 +237,7 @@ void MenuInterface::processCharacterDetails(char selection) {
 		printf("Health:%7d / 50\n", character->getHealthPoint());
 		int* characterDamageWeaponed = character->damageWeaponed();
 		printf("Damage:%7d - %2d\n", characterDamageWeaponed[0], characterDamageWeaponed[1]);
+		delete characterDamageWeaponed; // release the memory.
 		printf("Dodge:%12d%%\n", character->dodgeChance());
 		_display << "Weapon:    " << character->getWeapon()->getDescription() << std::endl;
 		printf("Item:\n");

@@ -1,4 +1,4 @@
-#ifndef DOOR_H
+﻿#ifndef DOOR_H
 #define DOOR_H
 #include <memory>
 #include "room.h"
@@ -19,7 +19,11 @@ public:
         _room1 = room1;
         _room2 = room2;
     }
-
+    /**
+     * @brief getNeighbourRoom 获得邻居Room
+     * @param thisRoom
+     * @return
+     */
 	std::shared_ptr<Room> getNeighbourRoom(std::shared_ptr<Room> thisRoom)
 	{
 		if (thisRoom == _room1)

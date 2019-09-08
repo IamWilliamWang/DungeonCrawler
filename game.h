@@ -1,4 +1,4 @@
-#ifndef GAME_H
+﻿#ifndef GAME_H
 #define GAME_H
 #include <map>
 #include <memory>
@@ -58,7 +58,11 @@ public:
 	  return _dungeon;
   }
 
-  std::shared_ptr<dungeon::BasicDungeon> dungeon_basic() // ��ݺ���
+  /**
+   * @brief dungeon_basic
+   * @return
+   */
+  std::shared_ptr<dungeon::BasicDungeon> getBasicDungeon() // 便捷函数
   {
 	  return std::static_pointer_cast<dungeon::BasicDungeon>(_dungeon);
   }
@@ -78,7 +82,7 @@ public:
    */
   void enterDungeon()
   {
-	  auto basicDungeon = dungeon_basic();
+	  auto basicDungeon = getBasicDungeon();
 	  basicDungeon->setNowRoom(basicDungeon->getEntranceRoom());
   }
 
@@ -88,16 +92,26 @@ public:
    */
   auto currentRoom()
   {
-	  return dungeon_basic()->getNowRoom();
+	  return getBasicDungeon()->getNowRoom();
   }
 
   /**
    * @brief navigate Move the player's character to a neighbouring
    * Room of the current room.
    */
+  bool navigate()
+  {
+      return navigate(getBasicDungeon()->getNowRoom()->findDoorDirections().front());
+  }
+
+  /**
+   * @brief navigate 从当前Room的direction方向移动
+   * @param direction
+   * @return
+   */
   bool navigate(char direction)
   {
-	  auto basic_dungeon = dungeon_basic();
+	  auto basic_dungeon = getBasicDungeon();
 	  auto room = currentRoom();
 	  room->checkDirection(direction);
 	  auto door = room->getDoor(direction);
@@ -112,8 +126,9 @@ public:
    */
   bool navigateBack()
   {
-	  auto basic_dungeon = dungeon_basic();
+	  auto basic_dungeon = getBasicDungeon();
 	  basic_dungeon->setNowRoom(basic_dungeon->path(-2));
+      return true;
   }
 
   /**

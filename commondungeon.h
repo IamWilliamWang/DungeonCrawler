@@ -13,10 +13,10 @@ namespace dungeon {
 /**
  * @brief TODO The OpenDoorway class
  */
-class OpenDoorway
+class OpenDoorway : public Door
 {
 public:
-    OpenDoorway(){}
+    OpenDoorway(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2) : Door(room1,room2) { }
 };
 
 } // namespace dungeon

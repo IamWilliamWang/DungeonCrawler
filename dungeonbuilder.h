@@ -9,24 +9,39 @@ class DungeonBuilder
 {
 public:
     DungeonBuilder();
-    virtual Dungeon* buildDungeon() = 0;
-    virtual Dungeon* clone(Dungeon*) = 0;
+    /**
+     * @brief buildDungeon 创建牢笼
+     * @return
+     */
+    virtual std::shared_ptr<Dungeon> buildDungeon() = 0;
+    /**
+     * @brief clone 克隆牢笼
+     * @return
+     */
+    virtual std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon>) = 0;
     virtual ~DungeonBuilder() = default;
 };
 
 class BasicDungeonBuilder : public DungeonBuilder
 {
 public:
-    Dungeon* buildDungeon()
+    /**
+     * @brief buildDungeon
+     * @return
+     */
+    std::shared_ptr<Dungeon> buildDungeon()
     {
-        BasicDungeon *basicDungeon = new BasicDungeon();
-        return (Dungeon*)basicDungeon;
+        return std::make_shared<BasicDungeon>();
     }
-    Dungeon* clone(Dungeon* dungeon)
+    /**
+     * @brief clone
+     * @param dungeon
+     * @return
+     */
+    std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon> dungeon)
     {
-        BasicDungeon* original = (BasicDungeon*)dungeon;
-        BasicDungeon* newDungeon = new BasicDungeon();
-        return (Dungeon*)newDungeon;
+        // NOT IMPLEMENTED
+        return nullptr;
     }
 };
 

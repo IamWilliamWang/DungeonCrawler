@@ -1,4 +1,4 @@
-#ifndef WEAPONS_H
+﻿#ifndef WEAPONS_H
 #define WEAPONS_H
 
 namespace core {
@@ -16,30 +16,58 @@ public:
 	Weapon(std::string &name, std::string &description, std::string &longDescription) : _name(name), _description(description), _longDescription(longDescription) {}
 	Weapon(std::string &name, std::string &description, std::string &longDescription, int minDamage, int maxDamage)
 		: _name(name), _description(description), _longDescription(longDescription), _minDamage(minDamage), _maxDamage(maxDamage){}
-	std::string getName()
+    /**
+     * @brief getName 获得名字
+     * @return
+     */
+    std::string getName()
 	{
 		return _name;
 	}
+    /**
+     * @brief setName 设定名字
+     * @param name
+     */
 	void setName(std::string name)
 	{
 		_name = name;
 	}
+    /**
+     * @brief getDescription
+     * @return
+     */
 	std::string getDescription()
 	{
 		return _description;
 	}
+    /**
+     * @brief setDescription
+     * @param description
+     */
 	void setDescription(std::string description)
 	{
 		_description = description;
 	}
+    /**
+     * @brief getLongDescription
+     * @return
+     */
 	std::string getLongDescription()
 	{
 		return _longDescription;
 	}
+    /**
+     * @brief setLongDescription
+     * @param longDescription
+     */
 	void setLongDescription(std::string longDescription)
 	{
 		_longDescription = longDescription;
 	}
+    /**
+     * @brief getDamageRange 获得武器的最小攻击力和最大攻击力
+     * @return
+     */
 	int* getDamageRange()
 	{
 		int* range = new int[2];
@@ -47,15 +75,28 @@ public:
 		range[1] = _maxDamage;
 		return range;
 	}
+    /**
+     * @brief setDamageRange 设置武器的最小攻击力和最大攻击力
+     * @param minDamage
+     * @param maxDamage
+     */
 	void setDamageRange(int minDamage, int maxDamage)
 	{
 		_minDamage = minDamage;
 		_maxDamage = maxDamage;
 	}
+    /**
+     * @brief getSpecialAbilityDescription
+     * @return
+     */
 	std::string getSpecialAbilityDescription()
 	{
 		return _specialAbilityDescription;
 	}
+    /**
+     * @brief setSpecialAbilityDescription
+     * @param specialAbilityDescription
+     */
 	void setSpecialAbilityDescription(std::string specialAbilityDescription)
 	{
 		_specialAbilityDescription = specialAbilityDescription;
@@ -140,10 +181,10 @@ public:
 	WizardsStaff()
 	{
 		setName("Wizard's Staff");
-		setDescription("it would break if you leant on it, but it shoots fireballs so that��s something");
+		setDescription("it would break if you leant on it, but it shoots fireballs so that’s something");
 		setLongDescription("Not a very sturdy staff, but the swirl of magical fire around its top belies a magical secret: it shoots fireballs!");
 		setDamageRange(1, 2);
-		setSpecialAbilityDescription("Fireball: deals 10 - 20 damage to the opponent (plus the bonus from the creature or character��s Wisdom stat). Always hits, regardless of dodge chance.");
+		setSpecialAbilityDescription("Fireball: deals 10 - 20 damage to the opponent (plus the bonus from the creature or character’s Wisdom stat). Always hits, regardless of dodge chance.");
 	}
 };
 
@@ -156,8 +197,8 @@ public:
 	MagicWand()
 	{
 		setName("Magic Wand");
-		setDescription("birch with angel��s feather core and rubberised leather grip");
-		setLongDescription("Apparently, there is no other wand like this one in existence. The angel��s feather at its core allows the bearer to perform unbelievable feats of healing.");
+		setDescription("birch with angel’s feather core and rubberised leather grip");
+		setLongDescription("Apparently, there is no other wand like this one in existence. The angel’s feather at its core allows the bearer to perform unbelievable feats of healing.");
 		setDamageRange(5, 10);
 		setSpecialAbilityDescription("Healing: returns character to full health.");
 	}
