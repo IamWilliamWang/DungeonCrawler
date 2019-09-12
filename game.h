@@ -71,9 +71,10 @@ public:
    * @brief createDungeon Initiates the creation of a new dungeon level.
    * Any previous dungeon level is destroyed.
    */
-  void createDungeon()
+  void createDungeon(std::string dungeonType="BasicDungeon")
   {
-	  _dungeon = std::make_shared<dungeon::BasicDungeon>();
+	  if (dungeonType == "BasicDungeon")
+		  _dungeon = std::make_shared<dungeon::BasicDungeon>();
   }
 
   /**
