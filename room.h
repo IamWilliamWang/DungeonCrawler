@@ -43,7 +43,7 @@ public:
      */
 	bool addWall(char direction, std::shared_ptr<Wall> wall = std::make_shared<Wall>())
     {
-        if(!checkDirection(direction))
+        if(!checkDirectionVaild(direction))
             return false;
 
         _walls[direction] = wall;
@@ -58,7 +58,7 @@ public:
      */
     bool addDoor(char direction, std::shared_ptr<Door> door)
     {
-        if(!checkDirection(direction))
+        if(!checkDirectionVaild(direction))
             return false;
 
         _doors[direction] = door;
@@ -72,7 +72,7 @@ public:
      */
 	std::shared_ptr<dungeon::Door> getDoor(char direction)
 	{
-		if (!checkDirection(direction))
+		if (!checkDirectionVaild(direction))
 			return nullptr;
 		if (_doors.count(direction) == 0)
 			return nullptr;
@@ -150,7 +150,7 @@ public:
      * @param direction
      * @return
      */
-	bool checkDirection(char& direction)
+	bool checkDirectionVaild(char& direction)
 	{
 		if (direction >= 'a' && direction <= 'z')
 			direction -= 'a' - 'A';
@@ -176,7 +176,7 @@ private:
 	 */
 	bool setEntrance(char direction)
 	{
-		if (!checkDirection(direction))
+		if (!checkDirectionVaild(direction))
 			return false;
 
 		_entranceOrExit[direction] = "entrance";
@@ -190,7 +190,7 @@ private:
 	 */
 	bool setExit(char direction)
 	{
-		if (!checkDirection(direction))
+		if (!checkDirectionVaild(direction))
 			return false;
 
 		_entranceOrExit[direction] = "exit";

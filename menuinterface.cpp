@@ -134,7 +134,6 @@ bool MenuInterface::processMainMenu(char selection) {
 void MenuInterface::playGame() {
 	createCharacter();
 	setMenu(Menu::DungeonSelect);
-	
 }
 
 void MenuInterface::createCharacter() {
@@ -197,8 +196,7 @@ void MenuInterface::createCharacter() {
 }
 
 void MenuInterface::dungeonTypeMenu() const {
-  // TODO: implement this member function.
-  //_display << "TODO: any key will return to main menu" << std::endl;
+	// TODO: implement this member function.
 	_display << "While roaming the country side you encounter a strange fork in the road." << std::endl;
 	_display << "To the left lies a dark cave, the foul stench of rotting flesh emanates from it." << std::endl;
 	_display << "To the right is a mysterious tower, a strange magical energy lights the path." << std::endl;
@@ -209,13 +207,19 @@ void MenuInterface::dungeonTypeMenu() const {
 }
 
 void MenuInterface::processDungeonType(char selection) {
-  // TODO: implement this member function.
+	// TODO: implement this member function.
 	if (selection == 'b')
 		Game::instance()->createDungeon("BasicDungeon");
 	else if (selection == 'm')
 		Game::instance()->createDungeon("MagicalDungeon");
+    else if (selection == 'r')
+    {
+        setMenu(Menu::Main);
+        return ;
+    }
+	Game::instance()->enterDungeon();
 	_display << std::endl << "You enter a dark cave." << std::endl;
-	setMenu(Menu::Main);
+	setMenu(Menu::Action);
 }
 
 void MenuInterface::switchToCharacterMenu() {
@@ -272,13 +276,147 @@ void MenuInterface::displayWeaponDetails() {
 }
 
 void MenuInterface::actionMenu() const {
-  // TODO: implement this member function.
-  _display << "TODO: any key will return to main menu" << std::endl;
+	// TODO: implement this member function.
+	_display << "Looking around you see... ";
+	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+	
+	// initialize output lines.
+    std::vector<std::string> outputs(4);
+	// output entrance and exit
+	if (currRoom->existEntranceOrExit())
+	{
+		char entranceDirection = currRoom->getEntranceDirection();
+		char exitDirection = currRoom->getExitDirection();
+		if (entranceDirection != '\0')
+		{
+			switch (entranceDirection)
+			{
+			case 'N':
+				outputs[0] = ("To the NORTH you see the entrance by which you came in.");
+				break;
+			case 'S':
+				outputs[1] = ("To the SOUTH you see the entrance by which you came in.");
+				break;
+			case 'W':
+				outputs[2] = ("To the WEST you see the entrance by which you came in.");
+				break;
+			case 'E':
+				outputs[3] = ("To the EAST you see the entrance by which you came in.");
+				break;
+			default:
+				_display << "extrance direction invaild!" << std::endl;
+			}
+		}
+		else if (exitDirection != '\0')
+		{
+			switch (exitDirection)
+			{
+			case 'N':
+				outputs[0] = ("To the NORTH you see the exit.");
+				break;
+			case 'S':
+				outputs[1] = ("To the SOUTH you see the exit.");
+				break;
+			case 'W':
+				outputs[2] = ("To the WEST you see the exit.");
+				break;
+			case 'E':
+				outputs[3] = ("To the EAST you see the exit.");
+				break;
+			default:
+				_display << "exit direction invaild!" << std::endl;
+			}
+		}
+		else _display << "Unsuspected error occurred!" << std::endl;
+	}
+	// output doors
+	auto doorDirections = Game::instance()->getBasicDungeon()->getNowRoom()->getDoorDirections();
+	for (auto direction : doorDirections)
+	{
+		switch (direction)
+		{
+		case 'N':
+			outputs[0] = "To the NORTH you see you see an opening to another chamber";
+			break;
+		case 'S':
+			outputs[1] = "To the SOUTH you see you see an opening to another chamber";
+			break;
+		case 'W':
+			outputs[2] = "To the WEST you see you see an opening to another chamber";
+			break;
+		case 'E':
+			outputs[3] = "To the EAST you see you see an opening to another chamber";
+			break;
+		default:
+			break;
+		}
+	}
+	// write down into screen
+	if (currRoom->id() % 2 == 0)
+		_display << "a chamber that glitters like a thousand stars in the torchlight" << std::endl;
+	else
+		_display << "a dark and empty chamber" << std::endl;
+	for (int i = 0; i < 4; i++)
+	{
+		if (outputs[i] != "")
+			_display << outputs[i] << std::endl;
+	}
+	_display << "What would you like to do?" << std::endl;
+	_display << " Go (n)orth" << std::endl;
+	_display << " Go (e)ast" << std::endl;
+	_display << " Go (s)outh" << std::endl;
+	_display << " Go (w)est" << std::endl;
+	_display << " Go (b)ack the way you came" << std::endl;
+	_display << " use specia(l) ability" << std::endl;
+	_display << " View your (c)haracter stats" << std::endl;
+	_display << " Return to the main (m)enu" << std::endl;
 }
 
 void MenuInterface::processAction(char selection) {
-  // TODO: implement this member function.
-  setMenu(Menu::Main);
+	// TODO: implement this member function.
+	// get selection
+	_display << "Heading ";
+	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+	if (selection == 'n')
+		_display << "North..." << std::endl;
+	else if (selection == 's')
+		_display << "South..." << std::endl;
+	else if (selection == 'w')
+		_display << "West..." << std::endl;
+	else if (selection == 'e')
+		_display << "East..." << std::endl;
+	else if (selection == 'b')
+	{
+		setMenu(Menu::Main);
+		return;
+	}
+	else if (selection == 'l')
+		return ;
+	else if (selection == 'c')
+		return ;
+	else
+		warnSelectionInvalid(selection);
+
+	// walk into wall is not allowed
+	currRoom->checkDirectionVaild(selection);
+	if (currRoom->getDoor(selection) == nullptr)
+		_display << "out of the darkness looms a jagged formation of rock: you cannot go that way" << std::endl;
+	else if (currRoom->getEntranceDirection() == selection)
+	{
+		Game::instance()->exitDungeon();
+		setMenu(Menu::Main);
+		return;
+	}
+	else if (currRoom->getExitDirection() == selection)
+	{
+		Game::instance()->exitLevel();
+		setMenu(Menu::Main);
+		return;
+	}
+
+	// navigation
+	Game::instance()->navigate(selection);
+	_display << "You pass through the doorway..." << std::endl;
 }
 
 void MenuInterface::combatMenu() const {

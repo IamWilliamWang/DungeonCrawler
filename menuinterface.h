@@ -5,6 +5,9 @@
 #include <limits>
 #include "testingsettings.h"
 #include "character.h"
+#include "dungeon.h"
+#include "basicdungeon.h"
+#include "dungeonbuilder.h"
 
 namespace core {
 

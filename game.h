@@ -119,7 +119,7 @@ public:
   {
 	  auto basic_dungeon = getBasicDungeon();
 	  auto room = currentRoom();
-	  room->checkDirection(direction);
+	  room->checkDirectionVaild(direction);
 	  auto door = room->getDoor(direction);
 	  if (door == nullptr)
 		  return false;
