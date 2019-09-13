@@ -8,6 +8,7 @@
 #include <vector>
 #include "wall.h"
 #include "door.h"
+#include "weapons.h"
 #include "creatures.h"
 
 namespace core {
@@ -28,18 +29,19 @@ class Room
 public:
     Room(int id) : _id(id){}
 
-  /**
-   * @brief id Returns the unique integer id of the Room.
-   * @return the unique id
-   */
-    int id() { return _id; }
+	/**
+	* @brief id Returns the unique integer id of the Room.
+	* @return the unique id
+	*/
+	int id() { return _id; }
+
     /**
      * @brief addWall 给Room的某个方向增加一堵墙
      * @param direction
      * @param wall
      * @return
      */
-    bool addWall(char direction, std::shared_ptr<Wall> wall)
+	bool addWall(char direction, std::shared_ptr<Wall> wall = std::make_shared<Wall>())
     {
         if(!checkDirection(direction))
             return false;
@@ -47,6 +49,7 @@ public:
         _walls[direction] = wall;
         return true;
     }
+
     /**
      * @brief addDoor 给Room的某个方向增加一扇门
      * @param direction
@@ -61,6 +64,7 @@ public:
         _doors[direction] = door;
         return true;
     }
+
     /**
      * @brief getDoor 获得Room特定位置上的门
      * @param direction
@@ -74,32 +78,7 @@ public:
 			return nullptr;
 		return _doors[direction];
 	}
-    /**
-     * @brief setEntrance 设置Room的特定方向为牢笼入口
-     * @param direction
-     * @return
-     */
-    bool setEntrance(char direction)
-    {
-        if(!checkDirection(direction))
-            return false;
-
-        _entranceOrExit[direction] = "entrance";
-        return true;
-    }
-    /**
-     * @brief setExit 设置Room的特定方向为牢笼出口
-     * @param direction
-     * @return
-     */
-    bool setExit(char direction)
-    {
-        if(!checkDirection(direction))
-            return false;
-
-        _entranceOrExit[direction] = "exit";
-        return true;
-    }
+    
     /**
      * @brief findDoorDirections 找门所在的方向，返回char list
      * @return
@@ -113,6 +92,16 @@ public:
 		}
 		return directionList;
 	}
+
+	/**
+	 * @brief getDoorDirections findDoorDirections便捷函数，开发结束时会删除
+	 * @return
+	 */
+	auto getDoorDirections()
+	{
+		return findDoorDirections();
+	}
+
     /**
      * @brief existEntranceOrExit 如果存在入口或者出口
      * @return
@@ -121,6 +110,15 @@ public:
 	{
 		return getEntranceDirection() != '\0' || getExitDirection() != '\0';
 	}
+
+	void addEntranceOrExit(char direction, bool addEntrance)
+	{
+        if (addEntrance)
+			this->setEntrance(direction);
+		else
+			this->setExit(direction);
+	}
+
     /**
      * @brief getEntranceDirection 获得入口所在的方向
      * @return
@@ -159,7 +157,7 @@ public:
 		return (direction == NORTH || direction == SOUTH || direction == WEST || direction == EAST);
 	}
     /**
-     * @brief createCreature 使用可能的生物列表创建生物
+     * @brief createCreature 使用可能的生物列表随机创建生物
      * @param possibleCreatures
      * @return
      */
@@ -171,11 +169,40 @@ public:
 		return true;
 	}
 private:
+	/**
+	 * @brief setEntrance 设置Room的特定方向为牢笼入口
+	 * @param direction
+	 * @return
+	 */
+	bool setEntrance(char direction)
+	{
+		if (!checkDirection(direction))
+			return false;
+
+		_entranceOrExit[direction] = "entrance";
+		return true;
+	}
+
+	/**
+	 * @brief setExit 设置Room的特定方向为牢笼出口
+	 * @param direction
+	 * @return
+	 */
+	bool setExit(char direction)
+	{
+		if (!checkDirection(direction))
+			return false;
+
+		_entranceOrExit[direction] = "exit";
+		return true;
+	}
+
     int _id;
     std::map<char, std::shared_ptr<Wall>> _walls; // the walls of this room
     std::map<char, std::shared_ptr<Door>> _doors;
     std::map<char, std::string> _entranceOrExit; // save the direction of entrance or exit in this room
-	std::shared_ptr<core::creatures::Creature> _creature;
+	std::shared_ptr<core::creatures::Creature> _creature; 
+	std::shared_ptr<core::weapons::Weapon> _weapon;
 };
 
 } // namespace dungeon

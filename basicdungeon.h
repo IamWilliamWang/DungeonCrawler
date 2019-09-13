@@ -77,7 +77,7 @@ private:
 /**
  * @brief TODO The RockChamber class
  */
-class RockChamber
+class RockChamber : public Chamber
 {
 public:
     RockChamber(){}
@@ -86,7 +86,7 @@ public:
 /**
  * @brief TODO The QuartzChamber class
  */
-class QuartzChamber
+class QuartzChamber : public Chamber
 {
 public:
     QuartzChamber(){}

@@ -7,6 +7,7 @@
 #include <ctime>
 #include "character.h"
 #include "dungeon.h"
+#include "dungeonbuilder.h"
 
 namespace core {
 
@@ -73,8 +74,12 @@ public:
    */
   void createDungeon(std::string dungeonType="BasicDungeon")
   {
+	  std::shared_ptr<dungeon::DungeonBuilder> builder;
 	  if (dungeonType == "BasicDungeon")
-		  _dungeon = std::make_shared<dungeon::BasicDungeon>();
+	  {
+		  builder = std::make_shared<dungeon::BasicDungeonBuilder>();
+		  _dungeon = builder->buildDungeon();
+	  }
   }
 
   /**

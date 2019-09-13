@@ -19,6 +19,10 @@ public:
     OpenDoorway(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2) : Door(room1,room2) { }
 };
 
+class Chamber
+{
+
+};
 } // namespace dungeon
 } // namespace core
 
