@@ -1,17 +1,13 @@
 #ifndef CSVFILE_H
 #define CSVFILE_H
-#define USE_QTCORE // QString, QStringList, QVector, QRegularExpress will be used.
-
 #include <iostream>
 #include <string>
 #include <memory>
 
-#ifdef USE_QTCORE
 #include <qvector.h>
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qregularexpression.h>
-#endif
 namespace data {
 
 /**
@@ -40,157 +36,198 @@ class CsvFile
 {
 public:
   /**
-   * @brief CsvFile constructor, initialises internal data structures
-   * with CSV content from the input stream.
-   *
-   * Assumes the first row is a header row. If the input contains no
-   * content, the CsvFile is considered to have failed to load.
-   *
-   * @param input the stream from which to read the data
-   */
-  CsvFile(std::istream &input)
-  {
-#ifdef USE_QTCORE
-      constexpr int bufferLength = 200;
-      char buffer[bufferLength]; // 读取时的buffer
-      std::shared_ptr<QVector<QStringList>> table = std::make_shared<QVector<QStringList>>(); // 二维String数组
-      int columnCount = -1; // 有多少列
-      while(input.getline(buffer, bufferLength)) // 读取一行内容
-      {
-          QString line(buffer);
-          QStringList rowList = line.split(QRegularExpression(",|\""), QString::SkipEmptyParts); // split(",\"")获得单行内容的每一格
-          if (columnCount == -1) // 如果读的是表头，记录有多少列
-              columnCount = rowList.size();
-          if (columnCount < rowList.size()) // 存在extra column，终止读取
-              return;
-          if (line.count(',') < columnCount-1) // 如果这一行是完整数据，应该有列数-1个逗号
-              return;
-          else
-          {
-              while (rowList.size() < columnCount) // 保证后面的每一行的列数和第一行相同，不同的话插入""
-                  rowList.append("");
-          }
-          table->append(rowList); // 插入一行
-      }
-      if(table->size() != 0)
-          _dataTable = table; // 保存二维String
-#else
+    * @brief CsvFile constructor, initialises internal data structures
+    * with CSV content from the input stream.
+    *
+    * Assumes the first row is a header row. If the input contains no
+    * content, the CsvFile is considered to have failed to load.
+    *
+    * @param input the stream from which to read the data
+    */
+    CsvFile(std::istream &input)
+    {
+        constexpr int bufferLength = 200;
+        char buffer[bufferLength]; // 读取时的buffer
+        std::shared_ptr<QVector<QStringList>> table = std::make_shared<QVector<QStringList>>(); // 二维String数组
+        int columnCount = -1; // 有多少列
+        while (input.getline(buffer, bufferLength)) // 读取一行内容
+        {
+            QString line(buffer);
+            QStringList rowList = parseRow(line);
+            if (columnCount == -1) // 如果读的是表头，记录有多少列
+                columnCount = rowList.size();
+            if (columnCount < rowList.size()) // 存在extra column，终止读取
+                return;
+            if (line.count(',') < columnCount - 1) // 如果这一行是完整数据，应该有列数-1个逗号
+                return;
+            else
+            {
+                while (rowList.size() < columnCount) // 保证后面的每一行的列数和第一行相同，不同的话插入""
+                    rowList.append("");
+            }
+            table->append(rowList); // 插入一行
+        }
+        if (table->size() != 0)
+            _dataTable = table; // 保存二维String
+    }
 
-#endif
-  }
+    QStringList parseRow(QString &line)
+    {
+        return line.split(QRegularExpression(",|\""), QString::SkipEmptyParts); // split(",\"")获得单行内容的每一个部分
+//        以下是尝试解决DoubleQuoted tests的方案。有问题
+//        QStringList rowList;
+//        int start=0, end=-1;
+//        bool quote = false;
+//        for(int i=0;i<line.size();i++)
+//        {
+//          QChar ch = line[i];
+//          if(ch=='"')
+//          {
+//              if(quote == false)
+//              {
+//                  start=i+1;
+//                  quote=true;
+//              }
+//              else
+//              {
+//                  end=i;
+//                  rowList.append(line.mid(start,end-start));
+//                  quote=false;
+//              }
+//          }
+//          else if (ch==',') {
+//              if(quote==false)
+//              {
+//                  if(end!=i-1)
+//                  {
+//                      end=i;
+//                      rowList.append(line.mid(start,end-start));
+//                  }
+//              }
+//          }
+//        }
+//        return rowList;
+    }
 
-  /**
-   * @brief numberOfColumns Returns the number of columns in the CSV file,
-   * or -1 if the data failed to load.
-   *
-   * @return number of columns or -1
-   */
-  int numberOfColumns()
-  {
-#ifdef USE_QTCORE
-      if (_dataTable == nullptr)
-          return -1;
-      return _dataTable->at(0).size();
-#else
-      return -1;
-#endif
-  }
+    /**
+     * @brief numberOfColumns Returns the number of columns in the CSV file,
+     * or -1 if the data failed to load.
+     *
+     * @return number of columns or -1
+     */
+    int numberOfColumns()
+    {
+        if (_dataTable == nullptr)
+            return -1;
+        return _dataTable->at(0).size();
+    }
 
-  /**
-   * @brief numberOfRows returns the number of rows in the CSV file,
-   * or -1 if the data failed to load.
-   *
-   * The header row is NOT included in the count of rows.
-   *
-   * @return number of rows or -1
-   */
-  int numberOfRows()
-  {
-#ifdef USE_QTCORE
-      if(_dataTable == nullptr)
-          return -1;
-      return _dataTable->size() - 1;
-#else
-      return -1;
-#endif
-  }
+    /**
+     * @brief numberOfRows returns the number of rows in the CSV file,
+     * or -1 if the data failed to load.
+     *
+     * The header row is NOT included in the count of rows.
+     *
+     * @return number of rows or -1
+     */
+    int numberOfRows()
+    {
+        if (_dataTable == nullptr)
+            return -1;
+        return _dataTable->size() - 1;
+    }
 
-  /**
-   * @brief at Returns the content of the cell at the given row, column.
-   *
-   * Row indices start at 1, column indices start at 1.
-   * Returns an empty string if the CSV file failed to load or if row/column
-   * is out of range.
-   *
-   * @param row the row from which to retrieve the data
-   * @param column the column from whcih to retrieve the data
-   * @return the cell data at row, column
-   */
-  std::string at(int row, int column)
-  {
-#ifdef USE_QTCORE
-      if (_dataTable == nullptr) // load CSV file failed.
-          return "";
+    QString replaceAll(QString original, QString old, QString newOne)
+    {
+        if (!original.contains(old)) // nothing should happen
+            return original;
 
-      int rowCount = numberOfRows(), columnCount = numberOfColumns(); // 记录_dataTable的行数和列数
-      if (row > rowCount || row < 1) // 防止数组越界
-          return "";
-      if (column > columnCount || column < 1) // 防止数组越界
-          return "";
+        // copy original string to QVecto<QChar>
+        QVector<QChar> chars;
+        for (QChar ch : original)
+            chars.append(ch);
+        // find and save indexes.
+        QVector<int> fromIndexes;
+        int fromIndex = 0, index;
+        while ((index = original.indexOf(old, fromIndex)) != -1)
+        {
+            fromIndexes.append(index);
+            fromIndex = index + 1;
+        }
+        // remove old and insert new one.
+        for (auto it = fromIndexes.rbegin(); it != fromIndexes.rend(); it++)
+        {
+            auto removeStartIndex = *it;
+            chars.remove(removeStartIndex, old.size());
+            for (auto it2 = newOne.rbegin(); it2 != newOne.rend(); it2++)
+                chars.insert(removeStartIndex, *it2);
+        }
+        return QString(chars.data(), chars.size()); // convert back to QString
+    }
 
-      return _dataTable->at(row).at(column-1).toStdString(); // 取值
-#else
-      return "";
-#endif
-  }
+    /**
+     * @brief at Returns the content of the cell at the given row, column.
+     *
+     * Row indices start at 1, column indices start at 1.
+     * Returns an empty string if the CSV file failed to load or if row/column
+     * is out of range.
+     *
+     * @param row the row from which to retrieve the data
+     * @param column the column from whcih to retrieve the data
+     * @return the cell data at row, column
+     */
+    std::string at(int row, int column)
+    {
+        if (_dataTable == nullptr) // load CSV file failed.
+            return "";
 
-  /**
-   * @brief headerAt Returns the column name at the given index.
-   *
-   * Column indices start at 1.
-   * Returns an empty string if the CSV file failed to load or if column
-   * is out of range.
-   *
-   * @param column the index of the column
-   * @return the column name
-   */
-  std::string headerAt(int column)
-  {
-#ifdef USE_QTCORE
-      if (column > numberOfColumns() || column < 1)
-          return "";
-      if (numberOfRows() >= 0) // 有表头
-          return _dataTable->at(0).at(column-1).toStdString();
-      return "";
-#else
-      return "";
-#endif
-  }
+        int rowCount = numberOfRows(), columnCount = numberOfColumns(); // 记录_dataTable的行数和列数
+        if (row > rowCount || row < 1) // 防止数组越界
+            return "";
+        if (column > columnCount || column < 1) // 防止数组越界
+            return "";
 
-  /**
-   * @brief columnIndexOf Returns the column index for the given column name.
-   *
-   * Returns -1 if the CSV file faild to load.
-   * Column indices start at 1.
-   *
-   * @param columnName the name of the column
-   * @return the index of the named column, or -1
-   */
-  int columnIndexOf(const std::string &columnName)
-  {
-#ifdef USE_QTCORE
-      if (_dataTable == nullptr)
-          return -1;
-      int index = _dataTable->at(0).indexOf(QString::fromStdString(columnName));
-      return index == -1 ? -1 : index + 1;
-#else
-      return -1;
-#endif
-  }
+        return replaceAll(_dataTable->at(row).at(column - 1), "\\n", "\n").toStdString(); // 取值
+    }
+
+    /**
+     * @brief headerAt Returns the column name at the given index.
+     *
+     * Column indices start at 1.
+     * Returns an empty string if the CSV file failed to load or if column
+     * is out of range.
+     *
+     * @param column the index of the column
+     * @return the column name
+     */
+    std::string headerAt(int column)
+    {
+        if (column > numberOfColumns() || column < 1)
+            return "";
+        if (numberOfRows() >= 0) // 有表头
+            return replaceAll(_dataTable->at(0).at(column - 1), "\\n", "\n").toStdString();
+
+        return "";
+    }
+
+    /**
+     * @brief columnIndexOf Returns the column index for the given column name.
+     *
+     * Returns -1 if the CSV file faild to load.
+     * Column indices start at 1.
+     *
+     * @param columnName the name of the column
+     * @return the index of the named column, or -1
+     */
+    int columnIndexOf(const std::string &columnName)
+    {
+        if (_dataTable == nullptr)
+            return -1;
+        int index = _dataTable->at(0).indexOf(QString::fromStdString(columnName));
+        return index == -1 ? -1 : index + 1;
+    }
 private:
-#ifdef USE_QTCORE
-  std::shared_ptr<QVector<QStringList>> _dataTable;
-#endif
+    std::shared_ptr<QVector<QStringList>> _dataTable;
 };
 
 } // namespace data
