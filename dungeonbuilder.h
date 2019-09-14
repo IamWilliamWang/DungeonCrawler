@@ -44,23 +44,31 @@ public:
 		int strengthI = csv.columnIndexOf("Strength");
 		int dexterityI = csv.columnIndexOf("Dexterity");
 		int wisdomI = csv.columnIndexOf("Wisdom");
+        int weaponI = csv.columnIndexOf("Weapon");
+        int dungeonTypeI = csv.columnIndexOf("Dungeon Type");
         for (int row = 1; row <= csv.numberOfRows(); row++)
 		{
-			auto creature = std::make_shared<creatures::Creature>(csv.at(row, nameI));
+            if (csv.at(row, dungeonTypeI) != "BasicDungeon")
+                continue;
+            auto creature = std::make_shared<core::creatures::Creature>(csv.at(row, nameI));
 			creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI)), parseInt(csv.at(row, wisdomI)));
 			creature->setDescription(csv.at(row, descriptionI));
 			creature->setHealthPoint(parseInt(csv.at(row, healthI)));
+            auto weaponName = csv.at(row, weaponI);
+            if (weaponName == "Fists")
+                creature->setWeapon(std::make_shared<core::weapons::Fists>());
+            else if (weaponName == "Boomerang")
+                creature->setWeapon(std::make_shared<core::weapons::Boomerang>());
+            else if (weaponName == "ShortSword")
+                creature->setWeapon(std::make_shared<core::weapons::ShortSword>());
+            else if (weaponName == "BattleAxe")
+                creature->setWeapon(std::make_shared<core::weapons::BattleAxe>());
+            else // A creature in basic dungeon using magical dungeon's weapon.
+                return false;
+
 			_creatureList.emplace_back(creature);
 		}
 		return true;
-	}
-	bool loadWeapons()
-	{
-		return true;
-	}
-	bool loadDatabase()
-	{
-		return loadCreatures() && loadWeapons();
 	}
     /**
      * @brief buildDungeon
@@ -68,8 +76,9 @@ public:
      */
     std::shared_ptr<Dungeon> buildDungeon()
     {
-		if (!loadDatabase())
+        if (!loadCreatures())
 			return nullptr;
+
 		// create objects
         auto basicDungeon = std::make_shared<BasicDungeon>();
 		auto room1 = std::make_shared<Room>(1);
@@ -135,6 +144,10 @@ public:
 		room9->addWall('S');
 		room9->addDoor('W', door89);
 		room9->addEntranceOrExit('E', false);
+		// fill creatures
+		room3->createCreature(_creatureList);
+		room5->createCreature(_creatureList);
+		room9->createCreature(_creatureList);
 		// add rooms into dungeon
         basicDungeon->addRoom(room1);
         basicDungeon->addRoom(room2);
@@ -159,7 +172,6 @@ public:
     }
 private:
 	std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList;
-	std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList;
 	std::vector<std::shared_ptr<core::dungeon::Chamber>> _chamberList;
 };
 }

@@ -1,6 +1,7 @@
 ﻿#ifndef WEAPONS_H
 #define WEAPONS_H
-
+#include <string>
+#include <memory>
 namespace core {
 namespace weapons {
 class Enchantment; //predeclaration

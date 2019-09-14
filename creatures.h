@@ -1,7 +1,8 @@
 #ifndef CREATURE_H
 #define CREATURE_H
 #include <string>
-
+#include <memory>
+#include "weapons.h"
 namespace core {
 namespace creatures {
 
@@ -14,7 +15,10 @@ namespace creatures {
 class Creature
 {
 public:
-    Creature(const std::string &name) : _name(name){}
+    Creature(const std::string &name) : _name(name)
+	{
+        _weapon = std::make_shared<core::weapons::Fists>();
+	}
     /**
      * @brief name 获得生物的名字
      * @return
@@ -79,6 +83,17 @@ public:
     {
       return 2*(_strength-1);
     }
+	/**
+	 * @brief damageWeaponed 带有武器的伤害值
+	 * @return 返回int[2]，包含[最低伤害,最高伤害]
+	 */
+	int* damageWeaponed()
+	{
+		int* result = _weapon->getDamageRange();
+		result[0] += damage();
+		result[1] += damage();
+		return result;
+	}
     /**
      * @brief dodgeChance 获得躲避概率，0为不可能躲避，100为一定躲避
      * @return
@@ -95,6 +110,21 @@ public:
 	{
 		return _description;
 	}
+	/**
+	 * @brief getWeapon 获得武器
+	 */
+	auto getWeapon()
+	{
+		return _weapon;
+	}
+	/**
+	 * @brief setWeapon 设置武器
+	 * @param weapon
+	 */
+    void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon)
+	{
+		_weapon = weapon;
+	}
 private:
   std::string _name;
   std::string _description;
@@ -102,6 +132,7 @@ private:
   int _dexterity;
   int _wisdom;
   int _health = -1;
+  std::shared_ptr<core::weapons::Weapon> _weapon;
 };
 
 } // namespace creatures

@@ -168,6 +168,14 @@ public:
         _creature = possibleCreatures.at(rand(randomEngine));
 		return true;
 	}
+	/*bool createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons)
+	{
+		std::default_random_engine randomEngine(static_cast<unsigned>(time(nullptr)));
+		std::uniform_int_distribution<unsigned> rand(0, possibleWeapons.size() - 1);
+		_weapon = possibleWeapons.at(rand(randomEngine));
+		_creature->setWeapon(_weapon);
+		return true;
+	}*/
 	auto getCreature()
 	{
 		return _creature;
@@ -210,7 +218,7 @@ private:
     std::map<char, std::shared_ptr<Door>> _doors;
     std::map<char, std::string> _entranceOrExit; // save the direction of entrance or exit in this room
 	std::shared_ptr<core::creatures::Creature> _creature; 
-	std::shared_ptr<core::weapons::Weapon> _weapon;
+    std::shared_ptr<core::weapons::Weapon> _weapon;
 };
 
 } // namespace dungeon
