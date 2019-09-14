@@ -40,10 +40,15 @@ public:
      * @return
      */
     int getHealthPoint() { return _health; }
-    /**
-     * @brief isAlive 判断是否存活
-     * @return
-     */
+    
+	void setHealthPoint(int healthPoint)
+	{
+		_health = healthPoint;
+	}
+	/**
+	 * @brief isAlive 判断是否存活
+	 * @return
+	 */
     bool isAlive(){ return _health > 0; }
     /**
      * @brief setAttribute 设置生物的基本属性
@@ -82,9 +87,17 @@ public:
     {
 		return _dexterity > 0 ? 20 * (_dexterity - 1) : 0;
     }
-
+	void setDescription(std::string description)
+	{
+		_description = description;
+	}
+	std::string getDescription()
+	{
+		return _description;
+	}
 private:
   std::string _name;
+  std::string _description;
   int _strength;
   int _dexterity;
   int _wisdom;

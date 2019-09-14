@@ -141,14 +141,17 @@ public:
    * @brief exitLevel update the game state with successful completion
    * of the current level.
    */
-  void exitLevel();
+  void exitLevel()
+  {
+	  _successCount++;
+  }
 
   /**
    * @brief exitDungeon update the game to the state where the character
    * has completely left the dungeon, ready for a completely new dungeon
    * to be created.
    */
-  void exitDungeon();
+  void exitDungeon(){}
 
   /**
    * @brief doActionRound Performs a player action (weapon attack, item use,
@@ -212,6 +215,7 @@ private:
   static std::shared_ptr<Game> _game;
   std::shared_ptr<dungeon::Dungeon> _dungeon;
   std::shared_ptr<Character> _character;
+  int _successCount = 0;
 };
 
 } // namespace core

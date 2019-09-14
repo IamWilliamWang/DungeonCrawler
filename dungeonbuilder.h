@@ -1,7 +1,10 @@
 #ifndef DUNGEONBUILDER_H
 #define DUNGEONBUILDER_H
+#include <fstream>
+#include <stdlib.h>
 #include "dungeon.h"
 #include "basicdungeon.h"
+#include "csvfile.h"
 namespace core {
 namespace dungeon {
 
@@ -24,12 +27,49 @@ public:
 class BasicDungeonBuilder : public DungeonBuilder
 {
 public:
+	int parseInt(std::string intStr)
+	{
+		return atoi(intStr.c_str());
+	}
+	bool loadCreatures()
+	{
+        std::ifstream inputStream("creature_types.csv");
+        data::CsvFile csv(inputStream);
+		if (csv.numberOfRows() == -1)
+			return false;
+
+		int nameI = csv.columnIndexOf("Name");
+		int healthI = csv.columnIndexOf("Maximum Health");
+		int descriptionI = csv.columnIndexOf("Description");
+		int strengthI = csv.columnIndexOf("Strength");
+		int dexterityI = csv.columnIndexOf("Dexterity");
+		int wisdomI = csv.columnIndexOf("Wisdom");
+        for (int row = 1; row <= csv.numberOfRows(); row++)
+		{
+			auto creature = std::make_shared<creatures::Creature>(csv.at(row, nameI));
+			creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI)), parseInt(csv.at(row, wisdomI)));
+			creature->setDescription(csv.at(row, descriptionI));
+			creature->setHealthPoint(parseInt(csv.at(row, healthI)));
+			_creatureList.emplace_back(creature);
+		}
+		return true;
+	}
+	bool loadWeapons()
+	{
+		return true;
+	}
+	bool loadDatabase()
+	{
+		return loadCreatures() && loadWeapons();
+	}
     /**
      * @brief buildDungeon
      * @return
      */
     std::shared_ptr<Dungeon> buildDungeon()
     {
+		if (!loadDatabase())
+			return nullptr;
 		// create objects
         auto basicDungeon = std::make_shared<BasicDungeon>();
 		auto room1 = std::make_shared<Room>(1);
@@ -118,9 +158,9 @@ public:
         return nullptr;
     }
 private:
-	std::vector<std::shared_ptr<core::creatures::Creature>> creatureList;
-	std::vector<std::shared_ptr<core::weapons::Weapon>> weaponList;
-	std::vector<std::shared_ptr<core::dungeon::Chamber>> chamberList;
+	std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList;
+	std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList;
+	std::vector<std::shared_ptr<core::dungeon::Chamber>> _chamberList;
 };
 }
 }

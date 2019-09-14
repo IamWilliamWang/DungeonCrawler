@@ -167,6 +167,8 @@ private:
    */
   void displayWeaponDetails();
 
+  void displayChamber() const;
+
   /**
    * @brief actionMenu display main action task choices.
    */

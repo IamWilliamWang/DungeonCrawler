@@ -275,11 +275,19 @@ void MenuInterface::displayWeaponDetails() {
 	_display << weapon->getLongDescription() << std::endl;
 }
 
-void MenuInterface::actionMenu() const {
-	// TODO: implement this member function.
+void MenuInterface::displayChamber() const {
 	_display << "Looking around you see... ";
 	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
-	
+	if (currRoom->id() % 2 == 0)
+		_display << "a chamber that glitters like a thousand stars in the torchlight" << std::endl;
+	else
+		_display << "a dark and empty chamber" << std::endl;
+}
+
+void MenuInterface::actionMenu() const {
+	// TODO: implement this member function.
+	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+	displayChamber();
 	// initialize output lines.
     std::vector<std::string> outputs(4);
 	// output entrance and exit
@@ -352,10 +360,7 @@ void MenuInterface::actionMenu() const {
 		}
 	}
 	// write down into screen
-	if (currRoom->id() % 2 == 0)
-		_display << "a chamber that glitters like a thousand stars in the torchlight" << std::endl;
-	else
-		_display << "a dark and empty chamber" << std::endl;
+	
 	for (int i = 0; i < 4; i++)
 	{
 		if (outputs[i] != "")
@@ -420,13 +425,23 @@ void MenuInterface::processAction(char selection) {
 }
 
 void MenuInterface::combatMenu() const {
-  // TODO: implement this member function.
-  _display << "TODO: any key will return to main menu" << std::endl;
+	// TODO: implement this member function.
+	auto currRoom = Game::instance()->currentRoom();
+	auto currCreature = currRoom->getCreature();
+	displayChamber();
+	_display << "Blocking your path stands a " << currCreature->name() << ": " << currCreature->getDescription() << std::endl;
+	_display << std::endl;
+	_display << "What would you like to do?" << std::endl;
+	_display << " Go (b)ack the way you came" << std::endl;
+	_display << " (a)ttack with your weapon" << std::endl;
+	_display << " use specia(l) ability" << std::endl;
+	_display << " View your (c)haracter stats" << std::endl;
+	_display << " Return to the main (m)enu" << std::endl;
 }
 
 void MenuInterface::processCombatAction(char selection) {
-  // TODO: implement this member function.
-  setMenu(Menu::Main);
+	// TODO: implement this member function.
+
 }
 
 void MenuInterface::doNavigate() {

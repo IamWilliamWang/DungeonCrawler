@@ -168,6 +168,14 @@ public:
         _creature = possibleCreatures.at(rand(randomEngine));
 		return true;
 	}
+	auto getCreature()
+	{
+		return _creature;
+	}
+	auto getWeapon()
+	{
+		return _weapon;
+	}
 private:
 	/**
 	 * @brief setEntrance 设置Room的特定方向为牢笼入口

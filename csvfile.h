@@ -132,8 +132,8 @@ public:
       if (_dataTable == nullptr) // load CSV file failed.
           return "";
 
-      int rowCount = numberOfRows() + 1, columnCount = numberOfColumns(); // 记录_dataTable的行数和列数
-      if (row >= rowCount || row < 1) // 防止数组越界
+      int rowCount = numberOfRows(), columnCount = numberOfColumns(); // 记录_dataTable的行数和列数
+      if (row > rowCount || row < 1) // 防止数组越界
           return "";
       if (column > columnCount || column < 1) // 防止数组越界
           return "";
