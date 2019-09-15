@@ -72,24 +72,31 @@ public:
    * @brief createDungeon Initiates the creation of a new dungeon level.
    * Any previous dungeon level is destroyed.
    */
-  void createDungeon(std::string dungeonType="BasicDungeon")
+  bool createDungeon(std::string dungeonType="BasicDungeon")
   {
 	  std::shared_ptr<dungeon::DungeonBuilder> builder;
 	  if (dungeonType == "BasicDungeon")
 	  {
 		  builder = std::make_shared<dungeon::BasicDungeonBuilder>();
 		  _dungeon = builder->buildDungeon();
+		  return _dungeon != nullptr;
 	  }
+	  return false;
   }
 
   /**
    * @brief start Initialises the game to the starting state, i.e.,
    * the character has just entered the first room of the dungeon.
    */
-  void enterDungeon()
+  bool enterDungeon()
   {
-	  auto basicDungeon = getBasicDungeon();
-	  basicDungeon->setNowRoom(basicDungeon->getEntranceRoom());
+	  if (_dungeon == nullptr)
+		  return false;
+	  auto entranceRoom = getBasicDungeon()->getEntranceRoom();
+	  if (entranceRoom == nullptr)
+		  return false;
+	  getBasicDungeon()->setNowRoom(entranceRoom);
+	  return true;
   }
 
   /**

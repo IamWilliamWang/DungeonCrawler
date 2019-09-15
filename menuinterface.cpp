@@ -208,15 +208,22 @@ void MenuInterface::dungeonTypeMenu() const {
 
 void MenuInterface::processDungeonType(char selection) {
 	// TODO: implement this member function.
+	bool createSuccess;
 	if (selection == 'b')
-		Game::instance()->createDungeon("BasicDungeon");
+		createSuccess = Game::instance()->createDungeon("BasicDungeon");
 	else if (selection == 'm')
-		Game::instance()->createDungeon("MagicalDungeon");
+		createSuccess = Game::instance()->createDungeon("MagicalDungeon");
     else if (selection == 'r')
     {
         setMenu(Menu::Main);
         return ;
     }
+	if (createSuccess == false)
+	{
+		_display << "Warning: create dungeon failed!" << std::endl;
+		setMenu(Menu::Main);
+		return;
+	}
 	Game::instance()->enterDungeon();
 	_display << std::endl << "You enter a dark cave." << std::endl;
 	setMenu(Menu::Action);

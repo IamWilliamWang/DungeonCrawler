@@ -9,7 +9,7 @@
 // and selecting 'clean' or 'rebuild' as desired.
 
 // Set this to 1 to run the testing, 0 to run normal mode.
-#define TESTING 1
+#define TESTING 0
 
 // Set this to 1 to run the game using the input script
 // In order to work, the provided input script relies on
