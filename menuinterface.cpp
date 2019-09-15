@@ -165,7 +165,7 @@ void MenuInterface::createCharacter() {
 		_display << std::endl;
 		if (restPoints <= 0)
 		{
-			_display << "Create player failed! You dont have enough points." << std::endl;
+            _display << "Create player failed! You don't have enough points." << std::endl;
 			break;
 		}
 		_display << "You have *" << restPoints << "* stat points remaining." << std::endl;
@@ -174,7 +174,6 @@ void MenuInterface::createCharacter() {
 		int wisdom_tmp = getIntInput();
 		wisdom += wisdom_tmp;
 		restPoints -= wisdom_tmp;
-		_display << std::endl;
 		if (restPoints <= 0)
 			break;
 		_display << "You have *" << restPoints << "* stat points remaining." << std::endl;
@@ -233,6 +232,7 @@ void MenuInterface::switchToCharacterMenu() {
   // TODO: implement this member function
   setMenu(Menu::CharacterDetails);
   processCharacterDetails('c');
+  setMenu(Menu::Main);
 }
 
 bool MenuInterface::quitGame() const {
@@ -254,6 +254,7 @@ void MenuInterface::processCharacterDetails(char selection) {
 			_display << "There is currently no character to display." << std::endl;
 		else
 		{
+            _display << std::endl;
 			_display << "***Character Summary***" << std::endl;
 			_display << character->name() << std::endl;
 			printf("Strength:%10d\n", character->getStrength());
@@ -267,7 +268,6 @@ void MenuInterface::processCharacterDetails(char selection) {
 			_display << "Weapon:    " << character->getWeapon()->getDescription() << std::endl;
 			printf("Item:\n");
 		}
-		setMenu(Menu::Main);
 	}
 }
 
@@ -275,6 +275,8 @@ void MenuInterface::displayWeaponDetails() {
   // TODO: implement this member function
 	auto character = Game::instance()->player();
 	auto weapon = character->getWeapon();
+    _display << std::endl;
+    _display << "***Weapon Summary***" << std::endl;
 	_display << "\"" << weapon->getName() << "\"" << std::endl;
 	int* damages = weapon->getDamageRange();
 	printf("Min. Damage:%7d\n", damages[0]);
@@ -387,48 +389,82 @@ void MenuInterface::actionMenu() const {
 void MenuInterface::processAction(char selection) {
 	// TODO: implement this member function.
 	// get selection
-	_display << "Heading ";
 	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
 	if (selection == 'n')
-		_display << "North..." << std::endl;
+		_display << "Heading North..." << std::endl;
 	else if (selection == 's')
-		_display << "South..." << std::endl;
+		_display << "Heading South..." << std::endl;
 	else if (selection == 'w')
-		_display << "West..." << std::endl;
+		_display << "Heading West..." << std::endl;
 	else if (selection == 'e')
-		_display << "East..." << std::endl;
+		_display << "Heading East..." << std::endl;
 	else if (selection == 'b')
 	{
-		setMenu(Menu::Main);
+        Game::instance()->navigateBack();
+		_display << "You head back the way you came..." << std::endl;
+		_display << "You pass through the doorway..." << std::endl;
 		return;
 	}
 	else if (selection == 'l')
-		return ;
+    {
+		_display << "You hold your weapon high and shout..." << std::endl;
+		_display << "Nothing happens..." << std::endl;
+		return;
+    }
 	else if (selection == 'c')
-		return ;
+	{
+        setMenu(Menu::CharacterDetails);
+		processCharacterDetails('c');
+        setMenu(Menu::Action);
+        _display << std::endl;
+		_display << "What would you like to do?" << std::endl;
+        _display << " View (w)eapon info." << std::endl;
+        _display << " Return to the previous (m)enu" << std::endl;
+		auto selection = getCharacterInput();
+        if (selection == 'w') {
+			displayWeaponDetails();
+            return;
+        }
+		else if (selection == 'm')
+			return;
+		else
+			_display << "Sorry, '" << selection << "' is not a valid option, please try again." << std::endl;
+	}
+    else if (selection == 'm')
+    {
+        setMenu(Menu::Main);
+        return;
+    }
 	else
 		warnSelectionInvalid(selection);
 
 	// walk into wall is not allowed
 	currRoom->checkDirectionVaild(selection);
-	if (currRoom->getDoor(selection) == nullptr)
+	if (currRoom->existEntranceOrExit())
+	{
+		if (currRoom->getEntranceDirection() == selection)
+		{
+			Game::instance()->exitDungeon();
+			_display << "After exploring *" << Game::instance()->getSuccessTimes() << "* levels, you run out of the cave as quickly as your legs can carry you." << std::endl;
+			_display << "As you emerge from the darkness you are startled by the bright light and pause while your eyes adjust." << std::endl;
+			setMenu(Menu::Main);
+			return;
+		}
+		else if (currRoom->getExitDirection() == selection)
+		{
+			Game::instance()->exitLevel();
+			setMenu(Menu::Main);
+			return;
+		}
+	}
+    if (currRoom->getDoor(selection) == nullptr)
 		_display << "out of the darkness looms a jagged formation of rock: you cannot go that way" << std::endl;
-	else if (currRoom->getEntranceDirection() == selection)
+	else
 	{
-		Game::instance()->exitDungeon();
-		setMenu(Menu::Main);
-		return;
+		// navigation
+		Game::instance()->navigate(selection);
+		_display << "You pass through the doorway..." << std::endl;
 	}
-	else if (currRoom->getExitDirection() == selection)
-	{
-		Game::instance()->exitLevel();
-		setMenu(Menu::Main);
-		return;
-	}
-
-	// navigation
-	Game::instance()->navigate(selection);
-	_display << "You pass through the doorway..." << std::endl;
 }
 
 void MenuInterface::combatMenu() const {
@@ -477,7 +513,7 @@ void MenuInterface::leaveDungeon() {
 
 bool MenuInterface::confirm(const std::string &confirmationPrompt) const {
   // TODO: implement this member function.
-	_display << "You have successfully completed *0* levels so far." << std::endl;
+	_display << "You have successfully completed *" << Game::instance()->getSuccessTimes() << "* levels so far." << std::endl;
 	_display << confirmationPrompt << " (y/n)" << std::endl;
 	char selection = getCharacterInput();
 	return selection == 'y';

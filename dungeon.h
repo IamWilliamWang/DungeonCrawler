@@ -22,7 +22,7 @@ public:
   virtual ~Dungeon() = default;
 
 private:
-  int _anotherMember; //!< replace this with something real
+//  int _anotherMember; //!< replace this with something real
 
 
 /*-----------------------------------------------------------------------------------

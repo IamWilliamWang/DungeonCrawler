@@ -158,7 +158,10 @@ public:
    * has completely left the dungeon, ready for a completely new dungeon
    * to be created.
    */
-  void exitDungeon(){}
+  void exitDungeon()
+  {
+	  
+  }
 
   /**
    * @brief doActionRound Performs a player action (weapon attack, item use,
@@ -208,6 +211,11 @@ public:
   {
 	  _dungeon = dungeon;
 	  enterDungeon();
+  }
+
+  int getSuccessTimes()
+  {
+	  return _successCount;
   }
 
   static std::shared_ptr<Game> instance()
