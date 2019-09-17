@@ -6,86 +6,68 @@
 namespace core {
 namespace weapons {
 /**
- * @brief TODO The Enchantment class
- */
-class Enchantment
-{
-public:
-	Enchantment()
-	{
-	}
-
-	std::string getEnchantmentType()
-	{
-		return _enchantmentType;
-	}
-protected:
-	std::string _enchantmentType;
-};
-
-/**
  * @brief TODO The Weapon class
  */
 class Weapon
 {
 public:
 	Weapon() {}
-	Weapon(std::string &name, std::string &description) : _name(name),_description(description){}
+	Weapon(std::string &name, std::string &description) : _name(name), _description(description) {}
 	Weapon(std::string &name, std::string &description, std::string &longDescription) : _name(name), _description(description), _longDescription(longDescription) {}
 	Weapon(std::string &name, std::string &description, std::string &longDescription, int minDamage, int maxDamage)
-		: _name(name), _description(description), _longDescription(longDescription), _minDamage(minDamage), _maxDamage(maxDamage){}
-    /**
-     * @brief getName 获得名字
-     * @return
-     */
-    std::string getName()
+		: _name(name), _description(description), _longDescription(longDescription), _minDamage(minDamage), _maxDamage(maxDamage) {}
+	/**
+		* @brief getName 获得名字
+		* @return
+		*/
+	std::string getName()
 	{
 		return _name;
 	}
-    /**
-     * @brief setName 设定名字
-     * @param name
-     */
+	/**
+		* @brief setName 设定名字
+		* @param name
+		*/
 	void setName(std::string name)
 	{
 		_name = name;
 	}
-    /**
-     * @brief getDescription
-     * @return
-     */
+	/**
+		* @brief getDescription
+		* @return
+		*/
 	std::string getDescription()
 	{
 		return _description;
 	}
-    /**
-     * @brief setDescription
-     * @param description
-     */
+	/**
+		* @brief setDescription
+		* @param description
+		*/
 	void setDescription(std::string description)
 	{
 		_description = description;
 	}
-    /**
-     * @brief getLongDescription
-     * @return
-     */
+	/**
+		* @brief getLongDescription
+		* @return
+		*/
 	std::string getLongDescription()
 	{
 		return _longDescription;
 	}
-    /**
-     * @brief setLongDescription
-     * @param longDescription
-     */
+	/**
+		* @brief setLongDescription
+		* @param longDescription
+		*/
 	void setLongDescription(std::string longDescription)
 	{
 		_longDescription = longDescription;
 	}
-    /**
-     * @brief getDamageRange 获得武器的最小攻击力和最大攻击力
-     * @return
-     */
+	/**
+		* @brief getDamageRange 获得武器的最小攻击力和最大攻击力
+		* @return
+		*/
 	int* getDamageRange()
 	{
 		int* range = new int[2];
@@ -94,31 +76,35 @@ public:
 		range[1] = _maxDamage + enchantmentDamage;
 		return range;
 	}
-    /**
-     * @brief setDamageRange 设置武器的最小攻击力和最大攻击力
-     * @param minDamage
-     * @param maxDamage
-     */
+	/**
+		* @brief setDamageRange 设置武器的最小攻击力和最大攻击力
+		* @param minDamage
+		* @param maxDamage
+		*/
 	void setDamageRange(int minDamage, int maxDamage)
 	{
 		_minDamage = minDamage;
 		_maxDamage = maxDamage;
 	}
-    /**
-     * @brief getSpecialAbilityDescription
-     * @return
-     */
+	/**
+		* @brief getSpecialAbilityDescription
+		* @return
+		*/
 	std::string getSpecialAbilityDescription()
 	{
 		return _specialAbilityDescription;
 	}
-    /**
-     * @brief setSpecialAbilityDescription
-     * @param specialAbilityDescription
-     */
+	/**
+		* @brief setSpecialAbilityDescription
+		* @param specialAbilityDescription
+		*/
 	void setSpecialAbilityDescription(std::string specialAbilityDescription)
 	{
 		_specialAbilityDescription = specialAbilityDescription;
+	}
+	auto getPrefixEnchantment()
+	{
+		return _prefixEnchantment;
 	}
 	auto getSuffixEnchantment()
 	{
@@ -149,6 +135,24 @@ private:
 	std::string _specialAbilityDescription = "";
 	std::shared_ptr<Enchantment> _prefixEnchantment;
 	std::shared_ptr<Enchantment> _suffixEnchantment;
+};
+
+/**
+ * @brief TODO The Enchantment class
+ */
+class Enchantment
+{
+public:
+	Enchantment()
+	{
+	}
+
+	std::string getEnchantmentType()
+	{
+		return _enchantmentType;
+	}
+protected:
+	std::string _enchantmentType;
 };
 
 /**
@@ -308,7 +312,6 @@ public:
 		creature->setHealthPoint(creature->getHealthPoint() + damagedThisRound / 2);
 	}
 };
-
 } // namespace items
 } // namespace core
 

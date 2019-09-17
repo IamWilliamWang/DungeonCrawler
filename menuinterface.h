@@ -143,7 +143,7 @@ private:
    * @brief switchToCharacterDetails If a Character is available, transition to the
    * character details menu, otherwise dislay an error and return to the previous menu.
    */
-  void switchToCharacterMenu();
+  void switchToCharacterMenu(Menu retMenuStatus);
 
   /**
    * @brief quitGame displays the number of levels completed, if possible, before
@@ -165,7 +165,7 @@ private:
   /**
    * @brief displayWeaponDetails Output the detailed weapon info to the user
    */
-  void displayWeaponDetails();
+  void displayWeaponDetails(std::string title, std::shared_ptr<weapons::Weapon> weapon);
 
   void displayChamber() const;
 
@@ -229,7 +229,7 @@ private:
    */
   bool confirm(const std::string &confirmationPrompt) const;
 
-  void toLower(char &ch);
+  char toLower(const char ch);
 
   // The functions below should not be modified.
 

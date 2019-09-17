@@ -160,7 +160,9 @@ public:
    */
   void exitDungeon()
   {
-	  
+	  setPlayer(nullptr);
+	  setDungeon(nullptr);
+	  _dungeonLevel = 1;
   }
 
   bool canDodge(std::shared_ptr<creatures::Creature> creature)

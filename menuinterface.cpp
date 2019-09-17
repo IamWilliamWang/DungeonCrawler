@@ -132,8 +132,17 @@ bool MenuInterface::processMainMenu(char selection) {
 }
 
 void MenuInterface::playGame() {
-	createCharacter();
-	setMenu(Menu::DungeonSelect);
+	if (Game::instance()->getSuccessTimes() == 0)
+	{
+		createCharacter();
+		setMenu(Menu::DungeonSelect);
+	}
+	else
+	{
+		Game::instance()->createDungeon("BasicDungeon");
+		Game::instance()->enterDungeon();
+		setMenu(Menu::Action);
+	}
 }
 
 void MenuInterface::createCharacter() {
@@ -195,7 +204,6 @@ void MenuInterface::createCharacter() {
 }
 
 void MenuInterface::dungeonTypeMenu() const {
-	// TODO: implement this member function.
 	_display << "While roaming the country side you encounter a strange fork in the road." << std::endl;
 	_display << "To the left lies a dark cave, the foul stench of rotting flesh emanates from it." << std::endl;
 	_display << "To the right is a mysterious tower, a strange magical energy lights the path." << std::endl;
@@ -206,8 +214,10 @@ void MenuInterface::dungeonTypeMenu() const {
 }
 
 void MenuInterface::processDungeonType(char selection) {
-	// TODO: implement this member function.
-	toLower(selection);
+	if (_currentMenu != Menu::DungeonSelect)
+		return;
+
+	selection = toLower(selection);
 	bool createSuccess = false;
 	if (selection == 'b')
 		createSuccess = Game::instance()->createDungeon("BasicDungeon");
@@ -232,55 +242,53 @@ void MenuInterface::processDungeonType(char selection) {
 	setMenu(Menu::Action);
 }
 
-void MenuInterface::switchToCharacterMenu() {
-  // TODO: implement this member function
+void MenuInterface::switchToCharacterMenu(Menu retMenuStatus = Menu::Main) {
   setMenu(Menu::CharacterDetails);
   processCharacterDetails('c');
-  setMenu(Menu::Main);
+  setMenu(retMenuStatus);
 }
 
 bool MenuInterface::quitGame() const {
-  // TODO: complete implementation
-  return !confirm("Are you sure you want to quit?");
+	auto exit = confirm("Are you sure you want to quit?");
+	if (exit == false)
+		Game::instance()->exitDungeon();
+	return !exit;
 }
 
 void MenuInterface::characterDetailsMenu() const {
-  // TODO: implement this member function.
-  _display << "TODO: any key will return to main menu" << std::endl;
+
 }
 
 void MenuInterface::processCharacterDetails(char selection) {
-	// TODO: implement this member function.
-	toLower(selection);
-	if (_currentMenu == Menu::CharacterDetails && selection == 'c') 
+	if (_currentMenu != Menu::CharacterDetails || selection != 'c')
+		return;
+
+	selection = toLower(selection);
+	
+	auto character = Game::instance()->player();
+	if (character == nullptr)
+		_display << "There is currently no character to display." << std::endl;
+	else
 	{
-		auto character = Game::instance()->player();
-		if (character == nullptr)
-			_display << "There is currently no character to display." << std::endl;
-		else
-		{
-            _display << std::endl;
-			_display << "***Character Summary***" << std::endl;
-			_display << character->name() << std::endl;
-			printf("Strength:%10d\n", character->getStrength());
-			printf("Dexterity:%9d\n", character->getDexterity());
-			printf("Wisdom:%12d\n", character->getWisdom());
-			printf("Health:%7d / %2d\n", character->getHealthPoint(), character->getMaxHealthPoint());
-			int* characterDamageWeaponed = character->damageWeaponed();
-			printf("Damage:%7d - %2d\n", characterDamageWeaponed[0], characterDamageWeaponed[1]);
-			delete characterDamageWeaponed; // release the memory.
-			printf("Dodge:%12d%%\n", character->dodgeChance());
-			_display << "Weapon:    " << character->getWeapon()->getDescription() << std::endl;
-		}
+        _display << std::endl;
+		_display << "***Character Summary***" << std::endl;
+		_display << character->name() << std::endl;
+		printf("Strength:%10d\n", character->getStrength());
+		printf("Dexterity:%9d\n", character->getDexterity());
+		printf("Wisdom:%12d\n", character->getWisdom());
+		printf("Health:%7d / %2d\n", character->getHealthPoint(), character->getMaxHealthPoint());
+		int* characterDamageWeaponed = character->damageWeaponed();
+		printf("Damage:%7d - %2d\n", characterDamageWeaponed[0], characterDamageWeaponed[1]);
+		delete characterDamageWeaponed; // release the memory.
+		printf("Dodge:%12d%%\n", character->dodgeChance());
+		_display << "Weapon:    " << character->getWeapon()->getDescription() << std::endl;
 	}
 }
 
-void MenuInterface::displayWeaponDetails() {
-  // TODO: implement this member function
-	auto character = Game::instance()->player();
-	auto weapon = character->getWeapon();
+void MenuInterface::displayWeaponDetails(std::string title = "", std::shared_ptr<weapons::Weapon> weapon = Game::instance()->player()->getWeapon()) {
     _display << std::endl;
-    _display << "***Weapon Summary***" << std::endl;
+	if (title != "")
+	    _display << title << std::endl;
 	_display << "\"" << weapon->getName() << "\"" << std::endl;
 	int* damages = weapon->getDamageRange();
 	printf("Min. Damage:%7d\n", damages[0]);
@@ -298,7 +306,6 @@ void MenuInterface::displayChamber() const {
 }
 
 void MenuInterface::actionMenu() const {
-	// TODO: implement this member function.
 	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
 	displayChamber();
 	// initialize output lines.
@@ -385,14 +392,21 @@ void MenuInterface::actionMenu() const {
 	_display << " Go (s)outh" << std::endl;
 	_display << " Go (w)est" << std::endl;
 	_display << " Go (b)ack the way you came" << std::endl;
+	if (currRoom->getCreature() == nullptr && currRoom->getWeapon() != nullptr)
+	{
+		_display << " (p)ick-up item." << std::endl;
+		_display << " c(o)mpare items." << std::endl;
+	}
 	_display << " use specia(l) ability" << std::endl;
 	_display << " View your (c)haracter stats" << std::endl;
 	_display << " Return to the main (m)enu" << std::endl;
 }
 
 void MenuInterface::processAction(char selection) {
-	// TODO: implement this member function.
-	toLower(selection);
+	if (_currentMenu != Menu::Action)
+		return;
+
+	selection = toLower(selection);
 	// get selection
 	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
 	if (selection == 'n')
@@ -414,6 +428,14 @@ void MenuInterface::processAction(char selection) {
 		_display << "You pass through the doorway..." << std::endl;
 		return;
 	}
+	else if (selection == 'p')
+	{
+		pickupWeapon();
+	}
+	else if (selection == 'o')
+	{
+		compareWeapons();
+	}
 	else if (selection == 'l')
     {
 		useSpecialAbility();
@@ -421,8 +443,7 @@ void MenuInterface::processAction(char selection) {
     }
 	else if (selection == 'c')
 	{
-        setMenu(Menu::CharacterDetails);
-		processCharacterDetails('c');
+		switchToCharacterMenu(Menu::Action);
         setMenu(Menu::Action);
         _display << std::endl;
 		_display << "What would you like to do?" << std::endl;
@@ -430,7 +451,7 @@ void MenuInterface::processAction(char selection) {
         _display << " Return to the previous (m)enu" << std::endl;
 		auto selection = getCharacterInput();
         if (selection == 'w') {
-			displayWeaponDetails();
+			displayWeaponDetails("***Weapon Summary***");
             return;
         }
 		else if (selection == 'm')
@@ -440,7 +461,7 @@ void MenuInterface::processAction(char selection) {
 	}
     else if (selection == 'm')
     {
-        setMenu(Menu::Main);
+		leaveDungeon();
         return;
     }
 	else
@@ -461,6 +482,7 @@ void MenuInterface::processAction(char selection) {
 		else if (currRoom->getExitDirection() == selection)
 		{
 			Game::instance()->exitLevel();
+			_display << "You take the stairs, what awaits you do not know..." << std::endl;
 			setMenu(Menu::Main);
 			return;
 		}
@@ -479,7 +501,6 @@ void MenuInterface::processAction(char selection) {
 }
 
 void MenuInterface::combatMenu() const {
-	// TODO: implement this member function.
 	auto currRoom = Game::instance()->currentRoom();
 	auto currCreature = currRoom->getCreature();
 	displayChamber();
@@ -494,8 +515,10 @@ void MenuInterface::combatMenu() const {
 }
 
 void MenuInterface::processCombatAction(char selection) {
-	// TODO: implement this member function.
-	toLower(selection);
+	if (_currentMenu != Menu::Combat)
+		return;
+
+	selection = toLower(selection);
 	if (selection == 'b')
 	{
 		if (!Game::instance()->navigateBack())
@@ -519,8 +542,7 @@ void MenuInterface::processCombatAction(char selection) {
 	}
 	else if (selection == 'c')
 	{
-		setMenu(Menu::CharacterDetails);
-		processCharacterDetails('c');
+		switchToCharacterMenu(Menu::Action);
 		setMenu(Menu::Action);
 		_display << std::endl;
 		_display << "What would you like to do?" << std::endl;
@@ -528,7 +550,7 @@ void MenuInterface::processCombatAction(char selection) {
 		_display << " Return to the previous (m)enu" << std::endl;
 		auto selection = getCharacterInput();
 		if (selection == 'w') {
-			displayWeaponDetails();
+			displayWeaponDetails("***Weapon Summary***");
 			return;
 		}
 		else if (selection == 'm')
@@ -538,7 +560,7 @@ void MenuInterface::processCombatAction(char selection) {
 	}
 	else if (selection == 'm')
 	{
-		setMenu(Menu::Main);
+		leaveDungeon();
 		return;
 	}
 	else 
@@ -552,11 +574,43 @@ void MenuInterface::doNavigate(char navigateDirection) {
 
 
 void MenuInterface::pickupWeapon() {
-  // TODO: implement this member function
+	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+	_display << "This action will drop your current item. Are you sure? (y/n)" << std::endl;
+	char selection = toLower(getCharacterInput());
+	if (selection == 'y')
+	{
+		auto newWeapon = currRoom->getWeapon();
+		auto prefixEnchantment = newWeapon->getPrefixEnchantment();
+		auto suffixEnchantment = newWeapon->getSuffixEnchantment();
+		_display << "You picked up a ";
+		if (prefixEnchantment != nullptr)
+		{
+			if (prefixEnchantment->getEnchantmentType() == "FlameEnchantment")
+				_display << "Flaming ";
+			else if (prefixEnchantment->getEnchantmentType() == "ElectricityEnchantment")
+				_display << "Electrified ";
+		}
+		_display << newWeapon->getName() << " ";
+		if (suffixEnchantment != nullptr)
+		{
+			if (suffixEnchantment->getEnchantmentType() == "HealingEnchantment")
+				_display << "of Healing";
+			else if (suffixEnchantment->getEnchantmentType() == "VampirismEnchantment")
+				_display << "of Vampirism";
+		}
+		_display << std::endl;
+
+		Game::instance()->player()->setWeapon(newWeapon);
+		currRoom->setWeapon(nullptr);
+	}
 }
 
 void MenuInterface::compareWeapons() {
-  // TODO: implement this member function
+	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+	displayWeaponDetails("***Weapon Comparison***\n--Room", currRoom->getWeapon());
+	_display << std::endl;
+	displayWeaponDetails("--Equipped");
+	_display << std::endl;
 }
 
 void MenuInterface::doAttack() {
@@ -580,6 +634,22 @@ void MenuInterface::doAttack() {
 	if (Game::instance()->player()->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
 		_display << "Due to your Vampirism enchantment, you have received " << damagesHappened[1] / 2 << " healing points." << std::endl;
 	_display << std::endl;
+
+	if (!Game::instance()->player()->isAlive())
+	{
+		_display << "You died. Game Over Man!" << std::endl << std::endl;
+		_display << "You died after exploring *" << Game::instance()->getSuccessTimes() << "* levels" << std::endl;
+		setMenu(Menu::Main);
+		leaveDungeon();
+	}
+	else if (!Game::instance()->getBasicDungeon()->getNowRoom()->getCreature()->isAlive())
+	{
+		_display << "You win the Fight!" << std::endl;
+		_display << "Digging through the remains of the creature you find something interesting." << std::endl;
+		auto room = Game::instance()->getBasicDungeon()->getNowRoom();
+		room->setWeapon(room->getCreature()->getWeapon());
+		room->setCreature(nullptr);
+	}
 }
 
 void MenuInterface::useSpecialAbility() {
@@ -594,19 +664,23 @@ void MenuInterface::useSpecialAbility() {
 }
 
 void MenuInterface::leaveDungeon() {
-  // TODO: implement this member function
+	Game::instance()->exitDungeon();
+	_display << "After exploring *" << Game::instance()->getSuccessTimes() << "* levels, you run out of the cave as quickly as your legs can carry you." << std::endl;
+	_display << "As you emerge from the darkness you are startled by the bright light and pause while your eyes adjust." << std::endl;
+	setMenu(Menu::Main);
 }
 
 bool MenuInterface::confirm(const std::string &confirmationPrompt) const {
-  // TODO: implement this member function.
 	_display << "You have successfully completed *" << Game::instance()->getSuccessTimes() << "* levels so far." << std::endl;
 	_display << confirmationPrompt << " (y/n)" << std::endl;
 	char selection = getCharacterInput();
 	return selection == 'y';
 }
 
-void MenuInterface::toLower(char &ch)
+char MenuInterface::toLower(const char ch)
 {
-	if (ch >= 'A' && ch <= 'Z')
-		ch -= 'a' - 'A';
+	char c = ch;
+	if (c >= 'A' && c <= 'Z')
+		c -= 'a' - 'A';
+	return c;
 }
