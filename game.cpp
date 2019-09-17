@@ -27,7 +27,12 @@ std::shared_ptr<dungeon::BasicDungeon> Game::getBasicDungeon() // 便捷函数
 	return std::static_pointer_cast<dungeon::BasicDungeon>(_dungeon);
 }
 
-bool Game::createDungeon(std::string dungeonType = "BasicDungeon")
+std::shared_ptr<dungeon::Room> Game::currentRoom()
+{
+    return getBasicDungeon()->getNowRoom();
+}
+
+bool Game::createDungeon(std::string dungeonType)
 {
 	std::shared_ptr<dungeon::DungeonBuilder> builder;
 	if (dungeonType == "BasicDungeon")
@@ -48,11 +53,6 @@ bool Game::enterDungeon()
 		return false;
 	getBasicDungeon()->setNowRoom(entranceRoom);
 	return true;
-}
-
-auto Game::currentRoom()
-{
-	return getBasicDungeon()->getNowRoom();
 }
 
 bool Game::navigate(char direction)
@@ -108,7 +108,8 @@ void* Game::doActionRound(char selection)
 			if (creature->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
 			{
 				auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(creature->getWeapon()->getSuffixEnchantment());
-				vampirismEnchantment->doHeal(creature, damage);
+//				vampirismEnchantment->doHeal(creature, damage);
+                creature->setHealthPoint(creature->getHealthPoint() + vampirismEnchantment->getHealHealthPoints(damage));
 			}
 			damagesHappened[0] = damage;
 		}
@@ -120,7 +121,8 @@ void* Game::doActionRound(char selection)
 			if (player->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
 			{
 				auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(player->getWeapon()->getSuffixEnchantment());
-				vampirismEnchantment->doHeal(player, damage);
+//				vampirismEnchantment->doHeal(player, damage);
+                player->setHealthPoint(player->getHealthPoint() + vampirismEnchantment->getHealHealthPoints(damage));
 			}
 			damagesHappened[1] = damage;
 		}
@@ -139,12 +141,13 @@ void* Game::doActionRound(char selection)
 			{
 				auto healingEnchantment = std::static_pointer_cast<weapons::HealingEnchantment>(playerSuffixEnchantment);
 				//healingEnchantment->doHeal(player);
-				healingEnchantment->getHealHealthPoints
+                player->setHealthPoint(player->getHealthPoint() + healingEnchantment->getHealHealthPoints());
 				*done = true;
 			}
 		}
 		return done;
 	}
+    return nullptr;
 }
 
 void Game::setDungeon(std::shared_ptr<dungeon::Dungeon> dungeon)
@@ -158,7 +161,7 @@ int Game::getSuccessTimes()
 	return _dungeonLevel - 1;
 }
 
-static std::shared_ptr<Game> Game::instance()
+std::shared_ptr<Game> Game::instance()
 {
 	return _game;
 }

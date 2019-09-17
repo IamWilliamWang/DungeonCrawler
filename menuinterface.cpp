@@ -200,7 +200,7 @@ void MenuInterface::createCharacter() {
 	if (!myCharacter->setAttribute(strength+1, dexterity+1, wisdom+1))
 		_display << "Create player failed!" << std::endl;
     Game::instance()->setPlayer(myCharacter);
-	switchToCharacterMenu();
+    switchToCharacterMenu();
 }
 
 void MenuInterface::dungeonTypeMenu() const {
@@ -242,7 +242,7 @@ void MenuInterface::processDungeonType(char selection) {
 	setMenu(Menu::Action);
 }
 
-void MenuInterface::switchToCharacterMenu(Menu retMenuStatus = Menu::Main) {
+void MenuInterface::switchToCharacterMenu(Menu retMenuStatus) {
   setMenu(Menu::CharacterDetails);
   processCharacterDetails('c');
   setMenu(retMenuStatus);

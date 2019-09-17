@@ -90,7 +90,7 @@ public:
 	/**
 	 * @brief getWeapon 获得武器
 	 */
-	auto getWeapon();
+    std::shared_ptr<core::weapons::Weapon> getWeapon();
 
 	/**
 	 * @brief setWeapon 设置武器

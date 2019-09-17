@@ -21,7 +21,7 @@ std::shared_ptr<Room> BasicDungeon::getEntranceRoom()
 	return nullptr;
 }
 
-auto BasicDungeon::getNowRoom()
+std::shared_ptr<Room> BasicDungeon::getNowRoom()
 {
 	return _nowRoom;
 }

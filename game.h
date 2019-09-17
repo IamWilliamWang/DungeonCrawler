@@ -7,6 +7,7 @@
 #include <ctime>
 #include "character.h"
 #include "dungeon.h"
+#include "basicdungeon.h"
 #include "dungeonbuilder.h"
 
 namespace core {
@@ -24,6 +25,10 @@ namespace core {
  * maintain and update the game state, so any member functions you implement must be
  * in fulfillment of that responsibility.
  *-----------------------------------------------------------------------------------*/
+namespace dungeon {
+    class Dungeon; // predeclaration.
+    class BasicDungeon;
+}
 
 /**
  * @brief TODO The Game class
@@ -72,7 +77,7 @@ public:
     * @brief currentRoom Answers the current room the player's character is in.
     * @return the Room the player is in
     */
-	auto currentRoom();
+    std::shared_ptr<dungeon::Room> currentRoom();
 
    /**
     * @brief navigate Move the player's character to a neighbouring

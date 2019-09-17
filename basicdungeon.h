@@ -1,5 +1,6 @@
 #ifndef BASICDUNGEON_H
 #define BASICDUNGEON_H
+#include "dungeon.h"
 #include "commondungeon.h"
 
 namespace core {
@@ -24,7 +25,7 @@ public:
     /**
      * @brief getNowRoom 获得当前的Room
      */
-	auto getNowRoom();
+    std::shared_ptr<Room> getNowRoom();
 
     /**
      * @brief setNowRoom 设置当前的Room

@@ -15,11 +15,23 @@ Weapon::Weapon()
 
 }
 
-Weapon::Weapon(std::string &name, std::string &description) : _name(name), _description(description) {}
-Weapon::Weapon(std::string &name, std::string &description, std::string &longDescription) : _name(name), _description(description), _longDescription(longDescription) {}
+Weapon::Weapon(std::string &name, std::string &description)
+    : _name(name), _description(description)
+{
+
+}
+
+Weapon::Weapon(std::string &name, std::string &description, std::string &longDescription)
+    : _name(name), _description(description), _longDescription(longDescription)
+{
+
+}
 
 Weapon::Weapon(std::string &name, std::string &description, std::string &longDescription, int minDamage, int maxDamage)
-	: _name(name), _description(description), _longDescription(longDescription), _minDamage(minDamage), _maxDamage(maxDamage) {}
+    : _name(name), _description(description), _longDescription(longDescription), _minDamage(minDamage), _maxDamage(maxDamage)
+{
+
+}
 
 std::string Weapon::getName()
 {
@@ -75,11 +87,11 @@ void Weapon::setSpecialAbilityDescription(std::string specialAbilityDescription)
 {
 	_specialAbilityDescription = specialAbilityDescription;
 }
-auto Weapon::getPrefixEnchantment()
+std::shared_ptr<Enchantment> Weapon::getPrefixEnchantment()
 {
 	return _prefixEnchantment;
 }
-auto Weapon::getSuffixEnchantment()
+std::shared_ptr<Enchantment> Weapon::getSuffixEnchantment()
 {
 	return _suffixEnchantment;
 }
@@ -99,6 +111,7 @@ int Weapon::getEnchantmentDamage()
 			return electricityEnchantment->getExtraDamage();
 		}
 	}
+    return 0;
 }
 
 Fists::Fists()

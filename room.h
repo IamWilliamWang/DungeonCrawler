@@ -65,7 +65,7 @@ public:
 	 * @brief getDoorDirections findDoorDirections便捷函数，开发结束时会删除
 	 * @return
 	 */
-	auto getDoorDirections();
+    std::list<char> getDoorDirections();
 
     /**
      * @brief existEntranceOrExit 如果存在入口或者出口
@@ -103,16 +103,13 @@ public:
 
 	bool createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons);
 
-	auto getCreature();
+    std::shared_ptr<core::creatures::Creature> getCreature();
 
 	void setCreature(std::shared_ptr<core::creatures::Creature> creature);
 
-	auto getWeapon();
+    std::shared_ptr<core::weapons::Weapon> getWeapon();
 
-	void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon)
-	{
-		_weapon = weapon;
-	}
+    void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon);
 
 private:
 	/**

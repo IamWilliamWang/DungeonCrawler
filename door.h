@@ -6,6 +6,8 @@
 namespace core {
 namespace dungeon {
 
+class Room; //predeclaration
+
 /**
  * @brief TODO The Door class
  */

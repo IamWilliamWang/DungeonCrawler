@@ -54,7 +54,7 @@ std::list<char> Room::findDoorDirections()
 	return directionList;
 }
 
-auto Room::getDoorDirections()
+std::list<char> Room::getDoorDirections()
 {
 	return findDoorDirections();
 }
@@ -101,17 +101,17 @@ bool Room::checkDirectionVaild(char& direction)
 
 bool Room::createCreature(std::vector<std::shared_ptr<core::creatures::Creature>> possibleCreatures)
 {
-	_creature = possibleCreatures.at(Game::randomIntBetweenEx(0, possibleCreatures.size()));
+    _creature = possibleCreatures.at(Game::instance()->randomIntBetweenEx(0, possibleCreatures.size()));
 	return true;
 }
 
 bool Room::createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons)
 {
-	_weapon = possibleWeapons.at(Game::randomIntBetweenEx(0, possibleWeapons.size()));
+    _weapon = possibleWeapons.at(Game::instance()->randomIntBetweenEx(0, possibleWeapons.size()));
 	return true;
 }
 
-auto Room::getCreature()
+std::shared_ptr<core::creatures::Creature> Room::getCreature()
 {
 	return _creature;
 }
@@ -121,7 +121,7 @@ void Room::setCreature(std::shared_ptr<core::creatures::Creature> creature)
 	_creature = creature;
 }
 
-auto Room::getWeapon()
+std::shared_ptr<core::weapons::Weapon> Room::getWeapon()
 {
 	if (_creature == nullptr) // weapon only
 		return _weapon;

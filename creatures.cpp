@@ -99,7 +99,7 @@ std::string Creature::getDescription()
 	return _description;
 }
 
-auto Creature::getWeapon()
+std::shared_ptr<core::weapons::Weapon> Creature::getWeapon()
 {
 	return _weapon;
 }

@@ -143,7 +143,7 @@ private:
    * @brief switchToCharacterDetails If a Character is available, transition to the
    * character details menu, otherwise dislay an error and return to the previous menu.
    */
-  void switchToCharacterMenu(Menu retMenuStatus);
+  void switchToCharacterMenu(Menu retMenuStatus = Menu::Main);
 
   /**
    * @brief quitGame displays the number of levels completed, if possible, before

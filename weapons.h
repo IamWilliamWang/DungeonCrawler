@@ -55,7 +55,7 @@ class VampirismEnchantment : public Enchantment
 public:
 	VampirismEnchantment();
 	//void doHeal(std::shared_ptr<core::Character::Creature> creature, int damagedThisRound);
-	int getHealHealthPoints();
+    int getHealHealthPoints(int damagedThisRound);
 };
 
 /**
@@ -129,9 +129,9 @@ public:
 		*/
     void setSpecialAbilityDescription(std::string specialAbilityDescription);
 
-	auto getPrefixEnchantment();
+    std::shared_ptr<Enchantment> getPrefixEnchantment();
 
-	auto getSuffixEnchantment();
+    std::shared_ptr<Enchantment> getSuffixEnchantment();
 
 private:
 	int getEnchantmentDamage();

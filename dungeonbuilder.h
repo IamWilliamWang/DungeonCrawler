@@ -8,6 +8,8 @@
 namespace core {
 namespace dungeon {
 
+class Dungeon;
+
 class DungeonBuilder
 {
 public:
