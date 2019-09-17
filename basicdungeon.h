@@ -13,65 +13,35 @@ namespace dungeon {
 class BasicDungeon : public Dungeon
 {
 public:
-    BasicDungeon(){}
+	BasicDungeon();
+
     /**
      * @brief getEntranceRoom 获得牢笼的开始Room
      * @return
      */
-    std::shared_ptr<Room> getEntranceRoom()
-    {
-        for(auto &pair : _rooms)
-        {
-            if(pair.second->getEntranceDirection() != '\0')
-                return pair.second;
-        }
-        return nullptr;
-    }
+	std::shared_ptr<Room> getEntranceRoom();
+
     /**
      * @brief getNowRoom 获得当前的Room
      */
-	auto getNowRoom()
-	{
-		return _nowRoom;
-	}
+	auto getNowRoom();
+
     /**
      * @brief setNowRoom 设置当前的Room
      * @param nowRoom
      */
-	void setNowRoom(std::shared_ptr<dungeon::Room> nowRoom)
-	{
-		_nowRoom = nowRoom;
-		_path.emplace_back(nowRoom);
-	}
+	void setNowRoom(std::shared_ptr<Room> nowRoom);
+
     /**
      * @brief path 获得走过路径上第几个Room，index可正可负
      * @param index
      * @return
      */
-	std::shared_ptr<dungeon::Room> path(int index)
-	{
-		if (index < 0)
-		{
-			auto it = _path.rbegin();
-			for (; index < -1 && it!=_path.rend(); index++)
-				it++;
-			if (it == _path.rend())
-				return nullptr;
-			return *it;
-		}
-		else
-		{
-			auto it = _path.begin();
-			for (; index > 0 && it != _path.end(); index--)
-				it++;
-			if (it == _path.end())
-				return nullptr;
-			return *it;
-        }
-	}
+	std::shared_ptr<Room> path(int index);
+
 private:
-	std::list<std::shared_ptr<dungeon::Room>> _path;
-	std::shared_ptr<dungeon::Room> _nowRoom;
+	std::list<std::shared_ptr<Room>> _path;
+	std::shared_ptr<Room> _nowRoom;
 };
 
 /**
@@ -80,7 +50,7 @@ private:
 class RockChamber : public Chamber
 {
 public:
-    RockChamber(){}
+	RockChamber();
 };
 
 /**
@@ -89,7 +59,7 @@ public:
 class QuartzChamber : public Chamber
 {
 public:
-    QuartzChamber(){}
+	QuartzChamber();
 };
 
 /**
@@ -98,7 +68,7 @@ public:
 class RockWall
 {
 public:
-    RockWall(){}
+	RockWall();
 };
 
 } // namespace dungeon

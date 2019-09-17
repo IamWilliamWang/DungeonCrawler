@@ -6,7 +6,6 @@
 namespace core {
 
 // TODO: define Character class.
-// There is some example code in here, but it can be modified if desired.
 
 /**
  * @brief TODO The Complete the Character class, following is just a small example
@@ -14,15 +13,12 @@ namespace core {
 class Character : public creatures::Creature
 {
 public:
-    Character(const std::string &name) : creatures::Creature(name) { }
+	Character(const std::string &name);
 private:
 	
 };
 
 } // namespace core
 
-//std::ostream& operator<<(std::ostream &stream, core::Character &character) {
-//  stream << character.name();
-//  return stream;
-//}
+//std::ostream& operator<<(std::ostream &stream, core::Character &character);
 #endif // CHARACTER_H

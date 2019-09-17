@@ -10,6 +10,7 @@
 #include "door.h"
 #include "weapons.h"
 #include "creatures.h"
+#include "game.h"
 
 namespace core {
 namespace dungeon {
@@ -17,23 +18,19 @@ namespace dungeon {
 class Wall;
 class Door; //predeclaration
 
-#define NORTH 'N'
-#define SOUTH 'S'
-#define WEST 'W'
-#define EAST 'E'
 /**
  * @brief TODO The Room class
  */
 class Room
 {
 public:
-    Room(int id) : _id(id){}
+	Room(int id);
 
 	/**
 	* @brief id Returns the unique integer id of the Room.
 	* @return the unique id
 	*/
-	int id() { return _id; }
+	int id();
 
     /**
      * @brief addWall 给Room的某个方向增加一堵墙
@@ -41,14 +38,7 @@ public:
      * @param wall
      * @return
      */
-	bool addWall(char direction, std::shared_ptr<Wall> wall = std::make_shared<Wall>())
-    {
-        if(!checkDirectionVaild(direction))
-            return false;
-
-        _walls[direction] = wall;
-        return true;
-    }
+	bool addWall(char direction, std::shared_ptr<Wall> wall = std::make_shared<Wall>());
 
     /**
      * @brief addDoor 给Room的某个方向增加一扇门
@@ -56,167 +46,88 @@ public:
      * @param door
      * @return
      */
-    bool addDoor(char direction, std::shared_ptr<Door> door)
-    {
-        if(!checkDirectionVaild(direction))
-            return false;
-
-        _doors[direction] = door;
-        return true;
-    }
+	bool addDoor(char direction, std::shared_ptr<Door> door);
 
     /**
      * @brief getDoor 获得Room特定位置上的门
      * @param direction
      * @return
      */
-	std::shared_ptr<dungeon::Door> getDoor(char direction)
-	{
-		if (!checkDirectionVaild(direction))
-			return nullptr;
-		if (_doors.count(direction) == 0)
-			return nullptr;
-		return _doors[direction];
-	}
+	std::shared_ptr<dungeon::Door> getDoor(char direction);
     
     /**
      * @brief findDoorDirections 找门所在的方向，返回char list
      * @return
      */
-	std::list<char> findDoorDirections()
-	{
-		std::list<char> directionList;
-		for (auto& pair : _doors)
-		{
-			directionList.emplace_back(pair.first);
-		}
-		return directionList;
-	}
+	std::list<char> findDoorDirections();
 
 	/**
 	 * @brief getDoorDirections findDoorDirections便捷函数，开发结束时会删除
 	 * @return
 	 */
-	auto getDoorDirections()
-	{
-		return findDoorDirections();
-	}
+	auto getDoorDirections();
 
     /**
      * @brief existEntranceOrExit 如果存在入口或者出口
      * @return
      */
-	bool existEntranceOrExit()
-	{
-		return getEntranceDirection() != '\0' || getExitDirection() != '\0';
-	}
+	bool existEntranceOrExit();
 
-	void addEntranceOrExit(char direction, bool addEntrance)
-	{
-        if (addEntrance)
-			this->setEntrance(direction);
-		else
-			this->setExit(direction);
-	}
+	void addEntranceOrExit(char direction, bool addEntrance);
 
     /**
      * @brief getEntranceDirection 获得入口所在的方向
      * @return
      */
-    char getEntranceDirection()
-    {
-        for(auto& pair : _entranceOrExit)
-        {
-            if(pair.second == "entrance")
-                return pair.first;
-        }
-        return '\0';
-    }
+	char getEntranceDirection();
+
     /**
      * @brief getExitDirection 获得出口所在的方向
      * @return
      */
-    char getExitDirection()
-    {
-        for(auto& pair : _entranceOrExit)
-        {
-            if(pair.second == "exit")
-                return pair.first;
-        }
-        return '\0';
-    }
+	char getExitDirection();
+
     /**
      * @brief checkDirection 检查方向char是否合法
      * @param direction
      * @return
      */
-	bool checkDirectionVaild(char& direction)
-	{
-		if (direction >= 'a' && direction <= 'z')
-			direction -= 'a' - 'A';
-		return (direction == NORTH || direction == SOUTH || direction == WEST || direction == EAST);
-	}
+	bool checkDirectionVaild(char& direction);
+
     /**
      * @brief createCreature 使用可能的生物列表随机创建生物
      * @param possibleCreatures
      * @return
      */
-	bool createCreature(std::vector<std::shared_ptr<core::creatures::Creature>> possibleCreatures)
-	{
-        _creature = possibleCreatures.at(Game::randomIntBetweenEx(0, possibleCreatures.size()));
-		return true;
-	}
-	bool createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons)
-	{
-		_weapon = possibleWeapons.at(Game::randomIntBetweenEx(0, possibleWeapons.size()));
-		return true;
-	}
-	auto getCreature()
-	{
-		return _creature;
-	}
-	void setCreature(std::shared_ptr<core::creatures::Creature> creature)
-	{
-		_creature = creature;
-	}
-	auto getWeapon()
-	{
-		if (_creature == nullptr) // weapon only
-			return _weapon;
-		else return _creature->getWeapon(); // creature takes a weapon
-	}
+	bool createCreature(std::vector<std::shared_ptr<core::creatures::Creature>> possibleCreatures);
+
+	bool createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons);
+
+	auto getCreature();
+
+	void setCreature(std::shared_ptr<core::creatures::Creature> creature);
+
+	auto getWeapon();
+
 	void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon)
 	{
 		_weapon = weapon;
 	}
+
 private:
 	/**
 	 * @brief setEntrance 设置Room的特定方向为牢笼入口
 	 * @param direction
 	 * @return
 	 */
-	bool setEntrance(char direction)
-	{
-		if (!checkDirectionVaild(direction))
-			return false;
-
-		_entranceOrExit[direction] = "entrance";
-		return true;
-	}
+	bool setEntrance(char direction);
 
 	/**
 	 * @brief setExit 设置Room的特定方向为牢笼出口
 	 * @param direction
 	 * @return
 	 */
-	bool setExit(char direction)
-	{
-		if (!checkDirectionVaild(direction))
-			return false;
-
-		_entranceOrExit[direction] = "exit";
-		return true;
-	}
+	bool setExit(char direction);
 
     int _id;
     std::map<char, std::shared_ptr<Wall>> _walls; // the walls of this room

@@ -1,4 +1,4 @@
-﻿#ifndef GAME_H
+#ifndef GAME_H
 #define GAME_H
 #include <map>
 #include <memory>
@@ -32,202 +32,87 @@ class Game
 {
 public:
 
-  // TODO implement the Game class
+	// TODO implement the Game class
   
 
-  /**
-   * @brief player Retrieves the player's Character, if any.
-   */
-  std::shared_ptr<Character> player()
-  {
-	  return _character;
-  }
+   /**
+    * @brief player Retrieves the player's Character, if any.
+    */
+	std::shared_ptr<Character> player();
 
-  /**
-   * @brief setPlayer Sets the current player character for the game.
-   */
-  void setPlayer(std::shared_ptr<Character> character)
-  {
-	  _character = character;
-  }
+   /**
+    * @brief setPlayer Sets the current player character for the game.
+    */
+	void setPlayer(std::shared_ptr<Character> character);
 
-  /**
-   * @brief dungeon Returns the current dungeon level, if any.
-   */
-  std::shared_ptr<dungeon::Dungeon> dungeon()
-  {
-	  return _dungeon;
-  }
+   /**
+    * @brief dungeon Returns the current dungeon level, if any.
+    */
+	std::shared_ptr<dungeon::Dungeon> dungeon();
 
-  /**
-   * @brief dungeon_basic
-   * @return
-   */
-  std::shared_ptr<dungeon::BasicDungeon> getBasicDungeon() // 便捷函数
-  {
-	  return std::static_pointer_cast<dungeon::BasicDungeon>(_dungeon);
-  }
+   /**
+    * @brief dungeon_basic
+    * @return
+    */
+	std::shared_ptr<dungeon::BasicDungeon> getBasicDungeon();
 
-  /**
-   * @brief createDungeon Initiates the creation of a new dungeon level.
-   * Any previous dungeon level is destroyed.
-   */
-  bool createDungeon(std::string dungeonType="BasicDungeon")
-  {
-	  std::shared_ptr<dungeon::DungeonBuilder> builder;
-	  if (dungeonType == "BasicDungeon")
-	  {
-		  builder = std::make_shared<dungeon::BasicDungeonBuilder>();
-		  _dungeon = builder->buildDungeon();
-		  return _dungeon != nullptr;
-	  }
-	  return false;
-  }
+   /**
+    * @brief createDungeon Initiates the creation of a new dungeon level.
+    * Any previous dungeon level is destroyed.
+    */
+	bool createDungeon(std::string dungeonType = "BasicDungeon");
 
-  /**
-   * @brief start Initialises the game to the starting state, i.e.,
-   * the character has just entered the first room of the dungeon.
-   */
-  bool enterDungeon()
-  {
-	  if (_dungeon == nullptr)
-		  return false;
-	  auto entranceRoom = getBasicDungeon()->getEntranceRoom();
-	  if (entranceRoom == nullptr)
-		  return false;
-	  getBasicDungeon()->setNowRoom(entranceRoom);
-	  return true;
-  }
+   /**
+    * @brief start Initialises the game to the starting state, i.e.,
+    * the character has just entered the first room of the dungeon.
+    */
+	bool enterDungeon();
 
-  /**
-   * @brief currentRoom Answers the current room the player's character is in.
-   * @return the Room the player is in
-   */
-  auto currentRoom()
-  {
-	  return getBasicDungeon()->getNowRoom();
-  }
+   /**
+    * @brief currentRoom Answers the current room the player's character is in.
+    * @return the Room the player is in
+    */
+	auto currentRoom();
 
-  /**
-   * @brief navigate Move the player's character to a neighbouring
-   * Room of the current room.
-   */
-  bool navigate()
-  {
-      return navigate(getBasicDungeon()->getNowRoom()->findDoorDirections().front());
-  }
+   /**
+    * @brief navigate Move the player's character to a neighbouring
+    * @param direction
+    * @return
+    */
+	bool navigate(char direction);
 
-  /**
-   * @brief navigate 从当前Room的direction方向移动
-   * @param direction
-   * @return
-   */
-  bool navigate(char direction)
-  {
-	  auto basic_dungeon = getBasicDungeon();
-	  auto room = currentRoom();
-	  room->checkDirectionVaild(direction);
-	  auto door = room->getDoor(direction);
-	  if (door == nullptr)
-		  return false;
-	  basic_dungeon->setNowRoom(door->getNeighbourRoom(room));
-	  return true;
-  }
+   /**
+    * @brief navigateBack Move the character to the previous room.
+    */
+	bool navigateBack();
 
-  /**
-   * @brief navigateBack Move the character to the previous room.
-   */
-  bool navigateBack()
-  {
-	  auto basic_dungeon = getBasicDungeon();
-	  basic_dungeon->setNowRoom(basic_dungeon->path(-2));
-      return true;
-  }
+   /**
+    * @brief exitLevel update the game state with successful completion
+    * of the current level.
+    */
+	void exitLevel();
 
-  /**
-   * @brief exitLevel update the game state with successful completion
-   * of the current level.
-   */
-  void exitLevel()
-  {
-	  _dungeonLevel++;
-  }
+   /**
+    * @brief exitDungeon update the game to the state where the character
+    * has completely left the dungeon, ready for a completely new dungeon
+    * to be created.
+    */
+	void exitDungeon();
 
-  /**
-   * @brief exitDungeon update the game to the state where the character
-   * has completely left the dungeon, ready for a completely new dungeon
-   * to be created.
-   */
-  void exitDungeon()
-  {
-	  setPlayer(nullptr);
-	  setDungeon(nullptr);
-	  _dungeonLevel = 1;
-  }
+	bool canDodge(std::shared_ptr<creatures::Creature> creature);
 
-  bool canDodge(std::shared_ptr<creatures::Creature> creature)
-  {
-	  return randomIntBetweenInc(0, 100) <= creature->dodgeChance();
-  }
+   /**
+    * @brief doActionRound Performs a player action (weapon attack, item use,
+    * or special ability), including a responding attack by a creature if one is present.
+    */
+	void* doActionRound(char selection);
 
-  /**
-   * @brief doActionRound Performs a player action (weapon attack, item use,
-   * or special ability), including a responding attack by a creature if one is present.
-   */
-  void* doActionRound(char selection)
-  {
-	  if (selection == 'a')
-	  {
-		  int* damagesHappened = new int[2];
-		  damagesHappened[0] = damagesHappened[1] = 0;
+	void setDungeon(std::shared_ptr<dungeon::Dungeon> dungeon);
 
-		  auto player = _character;
-		  auto creature = getBasicDungeon()->getNowRoom()->getCreature();
-		  if (!canDodge(creature))
-		  {
-			  int* damageRange = player->damageWeaponed();
-			  int damage = randomIntBetweenInc(damageRange[0], damageRange[1]);
-			  creature->setHealthPoint(creature->getHealthPoint() - damage);
-			  if (creature->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
-			  {
-				  auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(creature->getWeapon()->getSuffixEnchantment());
-				  vampirismEnchantment->doHeal(creature, damage);
-			  }
-			  damagesHappened[0] = damage;
-		  }
-		  if (!canDodge(player))
-		  {
-			  int* damageRange = creature->damageWeaponed();
-			  int damage = randomIntBetweenInc(damageRange[0], damageRange[1]);
-			  player->setHealthPoint(player->getHealthPoint() - damage);
-			  if (player->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
-			  {
-				  auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(player->getWeapon()->getSuffixEnchantment());
-				  vampirismEnchantment->doHeal(player, damage);
-			  }
-			  damagesHappened[1] = damage;
-		  }
-		  return damagesHappened;
-	  }
-	  if (selection == 'l')
-	  {
-		  bool* done = new bool;
-		  auto player = _character;
-		  auto playerSuffixEnchantment = player->getWeapon()->getSuffixEnchantment();
-		  if (playerSuffixEnchantment == nullptr)
-			  *done = false;
-		  else
-		  {
-			  if (playerSuffixEnchantment->getEnchantmentType() == "HealingEnchantment")
-			  {
-				  auto healingEnchantment = std::static_pointer_cast<weapons::HealingEnchantment>(playerSuffixEnchantment);
-				  healingEnchantment->doHeal(player);
-				  *done = true;
-			  }
-		  }
-		  return done;
-	  }
-  }
+	int getSuccessTimes();
+
+	static std::shared_ptr<Game> instance();
+
 
   // Functions with provided implementations are declared below, DO NOT MODIFY
 
@@ -266,22 +151,6 @@ public:
    * @return the randomly generated double
    */
   double randomDouble();
-
-  void setDungeon(std::shared_ptr<dungeon::Dungeon> dungeon)
-  {
-	  _dungeon = dungeon;
-	  enterDungeon();
-  }
-
-  int getSuccessTimes()
-  {
-	  return _dungeonLevel - 1;
-  }
-
-  static std::shared_ptr<Game> instance()
-  {
-	  return _game;
-  }
 
 private:
   Game();

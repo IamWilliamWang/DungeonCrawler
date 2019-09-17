@@ -14,51 +14,48 @@ namespace creatures {
 class Creature
 {
 public:
-    Creature(const std::string &name) : _name(name)
-	{
-        _weapon = std::make_shared<core::weapons::Fists>();
-	}
+	Creature(const std::string &name);
+
     /**
      * @brief name 获得生物的名字
      * @return
      */
-    const std::string& name() {return _name; }
+	const std::string& name();
+
     /**
      * @brief getStrength 获得力量值
      * @return
      */
-    int getStrength() { return _strength; }
+	int getStrength();
+
     /**
      * @brief getDexterity 获得敏捷值
      * @return
      */
-    int getDexterity() { return _dexterity; }
+	int getDexterity();
+
     /**
      * @brief getWisdom 获得智力值
      * @return
      */
-    int getWisdom() { return _wisdom; }
+	int getWisdom();
+
     /**
      * @brief getHealthPoint 获得生命点数
      * @return
      */
-    int getHealthPoint() { return _health; }
+	int getHealthPoint();
     
-	void setHealthPoint(int healthPoint)
-	{
-		if (_maxHealth == -1)
-			_maxHealth = healthPoint;
-		_health = healthPoint > _maxHealth ? _maxHealth : healthPoint; // can not higher than the max value.
-	}
-	int getMaxHealthPoint()
-	{
-		return _maxHealth;
-	}
+	void setHealthPoint(int healthPoint);
+
+	int getMaxHealthPoint();
+
 	/**
 	 * @brief isAlive 判断是否存活
 	 * @return
 	 */
-    bool isAlive(){ return _health > 0; }
+	bool isAlive();
+
     /**
      * @brief setAttribute 设置生物的基本属性
      * @param strength
@@ -66,72 +63,41 @@ public:
      * @param wisdom
      * @return
      */
-    bool setAttribute(int strength, int dexterity, int wisdom)
-    {
-      if(strength < 1 || strength > 6)
-          return false;
-      if(dexterity < 1 || dexterity > 6)
-          return false;
-      if(wisdom < 1 || wisdom > 6)
-          return false;
-      _strength = strength;
-      _dexterity = dexterity;
-      _wisdom = wisdom;
-	  if (_maxHealth == -1)
-		  _maxHealth = 50;
-      _health = 50;
-      return true;
-    }
+	bool setAttribute(int strength, int dexterity, int wisdom);
+
     /**
      * @brief damage 获得基础伤害值
      * @return
      */
-    int damage()
-    {
-      return 2*(_strength-1);
-    }
+	int damage();
+
 	/**
 	 * @brief damageWeaponed 带有武器的伤害值
 	 * @return 返回int[2]，包含[最低伤害,最高伤害]
 	 */
-	int* damageWeaponed()
-	{
-		int* result = _weapon->getDamageRange();
-		result[0] += damage();
-		result[1] += damage();
-		return result;
-	}
+	int* damageWeaponed();
+
     /**
      * @brief dodgeChance 获得躲避概率，0为不可能躲避，100为一定躲避
      * @return
      */
-    int dodgeChance()
-    {
-		return _dexterity > 0 ? 20 * (_dexterity - 1) : 0;
-    }
-	void setDescription(std::string description)
-	{
-		_description = description;
-	}
-	std::string getDescription()
-	{
-		return _description;
-	}
+	int dodgeChance();
+
+	void setDescription(std::string description);
+
+	std::string getDescription();
+
 	/**
 	 * @brief getWeapon 获得武器
 	 */
-	auto getWeapon()
-	{
-		return _weapon;
-	}
+	auto getWeapon();
+
 	/**
 	 * @brief setWeapon 设置武器
 	 * @param weapon
 	 */
-    void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon)
-	{
-		_weapon = weapon;
-	}
+	void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon);
+
 private:
   std::string _name;
   std::string _description;
