@@ -194,7 +194,7 @@ private:
   /**
    * @brief doNavigate Navigates the player's character according to their input.
    */
-  void doNavigate();
+  void doNavigate(char navigateDirection);
 
   /**
    * @brief pickupWeapon Pick-up the weapon in the room, if any, and assign it
@@ -229,6 +229,7 @@ private:
    */
   bool confirm(const std::string &confirmationPrompt) const;
 
+  void toLower(char &ch);
 
   // The functions below should not be modified.
 

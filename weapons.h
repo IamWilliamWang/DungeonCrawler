@@ -2,9 +2,26 @@
 #define WEAPONS_H
 #include <string>
 #include <memory>
+#include "weapons.h"
 namespace core {
 namespace weapons {
-class Enchantment; //predeclaration
+/**
+ * @brief TODO The Enchantment class
+ */
+class Enchantment
+{
+public:
+	Enchantment()
+	{
+	}
+
+	std::string getEnchantmentType()
+	{
+		return _enchantmentType;
+	}
+protected:
+	std::string _enchantmentType;
+};
 
 /**
  * @brief TODO The Weapon class
@@ -72,8 +89,9 @@ public:
 	int* getDamageRange()
 	{
 		int* range = new int[2];
-		range[0] = _minDamage;
-		range[1] = _maxDamage;
+		int enchantmentDamage = getEnchantmentDamage();
+		range[0] = _minDamage + enchantmentDamage;
+		range[1] = _maxDamage + enchantmentDamage;
 		return range;
 	}
     /**
@@ -102,7 +120,27 @@ public:
 	{
 		_specialAbilityDescription = specialAbilityDescription;
 	}
+	auto getSuffixEnchantment()
+	{
+		return _suffixEnchantment;
+	}
 private:
+	int getEnchantmentDamage()
+	{
+		if (_prefixEnchantment != nullptr)
+		{
+			if (_prefixEnchantment->getEnchantmentType() == "FlameEnchantment")
+			{
+				auto flameEnchantment = std::static_pointer_cast<FlameEnchantment>(_prefixEnchantment);
+				return flameEnchantment->getExtraDamage();
+			}
+			else if (_prefixEnchantment->getEnchantmentType() == "ElectricityEnchantment")
+			{
+				auto electricityEnchantment = std::static_pointer_cast<ElectricityEnchantment>(_prefixEnchantment);
+				return electricityEnchantment->getExtraDamage();
+			}
+		}
+	}
 	std::string _name = "";
 	std::string _description = "";
 	std::string _longDescription = "";
@@ -206,21 +244,20 @@ public:
 };
 
 /**
- * @brief TODO The Enchantment class
- */
-class Enchantment
-{
-public:
-    Enchantment(){}
-};
-
-/**
  * @brief TODO The FlameEnchantment class
  */
 class FlameEnchantment : public Enchantment
 {
 public:
-    FlameEnchantment(){}
+    FlameEnchantment()
+	{
+		_enchantmentType = "FlameEnchantment";
+	}
+
+	int getExtraDamage()
+	{
+		return 5;
+	}
 };
 
 /**
@@ -229,7 +266,15 @@ public:
 class ElectricityEnchantment : public Enchantment
 {
 public:
-    ElectricityEnchantment(){}
+    ElectricityEnchantment()
+	{
+		_enchantmentType = "ElectricityEnchantment";
+	}
+
+	int getExtraDamage()
+	{
+		return 5;
+	}
 };
 
 /**
@@ -238,7 +283,14 @@ public:
 class HealingEnchantment : public Enchantment
 {
 public:
-    HealingEnchantment(){}
+    HealingEnchantment()
+	{
+		_enchantmentType = "HealingEnchantment";
+	}
+    void doHeal(std::shared_ptr<core::Character::Creature> creature)
+	{
+		creature->setHealthPoint(creature->getHealthPoint() + 5);
+	}
 };
 
 /**
@@ -247,7 +299,14 @@ public:
 class VampirismEnchantment : public Enchantment
 {
 public:
-    VampirismEnchantment(){}
+    VampirismEnchantment()
+	{
+		_enchantmentType = "VampirismEnchantment";
+	}
+    void doHeal(std::shared_ptr<core::Character::Creature> creature, int damagedThisRound)
+	{
+		creature->setHealthPoint(creature->getHealthPoint() + damagedThisRound / 2);
+	}
 };
 
 } // namespace items

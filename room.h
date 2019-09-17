@@ -163,9 +163,7 @@ public:
      */
 	bool createCreature(std::vector<std::shared_ptr<core::creatures::Creature>> possibleCreatures)
 	{
-        std::default_random_engine randomEngine(static_cast<unsigned>(time(nullptr)));
-        std::uniform_int_distribution<unsigned> rand(0, possibleCreatures.size() - 1);
-        _creature = possibleCreatures.at(rand(randomEngine));
+        _creature = possibleCreatures.at(Game::randomIntBetweenEx(0, possibleCreatures.size()));
 		return true;
 	}
 	/*bool createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons)
@@ -180,9 +178,19 @@ public:
 	{
 		return _creature;
 	}
+	void setCreature(std::shared_ptr<core::creatures::Creature> creature)
+	{
+		_creature = creature;
+	}
 	auto getWeapon()
 	{
-		return _weapon;
+		if (_creature == nullptr) // weapon only
+			return _weapon;
+		else return _creature->getWeapon(); // creature takes a weapon
+	}
+	void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon)
+	{
+		_weapon = weapon;
 	}
 private:
 	/**

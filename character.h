@@ -2,9 +2,7 @@
 #define CHARACTER_H
 #include <string>
 #include <memory>
-#include "room.h"
-#include "basicdungeon.h"
-#include "weapons.h"
+#include "creatures.h"
 namespace core {
 
 // TODO: define Character class.

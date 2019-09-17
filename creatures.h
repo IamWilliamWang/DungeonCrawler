@@ -5,7 +5,6 @@
 #include "weapons.h"
 namespace core {
 namespace creatures {
-
 // TODO: define Creature class and the its concrete subclasses.
 // There is some example code in here, but it can be modified if desired.
 
@@ -47,7 +46,13 @@ public:
     
 	void setHealthPoint(int healthPoint)
 	{
-		_health = healthPoint;
+		if (_maxHealth == -1)
+			_maxHealth = healthPoint;
+		_health = healthPoint > _maxHealth ? _maxHealth : healthPoint; // can not higher than the max value.
+	}
+	int getMaxHealthPoint()
+	{
+		return _maxHealth;
 	}
 	/**
 	 * @brief isAlive 判断是否存活
@@ -72,6 +77,8 @@ public:
       _strength = strength;
       _dexterity = dexterity;
       _wisdom = wisdom;
+	  if (_maxHealth == -1)
+		  _maxHealth = 50;
       _health = 50;
       return true;
     }
@@ -131,7 +138,8 @@ private:
   int _strength;
   int _dexterity;
   int _wisdom;
-  int _health = -1;
+  int _health;
+  int _maxHealth = -1;
   std::shared_ptr<core::weapons::Weapon> _weapon;
 };
 

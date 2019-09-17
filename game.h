@@ -150,7 +150,7 @@ public:
    */
   void exitLevel()
   {
-	  _successCount++;
+	  _dungeonLevel++;
   }
 
   /**
@@ -163,11 +163,69 @@ public:
 	  
   }
 
+  bool canDodge(std::shared_ptr<creatures::Creature> creature)
+  {
+	  return randomIntBetweenInc(0, 100) <= creature->dodgeChance();
+  }
+
   /**
    * @brief doActionRound Performs a player action (weapon attack, item use,
    * or special ability), including a responding attack by a creature if one is present.
    */
-  void doActionRound();
+  void* doActionRound(char selection)
+  {
+	  if (selection == 'a')
+	  {
+		  int* damagesHappened = new int[2];
+		  damagesHappened[0] = damagesHappened[1] = 0;
+
+		  auto player = _character;
+		  auto creature = getBasicDungeon()->getNowRoom()->getCreature();
+		  if (!canDodge(creature))
+		  {
+			  int* damageRange = player->damageWeaponed();
+			  int damage = randomIntBetweenInc(damageRange[0], damageRange[1]);
+			  creature->setHealthPoint(creature->getHealthPoint() - damage);
+			  if (creature->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
+			  {
+				  auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(creature->getWeapon()->getSuffixEnchantment());
+				  vampirismEnchantment->doHeal(creature, damage);
+			  }
+			  damagesHappened[0] = damage;
+		  }
+		  if (!canDodge(player))
+		  {
+			  int* damageRange = creature->damageWeaponed();
+			  int damage = randomIntBetweenInc(damageRange[0], damageRange[1]);
+			  player->setHealthPoint(player->getHealthPoint() - damage);
+			  if (player->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
+			  {
+				  auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(player->getWeapon()->getSuffixEnchantment());
+				  vampirismEnchantment->doHeal(player, damage);
+			  }
+			  damagesHappened[1] = damage;
+		  }
+		  return damagesHappened;
+	  }
+	  if (selection == 'l')
+	  {
+		  bool* done = new bool;
+		  auto player = _character;
+		  auto playerSuffixEnchantment = player->getWeapon()->getSuffixEnchantment();
+		  if (playerSuffixEnchantment == nullptr)
+			  *done = false;
+		  else
+		  {
+			  if (playerSuffixEnchantment->getEnchantmentType() == "HealingEnchantment")
+			  {
+				  auto healingEnchantment = std::static_pointer_cast<weapons::HealingEnchantment>(playerSuffixEnchantment);
+				  healingEnchantment->doHeal(player);
+				  *done = true;
+			  }
+		  }
+		  return done;
+	  }
+  }
 
   // Functions with provided implementations are declared below, DO NOT MODIFY
 
@@ -215,7 +273,7 @@ public:
 
   int getSuccessTimes()
   {
-	  return _successCount;
+	  return _dungeonLevel - 1;
   }
 
   static std::shared_ptr<Game> instance()
@@ -230,7 +288,7 @@ private:
   static std::shared_ptr<Game> _game;
   std::shared_ptr<dungeon::Dungeon> _dungeon;
   std::shared_ptr<Character> _character;
-  int _successCount = 0;
+  int _dungeonLevel = 1;
 };
 
 } // namespace core
