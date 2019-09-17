@@ -166,14 +166,11 @@ public:
         _creature = possibleCreatures.at(Game::randomIntBetweenEx(0, possibleCreatures.size()));
 		return true;
 	}
-	/*bool createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons)
+	bool createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons)
 	{
-		std::default_random_engine randomEngine(static_cast<unsigned>(time(nullptr)));
-		std::uniform_int_distribution<unsigned> rand(0, possibleWeapons.size() - 1);
-		_weapon = possibleWeapons.at(rand(randomEngine));
-		_creature->setWeapon(_weapon);
+		_weapon = possibleWeapons.at(Game::randomIntBetweenEx(0, possibleWeapons.size()));
 		return true;
-	}*/
+	}
 	auto getCreature()
 	{
 		return _creature;

@@ -70,13 +70,23 @@ public:
 		}
 		return true;
 	}
+
+	bool loadWeapons()
+	{
+		_weaponList.emplace_back(std::make_shared<weapons::Fists>());
+		_weaponList.emplace_back(std::make_shared<weapons::Boomerang>());
+		_weaponList.emplace_back(std::make_shared<weapons::ShortSword>());
+		_weaponList.emplace_back(std::make_shared<weapons::BattleAxe>());
+		return true;
+	}
+
     /**
      * @brief buildDungeon
      * @return
      */
     std::shared_ptr<Dungeon> buildDungeon()
     {
-        if (!loadCreatures())
+        if (!loadCreatures() || !loadWeapons())
 			return nullptr;
 
 		// create objects
@@ -148,6 +158,8 @@ public:
 		room3->createCreature(_creatureList);
 		room5->createCreature(_creatureList);
 		room9->createCreature(_creatureList);
+		// fill weapons
+		room7->createWeapon(_weaponList);
 		// add rooms into dungeon
         basicDungeon->addRoom(room1);
         basicDungeon->addRoom(room2);
@@ -172,7 +184,7 @@ public:
     }
 private:
 	std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList;
-	std::vector<std::shared_ptr<core::dungeon::Chamber>> _chamberList;
+	std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList;
 };
 }
 }
