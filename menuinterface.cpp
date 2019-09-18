@@ -1,5 +1,4 @@
 #include "menuinterface.h"
-#include "game.h"
 #include <string>
 #include <algorithm>
 
@@ -242,7 +241,7 @@ void MenuInterface::processDungeonType(char selection) {
 	setMenu(Menu::Action);
 }
 
-void MenuInterface::switchToCharacterMenu(Menu retMenuStatus = Menu::Main) {
+void MenuInterface::switchToCharacterMenu(Menu retMenuStatus) {
   setMenu(Menu::CharacterDetails);
   processCharacterDetails('c');
   setMenu(retMenuStatus);
@@ -276,7 +275,7 @@ void MenuInterface::processCharacterDetails(char selection) {
 	}
 }
 
-void MenuInterface::displayWeaponDetails(std::string title = "", std::shared_ptr<weapons::Weapon> weapon = Game::instance()->player()->getWeapon()) {
+void MenuInterface::displayWeaponDetails(std::string title, std::shared_ptr<weapons::Weapon> weapon) {
     _display << std::endl;
 	if (title != "")
 	    _display << title << std::endl;
@@ -406,14 +405,8 @@ void MenuInterface::processAction(char selection) {
 		_display << "Heading East..." << std::endl;
 	else if (selection == 'b')
 	{
-		if (!Game::instance()->navigateBack())
-		{
-			_display << "NavigateBack failed!" << std::endl;
-			return;
-		}
-		_display << "You head back the way you came..." << std::endl;
-		_display << "You pass through the doorway..." << std::endl;
-		return;
+        doNavigateBack();
+        return;
 	}
 	else if (selection == 'p')
 	{
@@ -509,14 +502,8 @@ void MenuInterface::processCombatAction(char selection) {
 	selection = tolower(selection);
 	if (selection == 'b')
 	{
-		if (!Game::instance()->navigateBack())
-		{
-			_display << "NavigateBack failed!" << std::endl;
-			return;
-		}
-		_display << "You head back the way you came..." << std::endl;
-		_display << "You pass through the doorway..." << std::endl;
-		return;
+        doNavigateBack();
+        return;
 	}
 	else if (selection == 'a')
 	{
@@ -559,6 +546,17 @@ void MenuInterface::doNavigate(char navigateDirection) {
 	Game::instance()->navigate(navigateDirection);
 }
 
+void MenuInterface::doNavigateBack()
+{
+    if (!Game::instance()->navigateBack())
+    {
+        _display << "NavigateBack failed!" << std::endl;
+        return;
+    }
+    setMenu(Game::instance()->getBasicDungeon()->getNowRoom()->getCreature() ? Menu::Combat : Menu::Action);
+    _display << "You head back the way you came..." << std::endl;
+    _display << "You pass through the doorway..." << std::endl;
+}
 
 void MenuInterface::pickupWeapon() {
 	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
@@ -570,23 +568,7 @@ void MenuInterface::pickupWeapon() {
 		auto prefixEnchantment = newWeapon->getPrefixEnchantment();
 		auto suffixEnchantment = newWeapon->getSuffixEnchantment();
 		_display << "You picked up a ";
-		if (prefixEnchantment != nullptr)
-		{
-			if (prefixEnchantment->getEnchantmentType() == "FlameEnchantment")
-				_display << "Flaming ";
-			else if (prefixEnchantment->getEnchantmentType() == "ElectricityEnchantment")
-				_display << "Electrified ";
-		}
-		_display << newWeapon->getName() << " ";
-		if (suffixEnchantment != nullptr)
-		{
-			if (suffixEnchantment->getEnchantmentType() == "HealingEnchantment")
-				_display << "of Healing";
-			else if (suffixEnchantment->getEnchantmentType() == "VampirismEnchantment")
-				_display << "of Vampirism";
-		}
-		_display << std::endl;
-
+        _display << newWeapon->getFullName() << std::endl;
 		Game::instance()->player()->setWeapon(newWeapon);
 		currRoom->setWeapon(nullptr);
 	}
@@ -609,9 +591,16 @@ void MenuInterface::doAttack() {
 		_display << "The attack deals *" << damagesHappened[0] << "* damage..." << std::endl;
 	else
 		_display << "Creature dodged the attack" << std::endl;
-    if (Game::instance()->getBasicDungeon()->getNowRoom()->getCreature()->getWeapon()->getSuffixEnchantment()
-            && Game::instance()->getBasicDungeon()->getNowRoom()->getCreature()->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
-		_display << "Due to the creature's Vampirism enchantment, the creture has received " << damagesHappened[0] / 2 << " healing points." << std::endl;
+    auto suffixEnchantment = Game::instance()->getBasicDungeon()->getNowRoom()->getCreature()->getWeapon()->getSuffixEnchantment();
+    if (suffixEnchantment)
+    {
+        if (suffixEnchantment->getEnchantmentType() == "FlameEnchantment")
+            _display << "The target bursts into flames taking an extra 5 damage" << std::endl;
+        else if (suffixEnchantment->getEnchantmentType() == "ElectricityEnchantment")
+            _display << "The target bursts into electricity taking an extra 5 damage" << std::endl;
+        else if (suffixEnchantment->getEnchantmentType() == "VampirismEnchantment")
+            _display << "Due to the creature's Vampirism enchantment, the creture has received " << damagesHappened[0] / 2 << " healing points." << std::endl;
+    }
 	_display << std::endl;
 
 	_display << "The creature attacks... ";
@@ -619,7 +608,7 @@ void MenuInterface::doAttack() {
 	if (damagesHappened[1] != 0)
 		_display << "The attack deals *" << damagesHappened[1] << "* damage..." << std::endl;
 	else
-		_display << Game::instance()->player()->name() << " dodge the attack" << std::endl;
+        _display << Game::instance()->player()->name() << " dodged the attack" << std::endl;
     if (Game::instance()->player()->getWeapon()->getSuffixEnchantment()
             && Game::instance()->player()->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
 		_display << "Due to your Vampirism enchantment, you have received " << damagesHappened[1] / 2 << " healing points." << std::endl;

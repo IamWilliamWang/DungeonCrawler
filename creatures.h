@@ -83,11 +83,13 @@ public:
      */
 	int damage();
 
+	int damageWeaponed();
+
 	/**
-	 * @brief damageWeaponed 带有武器的伤害值
+	 * @brief damageWeaponedRange 带有武器的伤害值
 	 * @return 返回int[2]，包含[最低伤害,最高伤害]
 	 */
-	int* damageWeaponed();
+	int* damageWeaponedRange();
 
     /**
      * @brief dodgeChance 获得躲避概率，0为不可能躲避，100为一定躲避

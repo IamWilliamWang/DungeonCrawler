@@ -76,7 +76,12 @@ int Creature::damage()
 	return 2 * (_strength - 1);
 }
 
-int* Creature::damageWeaponed()
+int Creature::damageWeaponed()
+{
+	return damage() + _weapon->get();
+}
+
+int* Creature::damageWeaponedRange()
 {
 	int* result = _weapon->getDamageRange();
 	result[0] += damage();
@@ -111,12 +116,13 @@ void Creature::setWeapon(std::shared_ptr<core::weapons::Weapon> weapon)
 
 std::ostream& operator<<(std::ostream &stream, core::creatures::Creature &creature)
 {
+	// I use c-style formatted output, can't come up with a c++ solution.
     stream << creature.name() << std::endl;
     printf("Strength:%10d\n", creature.getStrength());
     printf("Dexterity:%9d\n", creature.getDexterity());
     printf("Wisdom:%12d\n", creature.getWisdom());
     printf("Health:%7d / %2d\n", creature.getHealthPoint(), creature.getMaxHealthPoint());
-    int* characterDamageWeaponed = creature.damageWeaponed();
+    int* characterDamageWeaponed = creature.damageWeaponedRange();
     printf("Damage:%7d - %2d\n", characterDamageWeaponed[0], characterDamageWeaponed[1]);
     delete characterDamageWeaponed; // release the memory.
     printf("Dodge:%12d%%\n", creature.dodgeChance());

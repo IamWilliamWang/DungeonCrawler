@@ -43,6 +43,27 @@ void Weapon::setName(std::string name)
 	_name = name;
 }
 
+std::string Weapon::getFullName()
+{
+	std::string result = "";
+	if (_prefixEnchantment != nullptr)
+	{
+		if (_prefixEnchantment->getEnchantmentType() == "FlameEnchantment")
+			result += "Flaming ";
+		else if (_prefixEnchantment->getEnchantmentType() == "ElectricityEnchantment")
+			result += "Electrified ";
+	}
+	result += _name;
+	if (_suffixEnchantment != nullptr)
+	{
+		if (_suffixEnchantment->getEnchantmentType() == "HealingEnchantment")
+			result += " of Healing";
+		else if (_suffixEnchantment->getEnchantmentType() == "VampirismEnchantment")
+			result += " of Vampirism";
+	}
+	return result;
+}
+
 std::string Weapon::getDescription()
 {
 	return _description;
@@ -103,15 +124,21 @@ int Weapon::getEnchantmentDamage()
 		if (_prefixEnchantment->getEnchantmentType() == "FlameEnchantment")
 		{
 			auto flameEnchantment = std::static_pointer_cast<FlameEnchantment>(_prefixEnchantment);
-			return flameEnchantment->getExtraDamage();
+			return flameEnchantment->get();
 		}
 		else if (_prefixEnchantment->getEnchantmentType() == "ElectricityEnchantment")
 		{
 			auto electricityEnchantment = std::static_pointer_cast<ElectricityEnchantment>(_prefixEnchantment);
-			return electricityEnchantment->getExtraDamage();
+			return electricityEnchantment->get();
 		}
 	}
     return 0;
+}
+
+int Weapon::get(void* args)
+{
+    auto range = getDamageRange();
+    return Game::instance()->randomIntBetweenInc(range[0], range[1]);
 }
 
 Fists::Fists()
@@ -189,6 +216,11 @@ int FlameEnchantment::getExtraDamage()
 	return 5;
 }
 
+int FlameEnchantment::get(void* args)
+{
+    return getExtraDamage();
+}
+
 ElectricityEnchantment::ElectricityEnchantment()
 {
 	_enchantmentType = "ElectricityEnchantment";
@@ -197,6 +229,11 @@ ElectricityEnchantment::ElectricityEnchantment()
 int ElectricityEnchantment::getExtraDamage()
 {
 	return 5;
+}
+
+int ElectricityEnchantment::get(void* args)
+{
+    return getExtraDamage();
 }
 
 HealingEnchantment::HealingEnchantment()
@@ -209,6 +246,11 @@ int HealingEnchantment::getHealHealthPoints()
 	return 5;
 }
 
+int HealingEnchantment::get(void* args)
+{
+    return getHealHealthPoints();
+}
+
 VampirismEnchantment::VampirismEnchantment()
 {
 	_enchantmentType = "VampirismEnchantment";
@@ -219,12 +261,19 @@ int VampirismEnchantment::getHealHealthPoints(int damagedThisRound)
 	return damagedThisRound / 2;
 }
 
+int VampirismEnchantment::get(void* args)
+{
+    return getHealHealthPoints(*static_cast<int*>(args));
+}
+
 std::ostream& operator<<(std::ostream &stream, core::weapons::Weapon &weapon)
 {
-    stream << "\"" << weapon.getName() << "\"" << std::endl;
+	// I use c-style formatted output, can't come up with a c++ solution.
+    stream << "\"" << weapon.getFullName() << "\"" << std::endl;
     int* damages = weapon.getDamageRange();
     printf("Min. Damage:%7d\n", damages[0]);
     printf("Max. Damage:%7d\n", damages[1]);
+	delete damages;
     stream << weapon.getLongDescription() << std::endl;
     return stream;
 }

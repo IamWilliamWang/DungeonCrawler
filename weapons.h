@@ -5,22 +5,32 @@
 namespace core {
 namespace weapons {
 /**
- * @brief TODO The Enchantment class
+ * @brief The Interface class 用作装饰器使用的接口
  */
-class Enchantment
+class Interface
+{
+    virtual int get(void* args = nullptr) = 0; // 接口的函数
+};
+
+/**
+ * @brief TODO The Enchantment class 附魔基类
+ */
+class Enchantment : public Interface
 {
 public:
     /**
-     * @brief Enchantment
+     * @brief Enchantment 附魔基类
      */
-	Enchantment();
+    Enchantment();
+
     /**
-     * @brief getEnchantmentType
+     * @brief getEnchantmentType 获得类名
      * @return
      */
-	std::string getEnchantmentType();
+    std::string getEnchantmentType();
+
 protected:
-	std::string _enchantmentType;
+    std::string _enchantmentType; // 储存类名
 };
 
 /**
@@ -30,14 +40,21 @@ class FlameEnchantment : public Enchantment
 {
 public:
     /**
-     * @brief FlameEnchantment
+     * @brief FlameEnchantment 火焰附魔
      */
-	FlameEnchantment();
+    FlameEnchantment();
+
     /**
-     * @brief getExtraDamage
+     * @brief getExtraDamage 获得额外的伤害值
      * @return
      */
-	int getExtraDamage();
+    int getExtraDamage();
+
+    /**
+     * @brief get 获得额外的伤害值(等同于getExtraDamage)
+     * @return
+     */
+    int get(void* args = nullptr);
 };
 
 /**
@@ -47,14 +64,20 @@ class ElectricityEnchantment : public Enchantment
 {
 public:
     /**
-     * @brief ElectricityEnchantment
+     * @brief ElectricityEnchantment 带电附魔
      */
-	ElectricityEnchantment();
+    ElectricityEnchantment();
     /**
-     * @brief getExtraDamage
+     * @brief getExtraDamage 获得额外的伤害值
      * @return
      */
-	int getExtraDamage();
+    int getExtraDamage();
+
+    /**
+     * @brief get 获得额外的伤害值(等同于getExtraDamage)
+     * @return
+     */
+    int get(void* args = nullptr);
 };
 
 /**
@@ -64,15 +87,21 @@ class HealingEnchantment : public Enchantment
 {
 public:
     /**
-     * @brief HealingEnchantment
+     * @brief HealingEnchantment 治疗附魔
      */
-	HealingEnchantment();
-	//void doHeal(std::shared_ptr<core::creatures::Creature> creature);
+    HealingEnchantment();
+
     /**
-     * @brief getHealHealthPoints
+     * @brief getHealHealthPoints 获得治疗值
      * @return
      */
-	int getHealHealthPoints();
+    int getHealHealthPoints();
+
+    /**
+     * @brief get 获得治疗值(等同于getHealHealthPoints)
+     * @return
+     */
+    int get(void* args = nullptr);
 };
 
 /**
@@ -84,36 +113,42 @@ public:
     /**
      * @brief VampirismEnchantment
      */
-	VampirismEnchantment();
-	//void doHeal(std::shared_ptr<core::Character::Creature> creature, int damagedThisRound);
+    VampirismEnchantment();
+
     /**
-     * @brief getHealHealthPoints
+     * @brief getHealHealthPoints 获得本回合治疗值
      * @param damagedThisRound
      * @return
      */
     int getHealHealthPoints(int damagedThisRound);
+
+    /**
+     * @brief get 获得本回合治疗值(等同于getHealHealthPoints)
+     * @return
+     */
+    int get(void* args = nullptr);
 };
 
 /**
- * @brief TODO The Weapon class
+ * @brief TODO The Weapon class 武器的基类
  */
-class Weapon
+class Weapon : public Interface
 {
 public:
     /**
-     * @brief Weapon
+     * @brief Weapon 武器的构造函数
      */
 	Weapon();
 
     /**
-     * @brief Weapon
+     * @brief Weapon 武器的构造函数
      * @param name
      * @param description
      */
 	Weapon(std::string &name, std::string &description);
 
     /**
-     * @brief Weapon
+     * @brief Weapon 武器的构造函数
      * @param name
      * @param description
      * @param longDescription
@@ -121,7 +156,7 @@ public:
 	Weapon(std::string &name, std::string &description, std::string &longDescription);
 
     /**
-     * @brief Weapon
+     * @brief Weapon 武器的构造函数
      * @param name
      * @param description
      * @param longDescription
@@ -131,43 +166,45 @@ public:
 	Weapon(std::string &name, std::string &description, std::string &longDescription, int minDamage, int maxDamage);
 
     /**
-     * @brief getName
+     * @brief getName 获得名字
      * @return
      */
 	std::string getName();
 
+	std::string getFullName();
+
     /**
-     * @brief setName
+     * @brief setName 设置名字
      * @param name
      */
 	void setName(std::string name);
 
     /**
-     * @brief getDescription
+     * @brief getDescription 获得短描述
      * @return
      */
     std::string getDescription();
 
     /**
-     * @brief setDescription
+     * @brief setDescription 设置短描述
      * @param description
      */
     void setDescription(std::string description);
 
     /**
-     * @brief getLongDescription
+     * @brief getLongDescription 获得长描述
      * @return
      */
     std::string getLongDescription();
 
     /**
-     * @brief setLongDescription
+     * @brief setLongDescription 设置长描述
      * @param longDescription
      */
     void setLongDescription(std::string longDescription);
 
     /**
-     * @brief getDamageRange 获得武器的最小攻击力和最大攻击力
+     * @brief getDamageRange 获得武器（包括附魔加成）的最小攻击力和最大攻击力
      * @return
      */
     int* getDamageRange();
@@ -180,29 +217,35 @@ public:
 	void setDamageRange(int minDamage, int maxDamage);
 
     /**
-     * @brief getSpecialAbilityDescription
+     * @brief getSpecialAbilityDescription 获得特殊技能描述
      * @return
      */
 	std::string getSpecialAbilityDescription();
 
     /**
-     * @brief setSpecialAbilityDescription
+     * @brief setSpecialAbilityDescription 设置特殊技能描述
      * @param specialAbilityDescription
      */
     void setSpecialAbilityDescription(std::string specialAbilityDescription);
 
     /**
-     * @brief getPrefixEnchantment
+     * @brief getPrefixEnchantment 获得前缀附魔
      * @return
      */
     std::shared_ptr<Enchantment> getPrefixEnchantment();
 
     /**
-     * @brief getSuffixEnchantment
+     * @brief getSuffixEnchantment 获得后缀附魔
      * @return
      */
     std::shared_ptr<Enchantment> getSuffixEnchantment();
 
+    /**
+     * @brief get 使用getDamageRange()的结果随机取一个伤害值
+     * @param args
+     * @return
+     */
+    int get(void* args = nullptr);
 private:
     /**
      * @brief getEnchantmentDamage

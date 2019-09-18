@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <limits>
+#include "game.h"
 #include "testingsettings.h"
 #include "character.h"
 #include "dungeon.h"
@@ -143,7 +144,7 @@ private:
    * @brief switchToCharacterDetails If a Character is available, transition to the
    * character details menu, otherwise dislay an error and return to the previous menu.
    */
-  void switchToCharacterMenu(Menu retMenuStatus);
+  void switchToCharacterMenu(Menu retMenuStatus = Menu::Main);
 
   /**
    * @brief quitGame displays the number of levels completed, if possible, before
@@ -165,7 +166,7 @@ private:
   /**
    * @brief displayWeaponDetails Output the detailed weapon info to the user
    */
-  void displayWeaponDetails(std::string title, std::shared_ptr<weapons::Weapon> weapon);
+  void displayWeaponDetails(std::string title = "", std::shared_ptr<weapons::Weapon> weapon = Game::instance()->player()->getWeapon());
 
   /**
    * @brief displayChamber
@@ -198,6 +199,8 @@ private:
    * @brief doNavigate Navigates the player's character according to their input.
    */
   void doNavigate(char navigateDirection);
+
+  void doNavigateBack();
 
   /**
    * @brief pickupWeapon Pick-up the weapon in the room, if any, and assign it

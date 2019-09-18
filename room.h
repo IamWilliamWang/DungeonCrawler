@@ -38,7 +38,7 @@ public:
      * @param wall
      * @return
      */
-    bool addWall(char direction, std::shared_ptr<Wall> wall);
+    bool addWall(char direction, std::shared_ptr<Wall> wall = std::make_shared<Wall>());
 
     /**
      * @brief addDoor 给Room的某个方向增加一扇门

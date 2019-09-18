@@ -8,12 +8,11 @@ namespace dungeon {
 
 class Dungeon;
 class Room; // predeclaration.
-//class Chamber;
 
 // TODO: define component classes spcific to the BasicDungeon type
 
 /**
- * @brief TODO The BasicDungeon class
+ * @brief The BasicDungeon class
  */
 class BasicDungeon : public Dungeon
 {

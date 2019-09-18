@@ -70,7 +70,7 @@ bool Game::navigate(char direction)
 bool Game::navigateBack()
 {
 	auto basic_dungeon = getBasicDungeon();
-	basic_dungeon->setNowRoom(basic_dungeon->path(-2));
+    basic_dungeon->setNowRoom(basic_dungeon->path(-2));
 	return true;
 }
 
@@ -102,27 +102,23 @@ void* Game::doActionRound(char selection)
 		auto creature = getBasicDungeon()->getNowRoom()->getCreature();
 		if (!canDodge(creature))
 		{
-			int* damageRange = player->damageWeaponed();
-			int damage = randomIntBetweenInc(damageRange[0], damageRange[1]);
+			int damage = player->damageWeaponed();
 			creature->setHealthPoint(creature->getHealthPoint() - damage);
             if (creature->getWeapon()->getSuffixEnchantment() && creature->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
 			{
 				auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(creature->getWeapon()->getSuffixEnchantment());
-//				vampirismEnchantment->doHeal(creature, damage);
-                creature->setHealthPoint(creature->getHealthPoint() + vampirismEnchantment->getHealHealthPoints(damage));
+                creature->setHealthPoint(creature->getHealthPoint() + vampirismEnchantment->get(&damage));
 			}
 			damagesHappened[0] = damage;
 		}
 		if (!canDodge(player))
 		{
-			int* damageRange = creature->damageWeaponed();
-			int damage = randomIntBetweenInc(damageRange[0], damageRange[1]);
+			int damage = creature->damageWeaponed();
 			player->setHealthPoint(player->getHealthPoint() - damage);
             if (player->getWeapon()->getSuffixEnchantment()
                     && player->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
 			{
 				auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(player->getWeapon()->getSuffixEnchantment());
-//				vampirismEnchantment->doHeal(player, damage);
                 player->setHealthPoint(player->getHealthPoint() + vampirismEnchantment->getHealHealthPoints(damage));
 			}
 			damagesHappened[1] = damage;
@@ -142,7 +138,7 @@ void* Game::doActionRound(char selection)
 			{
 				auto healingEnchantment = std::static_pointer_cast<weapons::HealingEnchantment>(playerSuffixEnchantment);
 				//healingEnchantment->doHeal(player);
-                player->setHealthPoint(player->getHealthPoint() + healingEnchantment->getHealHealthPoints());
+                player->setHealthPoint(player->getHealthPoint() + healingEnchantment->get());
 				*done = true;
 			}
 		}
