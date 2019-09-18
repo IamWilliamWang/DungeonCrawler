@@ -18,11 +18,11 @@ public:
      * @param name
      */
 	Character(const std::string &name);
+
 private:
-	
+
 };
 
 } // namespace core
 
-//std::ostream& operator<<(std::ostream &stream, core::Character &character);
 #endif // CHARACTER_H

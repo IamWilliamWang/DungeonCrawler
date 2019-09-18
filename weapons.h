@@ -295,5 +295,6 @@ public:
 } // namespace items
 } // namespace core
 
+std::ostream& operator<<(std::ostream &stream, core::weapons::Weapon &weapon);
 
 #endif // WEAPONS_H

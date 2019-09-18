@@ -19,7 +19,7 @@ int Room::id()
 	return _id; 
 }
 
-bool Room::addWall(char direction, std::shared_ptr<Wall> wall)
+bool Room::addWall(char direction, std::shared_ptr<Wall> wall = std::make_shared<Wall>())
 {
 	if (!checkDirectionVaild(direction))
 		return false;

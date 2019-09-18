@@ -204,11 +204,6 @@ HealingEnchantment::HealingEnchantment()
 	_enchantmentType = "HealingEnchantment";
 }
 
-//void HealingEnchantment::doHeal(std::shared_ptr<core::creatures::Creature> creature)
-//{
-//	creature->setHealthPoint(creature->getHealthPoint() + 5);
-//}
-
 int HealingEnchantment::getHealHealthPoints()
 {
 	return 5;
@@ -219,12 +214,17 @@ VampirismEnchantment::VampirismEnchantment()
 	_enchantmentType = "VampirismEnchantment";
 }
 
-//void VampirismEnchantment::doHeal(std::shared_ptr<core::Character::Creature> creature, int damagedThisRound)
-//{
-//	creature->setHealthPoint(creature->getHealthPoint() + damagedThisRound / 2);
-//}
-
 int VampirismEnchantment::getHealHealthPoints(int damagedThisRound)
 {
 	return damagedThisRound / 2;
+}
+
+std::ostream& operator<<(std::ostream &stream, core::weapons::Weapon &weapon)
+{
+    stream << "\"" << weapon.getName() << "\"" << std::endl;
+    int* damages = weapon.getDamageRange();
+    printf("Min. Damage:%7d\n", damages[0]);
+    printf("Max. Damage:%7d\n", damages[1]);
+    stream << weapon.getLongDescription() << std::endl;
+    return stream;
 }

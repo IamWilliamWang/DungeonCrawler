@@ -1,5 +1,5 @@
 #include "creatures.h"
-
+#include <iostream>
 using namespace core::creatures;
 
 /* ------------------------------------------------------------------------------
@@ -12,7 +12,7 @@ Creature::Creature(const std::string &name)
 	_weapon = std::make_shared<core::weapons::Fists>();
 }
 
-const std::string& Creature::name() 
+std::string& Creature::name()
 { 
 	return _name; 
 }
@@ -109,8 +109,17 @@ void Creature::setWeapon(std::shared_ptr<core::weapons::Weapon> weapon)
 	_weapon = weapon;
 }
 
-//const std::string& Creature::name() const {
-//  return _name;
-//}
-
-
+std::ostream& operator<<(std::ostream &stream, core::creatures::Creature &creature)
+{
+    stream << creature.name() << std::endl;
+    printf("Strength:%10d\n", creature.getStrength());
+    printf("Dexterity:%9d\n", creature.getDexterity());
+    printf("Wisdom:%12d\n", creature.getWisdom());
+    printf("Health:%7d / %2d\n", creature.getHealthPoint(), creature.getMaxHealthPoint());
+    int* characterDamageWeaponed = creature.damageWeaponed();
+    printf("Damage:%7d - %2d\n", characterDamageWeaponed[0], characterDamageWeaponed[1]);
+    delete characterDamageWeaponed; // release the memory.
+    printf("Dodge:%12d%%\n", creature.dodgeChance());
+    stream << "Weapon:    " << creature.getWeapon()->getDescription() << std::endl;
+    return stream;
+}

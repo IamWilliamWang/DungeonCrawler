@@ -143,7 +143,7 @@ private:
    * @brief switchToCharacterDetails If a Character is available, transition to the
    * character details menu, otherwise dislay an error and return to the previous menu.
    */
-  void switchToCharacterMenu(Menu retMenuStatus = Menu::Main);
+  void switchToCharacterMenu(Menu retMenuStatus);
 
   /**
    * @brief quitGame displays the number of levels completed, if possible, before
@@ -237,7 +237,7 @@ private:
    * @param ch
    * @return
    */
-  char toLower(const char ch);
+  char tolower(const char ch);
 
   // The functions below should not be modified.
 

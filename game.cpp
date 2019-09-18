@@ -105,7 +105,7 @@ void* Game::doActionRound(char selection)
 			int* damageRange = player->damageWeaponed();
 			int damage = randomIntBetweenInc(damageRange[0], damageRange[1]);
 			creature->setHealthPoint(creature->getHealthPoint() - damage);
-			if (creature->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
+            if (creature->getWeapon()->getSuffixEnchantment() && creature->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
 			{
 				auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(creature->getWeapon()->getSuffixEnchantment());
 //				vampirismEnchantment->doHeal(creature, damage);
@@ -118,7 +118,8 @@ void* Game::doActionRound(char selection)
 			int* damageRange = creature->damageWeaponed();
 			int damage = randomIntBetweenInc(damageRange[0], damageRange[1]);
 			player->setHealthPoint(player->getHealthPoint() - damage);
-			if (player->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
+            if (player->getWeapon()->getSuffixEnchantment()
+                    && player->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
 			{
 				auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(player->getWeapon()->getSuffixEnchantment());
 //				vampirismEnchantment->doHeal(player, damage);

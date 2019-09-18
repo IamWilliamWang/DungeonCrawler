@@ -55,18 +55,18 @@ bool MenuInterface::processSelection(char selection) {
 
   switch (_currentMenu) {
   case Menu::Main:
-    return processMainMenu(static_cast<char>(tolower(selection)));
+    return processMainMenu(tolower(selection));
   case Menu::CharacterDetails:
-    processCharacterDetails(static_cast<char>(tolower(selection)));
+    processCharacterDetails(tolower(selection));
     break;
   case Menu::DungeonSelect:
-    processDungeonType(static_cast<char>(tolower(selection)));
+    processDungeonType(tolower(selection));
     break;
   case Menu::Action:
-    processAction(static_cast<char>(tolower(selection)));
+    processAction(tolower(selection));
     break;
   case Menu::Combat:
-    processCombatAction(static_cast<char>(tolower(selection)));
+    processCombatAction(tolower(selection));
   }
 
   return true;
@@ -200,7 +200,7 @@ void MenuInterface::createCharacter() {
 	if (!myCharacter->setAttribute(strength+1, dexterity+1, wisdom+1))
 		_display << "Create player failed!" << std::endl;
     Game::instance()->setPlayer(myCharacter);
-    switchToCharacterMenu();
+    switchToCharacterMenu(_currentMenu);
 }
 
 void MenuInterface::dungeonTypeMenu() const {
@@ -217,7 +217,7 @@ void MenuInterface::processDungeonType(char selection) {
 	if (_currentMenu != Menu::DungeonSelect)
 		return;
 
-	selection = toLower(selection);
+	selection = tolower(selection);
 	bool createSuccess = false;
 	if (selection == 'b')
 		createSuccess = Game::instance()->createDungeon("BasicDungeon");
@@ -242,7 +242,7 @@ void MenuInterface::processDungeonType(char selection) {
 	setMenu(Menu::Action);
 }
 
-void MenuInterface::switchToCharacterMenu(Menu retMenuStatus) {
+void MenuInterface::switchToCharacterMenu(Menu retMenuStatus = Menu::Main) {
   setMenu(Menu::CharacterDetails);
   processCharacterDetails('c');
   setMenu(retMenuStatus);
@@ -263,7 +263,7 @@ void MenuInterface::processCharacterDetails(char selection) {
 	if (_currentMenu != Menu::CharacterDetails || selection != 'c')
 		return;
 
-	selection = toLower(selection);
+	selection = tolower(selection);
 	
 	auto character = Game::instance()->player();
 	if (character == nullptr)
@@ -272,16 +272,7 @@ void MenuInterface::processCharacterDetails(char selection) {
 	{
         _display << std::endl;
 		_display << "***Character Summary***" << std::endl;
-		_display << character->name() << std::endl;
-		printf("Strength:%10d\n", character->getStrength());
-		printf("Dexterity:%9d\n", character->getDexterity());
-		printf("Wisdom:%12d\n", character->getWisdom());
-		printf("Health:%7d / %2d\n", character->getHealthPoint(), character->getMaxHealthPoint());
-		int* characterDamageWeaponed = character->damageWeaponed();
-		printf("Damage:%7d - %2d\n", characterDamageWeaponed[0], characterDamageWeaponed[1]);
-		delete characterDamageWeaponed; // release the memory.
-		printf("Dodge:%12d%%\n", character->dodgeChance());
-		_display << "Weapon:    " << character->getWeapon()->getDescription() << std::endl;
+		_display << *character;
 	}
 }
 
@@ -289,11 +280,7 @@ void MenuInterface::displayWeaponDetails(std::string title = "", std::shared_ptr
     _display << std::endl;
 	if (title != "")
 	    _display << title << std::endl;
-	_display << "\"" << weapon->getName() << "\"" << std::endl;
-	int* damages = weapon->getDamageRange();
-	printf("Min. Damage:%7d\n", damages[0]);
-	printf("Max. Damage:%7d\n", damages[1]);
-	_display << weapon->getLongDescription() << std::endl;
+    _display << *weapon;
 }
 
 void MenuInterface::displayChamber() const {
@@ -340,16 +327,16 @@ void MenuInterface::actionMenu() const {
 			switch (exitDirection)
 			{
 			case 'N':
-				outputs[0] = ("To the NORTH you see the exit.");
+				outputs[0] = ("To the NORTH you see a stairway to a another level.");
 				break;
 			case 'S':
-				outputs[1] = ("To the SOUTH you see the exit.");
+				outputs[1] = ("To the SOUTH you see a stairway to a another level.");
 				break;
 			case 'W':
-				outputs[2] = ("To the WEST you see the exit.");
+				outputs[2] = ("To the WEST you see a stairway to a another level.");
 				break;
 			case 'E':
-				outputs[3] = ("To the EAST you see the exit.");
+				outputs[3] = ("To the EAST you see a stairway to a another level.");
 				break;
 			default:
 				_display << "exit direction invaild!" << std::endl;
@@ -383,8 +370,8 @@ void MenuInterface::actionMenu() const {
 	
 	for (int i = 0; i < 4; i++)
 	{
-		if (outputs[i] != "")
-			_display << outputs[i] << std::endl;
+        if (outputs[static_cast<unsigned>(i)] != "")
+            _display << outputs[static_cast<unsigned>(i)] << std::endl;
 	}
 	_display << "What would you like to do?" << std::endl;
 	_display << " Go (n)orth" << std::endl;
@@ -392,7 +379,7 @@ void MenuInterface::actionMenu() const {
 	_display << " Go (s)outh" << std::endl;
 	_display << " Go (w)est" << std::endl;
 	_display << " Go (b)ack the way you came" << std::endl;
-	if (currRoom->getCreature() == nullptr && currRoom->getWeapon() != nullptr)
+	if (!currRoom->getCreature() && currRoom->getWeapon())
 	{
 		_display << " (p)ick-up item." << std::endl;
 		_display << " c(o)mpare items." << std::endl;
@@ -406,7 +393,7 @@ void MenuInterface::processAction(char selection) {
 	if (_currentMenu != Menu::Action)
 		return;
 
-	selection = toLower(selection);
+	selection = tolower(selection);
 	// get selection
 	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
 	if (selection == 'n')
@@ -431,10 +418,12 @@ void MenuInterface::processAction(char selection) {
 	else if (selection == 'p')
 	{
 		pickupWeapon();
+        return;
 	}
 	else if (selection == 'o')
 	{
 		compareWeapons();
+        return;
 	}
 	else if (selection == 'l')
     {
@@ -443,8 +432,7 @@ void MenuInterface::processAction(char selection) {
     }
 	else if (selection == 'c')
 	{
-		switchToCharacterMenu(Menu::Action);
-        setMenu(Menu::Action);
+		switchToCharacterMenu(_currentMenu);
         _display << std::endl;
 		_display << "What would you like to do?" << std::endl;
         _display << " View (w)eapon info." << std::endl;
@@ -518,7 +506,7 @@ void MenuInterface::processCombatAction(char selection) {
 	if (_currentMenu != Menu::Combat)
 		return;
 
-	selection = toLower(selection);
+	selection = tolower(selection);
 	if (selection == 'b')
 	{
 		if (!Game::instance()->navigateBack())
@@ -542,8 +530,7 @@ void MenuInterface::processCombatAction(char selection) {
 	}
 	else if (selection == 'c')
 	{
-		switchToCharacterMenu(Menu::Action);
-		setMenu(Menu::Action);
+		switchToCharacterMenu(_currentMenu);
 		_display << std::endl;
 		_display << "What would you like to do?" << std::endl;
 		_display << " View (w)eapon info." << std::endl;
@@ -576,7 +563,7 @@ void MenuInterface::doNavigate(char navigateDirection) {
 void MenuInterface::pickupWeapon() {
 	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
 	_display << "This action will drop your current item. Are you sure? (y/n)" << std::endl;
-	char selection = toLower(getCharacterInput());
+	char selection = tolower(getCharacterInput());
 	if (selection == 'y')
 	{
 		auto newWeapon = currRoom->getWeapon();
@@ -614,14 +601,16 @@ void MenuInterface::compareWeapons() {
 }
 
 void MenuInterface::doAttack() {
-	int* damagesHappened = (int*)Game::instance()->doActionRound('a');
+    int* damagesHappened = static_cast<int*>(Game::instance()->doActionRound('a'));
+    _display << std::endl;
 	_display << "You attack the creature..." << std::endl;
 	_display << (damagesHappened[0] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*") << std::endl;
 	if (damagesHappened[0] != 0)
 		_display << "The attack deals *" << damagesHappened[0] << "* damage..." << std::endl;
 	else
 		_display << "Creature dodged the attack" << std::endl;
-	if (Game::instance()->getBasicDungeon()->getNowRoom()->getCreature()->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
+    if (Game::instance()->getBasicDungeon()->getNowRoom()->getCreature()->getWeapon()->getSuffixEnchantment()
+            && Game::instance()->getBasicDungeon()->getNowRoom()->getCreature()->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
 		_display << "Due to the creature's Vampirism enchantment, the creture has received " << damagesHappened[0] / 2 << " healing points." << std::endl;
 	_display << std::endl;
 
@@ -631,12 +620,14 @@ void MenuInterface::doAttack() {
 		_display << "The attack deals *" << damagesHappened[1] << "* damage..." << std::endl;
 	else
 		_display << Game::instance()->player()->name() << " dodge the attack" << std::endl;
-	if (Game::instance()->player()->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
+    if (Game::instance()->player()->getWeapon()->getSuffixEnchantment()
+            && Game::instance()->player()->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
 		_display << "Due to your Vampirism enchantment, you have received " << damagesHappened[1] / 2 << " healing points." << std::endl;
-	_display << std::endl;
+
 
 	if (!Game::instance()->player()->isAlive())
 	{
+        _display << std::endl;
 		_display << "You died. Game Over Man!" << std::endl << std::endl;
 		_display << "You died after exploring *" << Game::instance()->getSuccessTimes() << "* levels" << std::endl;
 		setMenu(Menu::Main);
@@ -644,17 +635,19 @@ void MenuInterface::doAttack() {
 	}
 	else if (!Game::instance()->getBasicDungeon()->getNowRoom()->getCreature()->isAlive())
 	{
+        _display << std::endl;
 		_display << "You win the Fight!" << std::endl;
 		_display << "Digging through the remains of the creature you find something interesting." << std::endl;
 		auto room = Game::instance()->getBasicDungeon()->getNowRoom();
 		room->setWeapon(room->getCreature()->getWeapon());
 		room->setCreature(nullptr);
+        setMenu(Menu::Action);
 	}
 }
 
 void MenuInterface::useSpecialAbility() {
 	auto player = Game::instance()->player();
-	if (*(bool*)Game::instance()->doActionRound('l'))
+    if (*static_cast<bool*>(Game::instance()->doActionRound('l')))
 		_display << "You have received 5 healing points and now have " << player->getHealthPoint() << " / " << player->getMaxHealthPoint() << " health points" << std::endl;
 	else 
 	{
@@ -677,7 +670,7 @@ bool MenuInterface::confirm(const std::string &confirmationPrompt) const {
 	return selection == 'y';
 }
 
-char MenuInterface::toLower(const char ch)
+char MenuInterface::tolower(const char ch)
 {
 	char c = ch;
 	if (c >= 'A' && c <= 'Z')

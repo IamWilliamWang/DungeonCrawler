@@ -24,7 +24,7 @@ public:
      * @brief name 获得生物的名字
      * @return
      */
-	const std::string& name();
+    std::string& name();
 
     /**
      * @brief getStrength 获得力量值
@@ -131,5 +131,7 @@ private:
 
 } // namespace creatures
 } // namespace core
+
+std::ostream& operator<<(std::ostream &stream, core::creatures::Creature &creature);
 
 #endif // CREATURE_H

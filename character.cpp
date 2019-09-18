@@ -6,8 +6,3 @@ Character::Character(const std::string &name)
 {
 
 }
-
-//std::ostream& operator<<(std::ostream &stream, const Character &character) {
-//  stream << character.name();
-//  return stream;
-//}
