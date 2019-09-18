@@ -167,6 +167,9 @@ private:
    */
   void displayWeaponDetails(std::string title, std::shared_ptr<weapons::Weapon> weapon);
 
+  /**
+   * @brief displayChamber
+   */
   void displayChamber() const;
 
   /**
@@ -229,6 +232,11 @@ private:
    */
   bool confirm(const std::string &confirmationPrompt) const;
 
+  /**
+   * @brief toLower
+   * @param ch
+   * @return
+   */
   char toLower(const char ch);
 
   // The functions below should not be modified.

@@ -1,5 +1,5 @@
 #include "dungeon.h"
-
+#include "room.h"
 using namespace core::dungeon;
 
 Dungeon::Dungeon()

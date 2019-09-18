@@ -13,6 +13,10 @@ namespace core {
 class Character : public creatures::Creature
 {
 public:
+    /**
+     * @brief Character
+     * @param name
+     */
 	Character(const std::string &name);
 private:
 	

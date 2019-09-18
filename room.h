@@ -3,14 +3,10 @@
 #include <map>
 #include <memory>
 #include <list>
-#include <random>
-#include <ctime>
 #include <vector>
-#include "wall.h"
-#include "door.h"
-#include "weapons.h"
 #include "creatures.h"
-#include "game.h"
+#include "weapons.h"
+#include "wall.h"
 
 namespace core {
 namespace dungeon {
@@ -24,6 +20,10 @@ class Door; //predeclaration
 class Room
 {
 public:
+    /**
+     * @brief Room
+     * @param id
+     */
 	Room(int id);
 
 	/**
@@ -101,14 +101,35 @@ public:
      */
 	bool createCreature(std::vector<std::shared_ptr<core::creatures::Creature>> possibleCreatures);
 
+    /**
+     * @brief createWeapon
+     * @param possibleWeapons
+     * @return
+     */
 	bool createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons);
 
+    /**
+     * @brief getCreature
+     * @return
+     */
     std::shared_ptr<core::creatures::Creature> getCreature();
 
+    /**
+     * @brief setCreature
+     * @param creature
+     */
 	void setCreature(std::shared_ptr<core::creatures::Creature> creature);
 
+    /**
+     * @brief getWeapon
+     * @return
+     */
     std::shared_ptr<core::weapons::Weapon> getWeapon();
 
+    /**
+     * @brief setWeapon
+     * @param weapon
+     */
     void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon);
 
 private:

@@ -29,10 +29,23 @@ public:
 class BasicDungeonBuilder : public DungeonBuilder
 {
 public:
+    /**
+     * @brief parseInt
+     * @param intStr
+     * @return
+     */
 	int parseInt(std::string intStr);
 
+    /**
+     * @brief loadCreatures
+     * @return
+     */
 	bool loadCreatures();
 
+    /**
+     * @brief loadWeapons
+     * @return
+     */
 	bool loadWeapons();
 
     /**

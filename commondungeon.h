@@ -16,6 +16,11 @@ namespace dungeon {
 class OpenDoorway : public Door
 {
 public:
+    /**
+     * @brief OpenDoorway
+     * @param room1
+     * @param room2
+     */
 	OpenDoorway(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2);
 };
 

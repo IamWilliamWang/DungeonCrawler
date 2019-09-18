@@ -46,6 +46,11 @@ public:
     */
 	CsvFile(std::istream &input);
 
+    /**
+     * @brief parseRow
+     * @param line
+     * @return
+     */
 	QStringList parseRow(QString line);
     
     /**
@@ -66,6 +71,13 @@ public:
      */
 	int numberOfRows();
 
+    /**
+     * @brief replaceAll
+     * @param original
+     * @param old
+     * @param newOne
+     * @return
+     */
 	QString replaceAll(QString original, QString old, QString newOne);
 
     /**

@@ -1,4 +1,6 @@
 #include "room.h"
+#include "door.h"
+#include "game.h"
 using namespace core::dungeon;
 
 #define NORTH 'N'
@@ -17,7 +19,7 @@ int Room::id()
 	return _id; 
 }
 
-bool Room::addWall(char direction, std::shared_ptr<Wall> wall = std::make_shared<Wall>())
+bool Room::addWall(char direction, std::shared_ptr<Wall> wall)
 {
 	if (!checkDirectionVaild(direction))
 		return false;
@@ -35,7 +37,7 @@ bool Room::addDoor(char direction, std::shared_ptr<Door> door)
 	return true;
 }
 
-std::shared_ptr<dungeon::Door> Room::getDoor(char direction)
+std::shared_ptr<Door> Room::getDoor(char direction)
 {
 	if (!checkDirectionVaild(direction))
 		return nullptr;
@@ -101,13 +103,13 @@ bool Room::checkDirectionVaild(char& direction)
 
 bool Room::createCreature(std::vector<std::shared_ptr<core::creatures::Creature>> possibleCreatures)
 {
-    _creature = possibleCreatures.at(Game::instance()->randomIntBetweenEx(0, possibleCreatures.size()));
+    _creature = possibleCreatures.at(Game::instance()->randomIntBetweenEx(0, (int)possibleCreatures.size()));
 	return true;
 }
 
 bool Room::createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons)
 {
-    _weapon = possibleWeapons.at(Game::instance()->randomIntBetweenEx(0, possibleWeapons.size()));
+    _weapon = possibleWeapons.at(Game::instance()->randomIntBetweenEx(0, (int)possibleWeapons.size()));
 	return true;
 }
 

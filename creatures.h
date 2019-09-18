@@ -14,6 +14,10 @@ namespace creatures {
 class Creature
 {
 public:
+    /**
+     * @brief Creature
+     * @param name
+     */
 	Creature(const std::string &name);
 
     /**
@@ -46,8 +50,16 @@ public:
      */
 	int getHealthPoint();
     
+    /**
+     * @brief setHealthPoint
+     * @param healthPoint
+     */
 	void setHealthPoint(int healthPoint);
 
+    /**
+     * @brief getMaxHealthPoint
+     * @return
+     */
 	int getMaxHealthPoint();
 
 	/**
@@ -83,8 +95,16 @@ public:
      */
 	int dodgeChance();
 
+    /**
+     * @brief setDescription
+     * @param description
+     */
 	void setDescription(std::string description);
 
+    /**
+     * @brief getDescription
+     * @return
+     */
 	std::string getDescription();
 
 	/**

@@ -14,6 +14,11 @@ class Room; //predeclaration
 class Door
 {
 public:
+    /**
+     * @brief Door
+     * @param room1
+     * @param room2
+     */
 	Door(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2);
 
     /**

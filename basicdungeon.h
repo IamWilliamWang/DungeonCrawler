@@ -1,10 +1,14 @@
 #ifndef BASICDUNGEON_H
 #define BASICDUNGEON_H
-#include "dungeon.h"
+#include <memory>
+#include <list>
 #include "commondungeon.h"
-
 namespace core {
 namespace dungeon {
+
+class Dungeon;
+class Room; // predeclaration.
+//class Chamber;
 
 // TODO: define component classes spcific to the BasicDungeon type
 
@@ -14,13 +18,16 @@ namespace dungeon {
 class BasicDungeon : public Dungeon
 {
 public:
-	BasicDungeon();
+    /**
+     * @brief BasicDungeon
+     */
+    BasicDungeon();
 
     /**
      * @brief getEntranceRoom 获得牢笼的开始Room
      * @return
      */
-	std::shared_ptr<Room> getEntranceRoom();
+    std::shared_ptr<Room> getEntranceRoom();
 
     /**
      * @brief getNowRoom 获得当前的Room
@@ -31,14 +38,14 @@ public:
      * @brief setNowRoom 设置当前的Room
      * @param nowRoom
      */
-	void setNowRoom(std::shared_ptr<Room> nowRoom);
+    void setNowRoom(std::shared_ptr<Room> nowRoom);
 
     /**
      * @brief path 获得走过路径上第几个Room，index可正可负
      * @param index
      * @return
      */
-	std::shared_ptr<Room> path(int index);
+    std::shared_ptr<Room> path(int index);
 
 private:
 	std::list<std::shared_ptr<Room>> _path;
@@ -51,6 +58,9 @@ private:
 class RockChamber : public Chamber
 {
 public:
+    /**
+     * @brief RockChamber
+     */
 	RockChamber();
 };
 
@@ -60,6 +70,9 @@ public:
 class QuartzChamber : public Chamber
 {
 public:
+    /**
+     * @brief QuartzChamber
+     */
 	QuartzChamber();
 };
 
@@ -69,6 +82,9 @@ public:
 class RockWall
 {
 public:
+    /**
+     * @brief RockWall
+     */
 	RockWall();
 };
 

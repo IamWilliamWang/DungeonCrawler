@@ -5,12 +5,19 @@
 #include <random>
 #include <string>
 #include <ctime>
+#include "room.h"
 #include "character.h"
 #include "dungeon.h"
 #include "basicdungeon.h"
-#include "dungeonbuilder.h"
-
 namespace core {
+
+//class Character;
+//namespace dungeon {
+//    class Room;
+//}
+//namespace creatures {
+//    class Creature;
+//}
 
 /*-----------------------------------------------------------------------------------
  * NOTE: DO NOT modify or remove ALREADY IMPLEMENTED members of this class.
@@ -25,10 +32,6 @@ namespace core {
  * maintain and update the game state, so any member functions you implement must be
  * in fulfillment of that responsibility.
  *-----------------------------------------------------------------------------------*/
-namespace dungeon {
-    class Dungeon; // predeclaration.
-    class BasicDungeon;
-}
 
 /**
  * @brief TODO The Game class
@@ -36,10 +39,7 @@ namespace dungeon {
 class Game
 {
 public:
-
-	// TODO implement the Game class
-  
-
+   // TODO implement the Game class
    /**
     * @brief player Retrieves the player's Character, if any.
     */
@@ -53,13 +53,13 @@ public:
    /**
     * @brief dungeon Returns the current dungeon level, if any.
     */
-	std::shared_ptr<dungeon::Dungeon> dungeon();
+    std::shared_ptr<dungeon::Dungeon> dungeon();
 
    /**
     * @brief dungeon_basic
     * @return
     */
-	std::shared_ptr<dungeon::BasicDungeon> getBasicDungeon();
+    std::shared_ptr<dungeon::BasicDungeon> getBasicDungeon();
 
    /**
     * @brief createDungeon Initiates the creation of a new dungeon level.
@@ -104,7 +104,12 @@ public:
     */
 	void exitDungeon();
 
-	bool canDodge(std::shared_ptr<creatures::Creature> creature);
+   /**
+    * @brief canDodge
+    * @param creature
+    * @return
+    */
+    bool canDodge(std::shared_ptr<creatures::Creature> creature);
 
    /**
     * @brief doActionRound Performs a player action (weapon attack, item use,
@@ -112,10 +117,22 @@ public:
     */
 	void* doActionRound(char selection);
 
-	void setDungeon(std::shared_ptr<dungeon::Dungeon> dungeon);
+   /**
+    * @brief setDungeon
+    * @param dungeon
+    */
+    void setDungeon(std::shared_ptr<dungeon::Dungeon> dungeon);
 
+   /**
+    * @brief getSuccessTimes
+    * @return
+    */
 	int getSuccessTimes();
 
+   /**
+    * @brief instance
+    * @return
+    */
 	static std::shared_ptr<Game> instance();
 
 

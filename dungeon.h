@@ -1,11 +1,12 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
-#include "room.h"
 #include <map>
 #include <memory>
 
 namespace core {
 namespace dungeon {
+
+class Room;
 
 /*-----------------------------------------------------------------------------------
  * NOTE: to students - DO NOT modify or remove EXISTING members of this class.

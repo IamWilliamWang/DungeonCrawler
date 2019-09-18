@@ -13,6 +13,9 @@ namespace dungeon {
 class MagicalDungeon
 {
 public:
+ /**
+  * @brief MagicalDungeon
+  */
   MagicalDungeon();
 };
 
@@ -22,6 +25,9 @@ public:
 class EnchantedLibrary
 {
 public:
+ /**
+  * @brief EnchantedLibrary
+  */
   EnchantedLibrary();
 };
 
@@ -31,6 +37,9 @@ public:
 class AlchemistsLaboratory
 {
 public:
+/**
+ * @brief AlchemistsLaboratory
+ */
   AlchemistsLaboratory();
 };
 
@@ -40,6 +49,9 @@ public:
 class MagicWall
 {
 public:
+/**
+ * @brief MagicWall
+ */
   MagicWall();
 };
 
