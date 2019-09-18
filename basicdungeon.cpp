@@ -12,6 +12,13 @@ BasicDungeon::BasicDungeon()
 
 }
 
+BasicDungeon::BasicDungeon(const BasicDungeon& oldDungeon)
+{
+	memcpy(&this->_rooms, &oldDungeon._rooms, sizeof(oldDungeon._rooms));
+	memcpy(&this->_path, &oldDungeon._path, sizeof(oldDungeon._path));
+	memcpy(&this->_nowRoom, &oldDungeon._nowRoom, sizeof(oldDungeon._nowRoom));
+}
+
 std::shared_ptr<Room> BasicDungeon::getEntranceRoom()
 {
     for (auto &pair : _rooms)

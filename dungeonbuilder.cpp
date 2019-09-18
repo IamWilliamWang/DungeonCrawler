@@ -146,6 +146,9 @@ std::shared_ptr<Dungeon> BasicDungeonBuilder::buildDungeon()
 
 std::shared_ptr<Dungeon> BasicDungeonBuilder::clone(std::shared_ptr<Dungeon> dungeon)
 {
-	// NOT IMPLEMENTED
+	auto basicDungeon = std::static_pointer_cast<BasicDungeon>(dungeon);
+	if (basicDungeon != nullptr)
+		return std::make_shared<BasicDungeon>(*basicDungeon);
+	
 	return nullptr;
 }

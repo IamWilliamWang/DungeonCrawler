@@ -23,6 +23,12 @@ public:
      */
     BasicDungeon();
 
+	/**
+	 * @brief 
+	 * @param nowRoom
+	 */
+	BasicDungeon(const BasicDungeon& oldDungeon);
+
     /**
      * @brief getEntranceRoom 获得牢笼的开始Room
      * @return
