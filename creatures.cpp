@@ -65,9 +65,7 @@ bool Creature::setAttribute(int strength, int dexterity, int wisdom)
 	_strength = strength;
 	_dexterity = dexterity;
 	_wisdom = wisdom;
-	if (_maxHealth == -1)
-		_maxHealth = 50;
-	_health = 50;
+    setHealthPoint(50);
 	return true;
 }
 

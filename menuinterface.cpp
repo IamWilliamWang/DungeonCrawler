@@ -583,38 +583,62 @@ void MenuInterface::compareWeapons() {
 }
 
 void MenuInterface::doAttack() {
+    auto player = Game::instance()->player(); // 我方
+    auto myPrefixEnchantment = player->getWeapon()->getPrefixEnchantment();
+    auto mySuffixEnchantment = player->getWeapon()->getSuffixEnchantment();
+    auto enemy = Game::instance()->getBasicDungeon()->getNowRoom()->getCreature(); // 敌方
+    auto enemyPrefixEnchantment = enemy->getWeapon()->getPrefixEnchantment();
+    auto enemySuffixEnchantment = enemy->getWeapon()->getSuffixEnchantment();
+
+    // 执行攻击并获得各造成伤害点数
     int* damagesHappened = static_cast<int*>(Game::instance()->doActionRound('a'));
     _display << std::endl;
+    // 我方开始攻击
 	_display << "You attack the creature..." << std::endl;
-	_display << (damagesHappened[0] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*") << std::endl;
-	if (damagesHappened[0] != 0)
+    _display << (damagesHappened[0] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*") << std::endl; // 战斗描述
+    if (damagesHappened[0] != 0) // 显示是否躲避
 		_display << "The attack deals *" << damagesHappened[0] << "* damage..." << std::endl;
 	else
-		_display << "Creature dodged the attack" << std::endl;
-    auto suffixEnchantment = Game::instance()->getBasicDungeon()->getNowRoom()->getCreature()->getWeapon()->getSuffixEnchantment();
-    if (suffixEnchantment)
+        _display << "Creature dodged the attack" << std::endl;
+    // 我方攻击时前缀附魔显示
+    if (damagesHappened[0] != 0 && myPrefixEnchantment)
     {
-        if (suffixEnchantment->getEnchantmentType() == "FlameEnchantment")
+        if (myPrefixEnchantment->instanceOf("FlameEnchantment"))
             _display << "The target bursts into flames taking an extra 5 damage" << std::endl;
-        else if (suffixEnchantment->getEnchantmentType() == "ElectricityEnchantment")
-            _display << "The target bursts into electricity taking an extra 5 damage" << std::endl;
-        else if (suffixEnchantment->getEnchantmentType() == "VampirismEnchantment")
-            _display << "Due to the creature's Vampirism enchantment, the creture has received " << damagesHappened[0] / 2 << " healing points." << std::endl;
+        else if (myPrefixEnchantment->instanceOf("ElectricityEnchantment"))
+            _display << "As the weapon connects, a bolt of lightning strikes the target dealing 5 damage" << std::endl;
+    }
+    // 我方攻击时敌方后缀附魔显示
+    if (damagesHappened[0] != 0 && enemySuffixEnchantment)
+    {
+        if (enemySuffixEnchantment->instanceOf("VampirismEnchantment"))
+            _display << "A feeling of warmth flows through creature and it heals " << damagesHappened[0] / 2 << " health" << std::endl;
     }
 	_display << std::endl;
 
+    // 敌方开始攻击
 	_display << "The creature attacks... ";
-	_display << (damagesHappened[1] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*") << std::endl;
-	if (damagesHappened[1] != 0)
+    _display << (damagesHappened[1] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*") << std::endl; // 战斗描述
+    if (damagesHappened[1] != 0) // 显示是否躲避
 		_display << "The attack deals *" << damagesHappened[1] << "* damage..." << std::endl;
 	else
         _display << Game::instance()->player()->name() << " dodged the attack" << std::endl;
-    if (Game::instance()->player()->getWeapon()->getSuffixEnchantment()
-            && Game::instance()->player()->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
-		_display << "Due to your Vampirism enchantment, you have received " << damagesHappened[1] / 2 << " healing points." << std::endl;
-
-
-	if (!Game::instance()->player()->isAlive())
+    // 敌方攻击时前缀附魔显示
+    if (damagesHappened[1] != 0 && enemyPrefixEnchantment)
+    {
+        if (enemyPrefixEnchantment->instanceOf("FlameEnchantment"))
+            _display << "You burst into flames taking an extra 5 damage" << std::endl;
+        else if (enemyPrefixEnchantment->instanceOf("ElectricityEnchantment"))
+            _display << "As the weapon connects, a bolt of lightning strikes you dealing 5 damage" << std::endl;
+    }
+    // 敌方攻击时我方后缀附魔显示
+    if (damagesHappened[1] != 0 && mySuffixEnchantment)
+    {
+        if (mySuffixEnchantment->instanceOf("VampirismEnchantment"))
+            _display << "A feeling of warmth flows through you and you heal " << damagesHappened[1] / 2 << " health" << std::endl;
+    }
+    // 检查双方是否死亡
+    if (!player->isAlive()) // 我方死亡
 	{
         _display << std::endl;
 		_display << "You died. Game Over Man!" << std::endl << std::endl;
@@ -622,7 +646,7 @@ void MenuInterface::doAttack() {
 		setMenu(Menu::Main);
 		leaveDungeon();
 	}
-	else if (!Game::instance()->getBasicDungeon()->getNowRoom()->getCreature()->isAlive())
+    else if (!enemy->isAlive()) // 敌方死亡
 	{
         _display << std::endl;
 		_display << "You win the Fight!" << std::endl;
@@ -637,7 +661,7 @@ void MenuInterface::doAttack() {
 void MenuInterface::useSpecialAbility() {
 	auto player = Game::instance()->player();
     if (*static_cast<bool*>(Game::instance()->doActionRound('l')))
-		_display << "You have received 5 healing points and now have " << player->getHealthPoint() << " / " << player->getMaxHealthPoint() << " health points" << std::endl;
+        _display << "An aura of light comes from within you. You are healed for 6 health points. Now your have " << player->getHealthPoint() << "/" << player->getMaxHealthPoint() << " health points" << std::endl;
 	else 
 	{
 		_display << "You hold your weapon high and shout..." << std::endl;

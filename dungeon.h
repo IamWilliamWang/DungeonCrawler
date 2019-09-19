@@ -14,7 +14,7 @@ class Room;
  *-----------------------------------------------------------------------------------*/
 
 /**
- * @brief TODO The Dungeon class
+ * @brief The Dungeon class
  */
 class Dungeon
 {

@@ -8,13 +8,13 @@ namespace core {
 // TODO: define Character class.
 
 /**
- * @brief TODO The Complete the Character class, following is just a small example
+ * @brief The Complete the Character class, following is just a small example
  */
 class Character : public creatures::Creature
 {
 public:
     /**
-     * @brief Character
+     * @brief Character 玩家角色
      * @param name
      */
 	Character(const std::string &name);

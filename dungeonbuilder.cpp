@@ -23,12 +23,13 @@ bool BasicDungeonBuilder::loadCreatures()
 	int dungeonTypeI = csv.columnIndexOf("Dungeon Type");
 	for (int row = 1; row <= csv.numberOfRows(); row++)
 	{
-		if (csv.at(row, dungeonTypeI) != "BasicDungeon")
+        if (csv.at(row, dungeonTypeI) == "MagicalDungeon" || csv.at(row, dungeonTypeI) == "")
 			continue;
 		auto creature = std::make_shared<core::creatures::Creature>(csv.at(row, nameI));
+        creature->setHealthPoint(parseInt(csv.at(row, healthI))); // set health point and max health point first
 		creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI)), parseInt(csv.at(row, wisdomI)));
 		creature->setDescription(csv.at(row, descriptionI));
-		creature->setHealthPoint(parseInt(csv.at(row, healthI)));
+
 		auto weaponName = csv.at(row, weaponI);
 		if (weaponName == "Fists")
 			creature->setWeapon(std::make_shared<core::weapons::Fists>());

@@ -5,7 +5,7 @@ namespace core {
 namespace dungeon {
 
 /**
- * @brief TODO The Wall class
+ * @brief The Wall class
  */
 class Wall
 {

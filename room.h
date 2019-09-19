@@ -15,13 +15,13 @@ class Wall;
 class Door; //predeclaration
 
 /**
- * @brief TODO The Room class
+ * @brief The Room class
  */
 class Room
 {
 public:
     /**
-     * @brief Room
+     * @brief Room 创建房间
      * @param id
      */
 	Room(int id);
@@ -73,6 +73,11 @@ public:
      */
 	bool existEntranceOrExit();
 
+    /**
+     * @brief addEntranceOrExit 为房间添加入口或者出口
+     * @param direction 需要添加的方向
+     * @param addEntrance 是否要添加的是入口
+     */
 	void addEntranceOrExit(char direction, bool addEntrance);
 
     /**
@@ -102,32 +107,32 @@ public:
 	bool createCreature(std::vector<std::shared_ptr<core::creatures::Creature>> possibleCreatures);
 
     /**
-     * @brief createWeapon
+     * @brief createWeapon 根据武器列表为房间随机添加一个武器
      * @param possibleWeapons
      * @return
      */
 	bool createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons);
 
     /**
-     * @brief getCreature
+     * @brief getCreature 获得房间内的生物
      * @return
      */
     std::shared_ptr<core::creatures::Creature> getCreature();
 
     /**
-     * @brief setCreature
+     * @brief setCreature 设置房间内的生物
      * @param creature
      */
 	void setCreature(std::shared_ptr<core::creatures::Creature> creature);
 
     /**
-     * @brief getWeapon
+     * @brief getWeapon 获得房间内的武器（或生物手持的武器）
      * @return
      */
     std::shared_ptr<core::weapons::Weapon> getWeapon();
 
     /**
-     * @brief setWeapon
+     * @brief setWeapon 设置房间内的武器
      * @param weapon
      */
     void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon);

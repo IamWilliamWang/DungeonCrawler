@@ -5,32 +5,31 @@
 
 using namespace core::weapons;
 
-
 /* ------------------------------------------------------------------------------
  * Weapon member implementations
  * -----------------------------------------------------------------------------*/
 
 Weapon::Weapon() 
 {
-
+    createEnchantmentOrNot();
 }
 
 Weapon::Weapon(std::string &name, std::string &description)
     : _name(name), _description(description)
 {
-
+    createEnchantmentOrNot();
 }
 
 Weapon::Weapon(std::string &name, std::string &description, std::string &longDescription)
     : _name(name), _description(description), _longDescription(longDescription)
 {
-
+    createEnchantmentOrNot();
 }
 
 Weapon::Weapon(std::string &name, std::string &description, std::string &longDescription, int minDamage, int maxDamage)
     : _name(name), _description(description), _longDescription(longDescription), _minDamage(minDamage), _maxDamage(maxDamage)
 {
-
+    createEnchantmentOrNot();
 }
 
 std::string Weapon::getName()
@@ -48,17 +47,17 @@ std::string Weapon::getFullName()
 	std::string result = "";
 	if (_prefixEnchantment != nullptr)
 	{
-		if (_prefixEnchantment->getEnchantmentType() == "FlameEnchantment")
+        if (_prefixEnchantment->instanceOf("FlameEnchantment"))
 			result += "Flaming ";
-		else if (_prefixEnchantment->getEnchantmentType() == "ElectricityEnchantment")
+        else if (_prefixEnchantment->instanceOf("ElectricityEnchantment"))
 			result += "Electrified ";
 	}
 	result += _name;
 	if (_suffixEnchantment != nullptr)
 	{
-		if (_suffixEnchantment->getEnchantmentType() == "HealingEnchantment")
+        if (_suffixEnchantment->instanceOf("HealingEnchantment"))
 			result += " of Healing";
-		else if (_suffixEnchantment->getEnchantmentType() == "VampirismEnchantment")
+        else if (_suffixEnchantment->instanceOf("VampirismEnchantment"))
 			result += " of Vampirism";
 	}
 	return result;
@@ -117,16 +116,52 @@ std::shared_ptr<Enchantment> Weapon::getSuffixEnchantment()
 	return _suffixEnchantment;
 }
 
+bool Weapon::createEnchantmentOrNot()
+{
+    return createEnchantment(hasEnchantmentCount());
+}
+
+int Weapon::hasEnchantmentCount()
+{
+    auto randomInt = Game::instance()->randomIntBetweenInc(1, 10);
+    if (randomInt <= 5)
+        return 0;
+    else
+        return randomInt < 9 ? 1 : 2;
+}
+
+bool Weapon::createEnchantment(int enchantmentCount)
+{
+    if (enchantmentCount < 0 || enchantmentCount > 2)
+        return false;
+
+    if (enchantmentCount >= 1)
+    {
+        if (Game::instance()->randomIntBetweenInc(0, 1))
+            _prefixEnchantment = std::make_shared<FlameEnchantment>();
+        else
+            _prefixEnchantment = std::make_shared<ElectricityEnchantment>();
+    }
+    if (enchantmentCount >= 2)
+    {
+        if (Game::instance()->randomIntBetweenInc(0, 1))
+            _suffixEnchantment = std::make_shared<HealingEnchantment>();
+        else
+            _suffixEnchantment = std::make_shared<VampirismEnchantment>();
+    }
+    return true;
+}
+
 int Weapon::getEnchantmentDamage()
 {
 	if (_prefixEnchantment != nullptr)
 	{
-		if (_prefixEnchantment->getEnchantmentType() == "FlameEnchantment")
+        if (_prefixEnchantment->instanceOf("FlameEnchantment"))
 		{
 			auto flameEnchantment = std::static_pointer_cast<FlameEnchantment>(_prefixEnchantment);
 			return flameEnchantment->get();
 		}
-		else if (_prefixEnchantment->getEnchantmentType() == "ElectricityEnchantment")
+        else if (_prefixEnchantment->instanceOf("ElectricityEnchantment"))
 		{
 			auto electricityEnchantment = std::static_pointer_cast<ElectricityEnchantment>(_prefixEnchantment);
 			return electricityEnchantment->get();
@@ -275,5 +310,31 @@ std::ostream& operator<<(std::ostream &stream, core::weapons::Weapon &weapon)
     printf("Max. Damage:%7d\n", damages[1]);
 	delete damages;
     stream << weapon.getLongDescription() << std::endl;
+    if (weapon.getPrefixEnchantment())
+    {
+        if (weapon.getPrefixEnchantment()->instanceOf("FlameEnchantment"))
+        {
+            stream << std::endl;
+            stream << "Holding it feels warm to the touch and sparks leap out when it makes contact with something." << std::endl;
+        }
+        else if(weapon.getPrefixEnchantment()->instanceOf("ElectricityEnchantment"))
+        {
+            stream << std::endl;
+            stream << "The air crackles around it making the hairs on your arm stand on end." << std::endl;
+        }
+    }
+    if (weapon.getSuffixEnchantment())
+    {
+        if (weapon.getSuffixEnchantment()->instanceOf(""))
+        {
+            stream << std::endl;
+            stream << "Just being near it makes you feel all warm and fuzzy inside." << std::endl;
+        }
+        else if(weapon.getSuffixEnchantment()->instanceOf(""))
+        {
+            stream << std::endl;
+            stream << "Occasionally drops of blood appear on the surface but you are unsure from whence they came."<<std::endl;
+        }
+    }
     return stream;
 }

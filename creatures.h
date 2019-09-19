@@ -9,19 +9,19 @@ namespace creatures {
 // There is some example code in here, but it can be modified if desired.
 
 /**
- * @brief TODO The Creature class
+ * @brief The Creature class
  */
 class Creature
 {
 public:
     /**
-     * @brief Creature
+     * @brief Creature 生物类
      * @param name
      */
 	Creature(const std::string &name);
 
     /**
-     * @brief name 获得生物的名字
+     * @brief name 获得名字
      * @return
      */
     std::string& name();
@@ -51,13 +51,13 @@ public:
 	int getHealthPoint();
     
     /**
-     * @brief setHealthPoint
+     * @brief setHealthPoint 设置生命点数
      * @param healthPoint
      */
 	void setHealthPoint(int healthPoint);
 
     /**
-     * @brief getMaxHealthPoint
+     * @brief getMaxHealthPoint 设置最大生命值
      * @return
      */
 	int getMaxHealthPoint();
@@ -83,10 +83,14 @@ public:
      */
 	int damage();
 
+    /**
+     * @brief damageWeaponed 获得武器(带附魔)的伤害值（在伤害范围内随机取值）
+     * @return
+     */
 	int damageWeaponed();
 
 	/**
-	 * @brief damageWeaponedRange 带有武器的伤害值
+     * @brief damageWeaponedRange 武器(带附魔)的伤害返回
 	 * @return 返回int[2]，包含[最低伤害,最高伤害]
 	 */
 	int* damageWeaponedRange();
@@ -98,13 +102,13 @@ public:
 	int dodgeChance();
 
     /**
-     * @brief setDescription
+     * @brief setDescription 设置描述
      * @param description
      */
 	void setDescription(std::string description);
 
     /**
-     * @brief getDescription
+     * @brief getDescription 获取描述
      * @return
      */
 	std::string getDescription();

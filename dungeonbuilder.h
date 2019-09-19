@@ -10,6 +10,9 @@ namespace dungeon {
 
 class Dungeon;
 
+/**
+ * @brief The DungeonBuilder class
+ */
 class DungeonBuilder
 {
 public:
@@ -30,32 +33,32 @@ class BasicDungeonBuilder : public DungeonBuilder
 {
 public:
     /**
-     * @brief parseInt
+     * @brief parseInt 转换字符串到整形
      * @param intStr
      * @return
      */
 	int parseInt(std::string intStr);
 
     /**
-     * @brief loadCreatures
+     * @brief loadCreatures 加载所有满足条件的生物信息
      * @return
      */
 	bool loadCreatures();
 
     /**
-     * @brief loadWeapons
+     * @brief loadWeapons 加载所有满足条件的武器信息
      * @return
      */
 	bool loadWeapons();
 
     /**
-     * @brief buildDungeon
+     * @brief buildDungeon 构建地牢
      * @return
      */
 	std::shared_ptr<Dungeon> buildDungeon();
 
     /**
-     * @brief clone
+     * @brief clone 克隆地牢
      * @param dungeon
      * @return
      */

@@ -9,11 +9,16 @@ namespace weapons {
  */
 class Interface
 {
-    virtual int get(void* args = nullptr) = 0; // 接口的函数
+    /**
+     * @brief get 获得想获取的数据
+     * @param args 任何需要传入的参数
+     * @return 获得的整形数据
+     */
+    virtual int get(void* args = nullptr) = 0;
 };
 
 /**
- * @brief TODO The Enchantment class 附魔基类
+ * @brief The Enchantment class 附魔基类
  */
 class Enchantment : public Interface
 {
@@ -24,17 +29,27 @@ public:
     Enchantment();
 
     /**
+     * @brief instanceOf 判断附魔是否为typeName类型的instance
+     * @param typeName
+     * @return
+     */
+    bool instanceOf(std::string typeName)
+    {
+        return _enchantmentType == typeName;
+    }
+
+protected:
+    /**
      * @brief getEnchantmentType 获得类名
      * @return
      */
     std::string getEnchantmentType();
 
-protected:
     std::string _enchantmentType; // 储存类名
 };
 
 /**
- * @brief TODO The FlameEnchantment class
+ * @brief The FlameEnchantment class
  */
 class FlameEnchantment : public Enchantment
 {
@@ -58,7 +73,7 @@ public:
 };
 
 /**
- * @brief TODO The ElectricityEnchantment class
+ * @brief The ElectricityEnchantment class
  */
 class ElectricityEnchantment : public Enchantment
 {
@@ -81,7 +96,7 @@ public:
 };
 
 /**
- * @brief TODO The HealingEnchantment class
+ * @brief The HealingEnchantment class
  */
 class HealingEnchantment : public Enchantment
 {
@@ -105,7 +120,7 @@ public:
 };
 
 /**
- * @brief TODO The VampirismEnchantment class
+ * @brief The VampirismEnchantment class
  */
 class VampirismEnchantment : public Enchantment
 {
@@ -130,7 +145,7 @@ public:
 };
 
 /**
- * @brief TODO The Weapon class 武器的基类
+ * @brief The Weapon class 武器的基类
  */
 class Weapon : public Interface
 {
@@ -247,8 +262,28 @@ public:
      */
     int get(void* args = nullptr);
 private:
+
     /**
-     * @brief getEnchantmentDamage
+     * @brief createEnchantmentOrNot 决定是否添加附魔，如果是就自动添加
+     * @return
+     */
+    bool createEnchantmentOrNot();
+
+    /**
+     * @brief hasEnchantmentCount 要拥有的附魔数量
+     * @return
+     */
+    int hasEnchantmentCount();
+
+    /**
+     * @brief createEnchantment 为本武器创建enchantmentCount个附魔
+     * @param enchantmentCount
+     * @return
+     */
+    bool createEnchantment(int enchantmentCount);
+
+    /**
+     * @brief getEnchantmentDamage 获得附魔的额外伤害
      * @return
      */
 	int getEnchantmentDamage();
@@ -264,7 +299,7 @@ private:
 };
 
 /**
- * @brief TODO The Fists class
+ * @brief The Fists class
  */
 class Fists : public Weapon
 {
@@ -276,7 +311,7 @@ public:
 };
 
 /**
- * @brief TODO The Boomerang class
+ * @brief The Boomerang class
  */
 class Boomerang : public Weapon
 {
@@ -288,7 +323,7 @@ public:
 };
 
 /**
- * @brief TODO The ShortSword class
+ * @brief The ShortSword class
  */
 class ShortSword : public Weapon
 {
@@ -300,7 +335,7 @@ public:
 };
 
 /**
- * @brief TODO The BattleAxe class
+ * @brief The BattleAxe class
  */
 class BattleAxe : public Weapon
 {
@@ -312,7 +347,7 @@ public:
 };
 
 /**
- * @brief TODO The WizardsStaff class
+ * @brief The WizardsStaff class
  */
 class WizardsStaff : public Weapon
 {
@@ -324,7 +359,7 @@ public:
 };
 
 /**
- * @brief TODO The MagicWand class
+ * @brief The MagicWand class
  */
 class MagicWand : public Weapon
 {

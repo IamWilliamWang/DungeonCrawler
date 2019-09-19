@@ -11,14 +11,6 @@
 #include "basicdungeon.h"
 namespace core {
 
-//class Character;
-//namespace dungeon {
-//    class Room;
-//}
-//namespace creatures {
-//    class Creature;
-//}
-
 /*-----------------------------------------------------------------------------------
  * NOTE: DO NOT modify or remove ALREADY IMPLEMENTED members of this class.
  * You will need to COMPLETE the implementations of the suggested skeleton functions
@@ -34,12 +26,12 @@ namespace core {
  *-----------------------------------------------------------------------------------*/
 
 /**
- * @brief TODO The Game class
+ * @brief The Game class
  */
 class Game
 {
 public:
-   // TODO implement the Game class
+   // the Game class
    /**
     * @brief player Retrieves the player's Character, if any.
     */
@@ -56,7 +48,7 @@ public:
     std::shared_ptr<dungeon::Dungeon> dungeon();
 
    /**
-    * @brief dungeon_basic
+    * @brief getBasicDungeon 获得地牢并转换为BasicDungeon
     * @return
     */
     std::shared_ptr<dungeon::BasicDungeon> getBasicDungeon();
@@ -105,7 +97,7 @@ public:
 	void exitDungeon();
 
    /**
-    * @brief canDodge
+    * @brief canDodge 生物是否可以躲避本次攻击
     * @param creature
     * @return
     */
@@ -118,19 +110,19 @@ public:
 	void* doActionRound(char selection);
 
    /**
-    * @brief setDungeon
+    * @brief setDungeon 设置牢笼
     * @param dungeon
     */
     void setDungeon(std::shared_ptr<dungeon::Dungeon> dungeon);
 
    /**
-    * @brief getSuccessTimes
+    * @brief getSuccessTimes 获得探索完毕的层数
     * @return
     */
 	int getSuccessTimes();
 
    /**
-    * @brief instance
+    * @brief instance 获得Game实例
     * @return
     */
 	static std::shared_ptr<Game> instance();

@@ -4,12 +4,12 @@ using namespace data;
 
 CsvFile::CsvFile(std::istream &input)
 {
-	constexpr int bufferLength = 200;
+    constexpr int bufferLength = 500;
 	char buffer[bufferLength]; // 读取时的buffer
 	std::shared_ptr<QVector<QStringList>> table = std::make_shared<QVector<QStringList>>(); // 二维String数组
 	int columnCount = -1; // 有多少列
-	while (input.getline(buffer, bufferLength)) // 读取一行内容
-	{
+    while (input.getline(buffer, bufferLength)) // 读取一行内容
+    {
 		QString line(buffer);
 		line = replaceAll(line, "\"\"", "$$"); // testDoubleQuotesWithinFields补丁：先把合法的""换成$，输出之前再换到"
 		QStringList rowList = parseRow(line);

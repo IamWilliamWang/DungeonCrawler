@@ -9,13 +9,13 @@ namespace dungeon {
 class Room; //predeclaration
 
 /**
- * @brief TODO The Door class
+ * @brief The Door class
  */
 class Door
 {
 public:
     /**
-     * @brief Door
+     * @brief Door 门
      * @param room1
      * @param room2
      */

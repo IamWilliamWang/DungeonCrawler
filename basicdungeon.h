@@ -18,29 +18,29 @@ class BasicDungeon : public Dungeon
 {
 public:
     /**
-     * @brief BasicDungeon
+     * @brief BasicDungeon 基础牢笼
      */
     BasicDungeon();
 
 	/**
-	 * @brief 
+     * @brief 复制构造函数
 	 * @param nowRoom
 	 */
 	BasicDungeon(const BasicDungeon& oldDungeon);
 
     /**
-     * @brief getEntranceRoom 获得牢笼的开始Room
+     * @brief getEntranceRoom 获得牢笼的起始Room
      * @return
      */
     std::shared_ptr<Room> getEntranceRoom();
 
     /**
-     * @brief getNowRoom 获得当前的Room
+     * @brief getNowRoom 获得当前玩家所在的Room
      */
     std::shared_ptr<Room> getNowRoom();
 
     /**
-     * @brief setNowRoom 设置当前的Room
+     * @brief setNowRoom 设置当前玩家所在的Room
      * @param nowRoom
      */
     void setNowRoom(std::shared_ptr<Room> nowRoom);

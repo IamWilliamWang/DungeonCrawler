@@ -8,7 +8,7 @@ namespace dungeon {
 // TODO: define component classes spcific to the MagicalDungeon type
 
 /**
- * @brief TODO The MagicalDungeon class
+ * @brief The MagicalDungeon class
  */
 class MagicalDungeon
 {

@@ -169,7 +169,7 @@ private:
   void displayWeaponDetails(std::string title = "", std::shared_ptr<weapons::Weapon> weapon = Game::instance()->player()->getWeapon());
 
   /**
-   * @brief displayChamber
+   * @brief displayChamber 输出Chamber提示语
    */
   void displayChamber() const;
 
@@ -200,6 +200,9 @@ private:
    */
   void doNavigate(char navigateDirection);
 
+  /**
+   * @brief doNavigateBack Navigates the player's character to where it comes.
+   */
   void doNavigateBack();
 
   /**
@@ -236,7 +239,7 @@ private:
   bool confirm(const std::string &confirmationPrompt) const;
 
   /**
-   * @brief toLower
+   * @brief toLower Make ch lowercase
    * @param ch
    * @return
    */

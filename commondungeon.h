@@ -11,13 +11,13 @@ namespace dungeon {
 // TODO: define concrete components classes common to all dungeon types
 
 /**
- * @brief TODO The OpenDoorway class
+ * @brief The OpenDoorway class
  */
 class OpenDoorway : public Door
 {
 public:
     /**
-     * @brief OpenDoorway
+     * @brief OpenDoorway 连接两个房间的门
      * @param room1
      * @param room2
      */

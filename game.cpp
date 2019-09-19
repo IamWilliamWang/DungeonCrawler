@@ -93,35 +93,41 @@ bool Game::canDodge(std::shared_ptr<creatures::Creature> creature)
 
 void* Game::doActionRound(char selection)
 {
+    // 进攻模块
 	if (selection == 'a')
 	{
-		int* damagesHappened = new int[2];
+        int* damagesHappened = new int[2]; // 储存我方造成的伤害和敌方造成的伤害
 		damagesHappened[0] = damagesHappened[1] = 0;
 
 		auto player = _character;
-		auto creature = getBasicDungeon()->getNowRoom()->getCreature();
-		if (!canDodge(creature))
+        auto enemy = getBasicDungeon()->getNowRoom()->getCreature();
+        // 如果敌方无法躲避
+        if (!canDodge(enemy))
 		{
-			int damage = player->damageWeaponed();
-			creature->setHealthPoint(creature->getHealthPoint() - damage);
-            if (creature->getWeapon()->getSuffixEnchantment() && creature->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
-			{
-				auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(creature->getWeapon()->getSuffixEnchantment());
-                creature->setHealthPoint(creature->getHealthPoint() + vampirismEnchantment->get(&damage));
-			}
-			damagesHappened[0] = damage;
+            int damage = player->damageWeaponed(); // 获得附魔伤害值
+            enemy->setHealthPoint(enemy->getHealthPoint() - damage); // 敌方掉血
+            // 敌方有VampirismEnchantment则治疗敌方
+            if (enemy->getWeapon()->getSuffixEnchantment()) // 附魔不为空
+                if (enemy->getWeapon()->getSuffixEnchantment()->instanceOf("VampirismEnchantment"))
+                {
+                    auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(enemy->getWeapon()->getSuffixEnchantment());
+                    enemy->setHealthPoint(enemy->getHealthPoint() + vampirismEnchantment->get(&damage));
+                }
+            damagesHappened[0] = damage; // 储存我方造成的伤害（不考虑治疗）
 		}
+        // 如果我方无法躲避
 		if (!canDodge(player))
 		{
-			int damage = creature->damageWeaponed();
-			player->setHealthPoint(player->getHealthPoint() - damage);
-            if (player->getWeapon()->getSuffixEnchantment()
-                    && player->getWeapon()->getSuffixEnchantment()->getEnchantmentType() == "VampirismEnchantment")
-			{
-				auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(player->getWeapon()->getSuffixEnchantment());
-                player->setHealthPoint(player->getHealthPoint() + vampirismEnchantment->getHealHealthPoints(damage));
-			}
-			damagesHappened[1] = damage;
+            int damage = enemy->damageWeaponed(); // 获得附魔伤害值
+            player->setHealthPoint(player->getHealthPoint() - damage); // 我方掉血
+            // 我方有VampirismEnchantment则治疗敌方
+            if (player->getWeapon()->getSuffixEnchantment()) // 附魔不为空
+                if (player->getWeapon()->getSuffixEnchantment()->instanceOf("VampirismEnchantment"))
+                {
+                    auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(player->getWeapon()->getSuffixEnchantment());
+                    player->setHealthPoint(player->getHealthPoint() + vampirismEnchantment->getHealHealthPoints(damage));
+                }
+            damagesHappened[1] = damage; // 储存敌方造成的伤害（不考虑治疗）
 		}
 		return damagesHappened;
 	}
@@ -134,10 +140,9 @@ void* Game::doActionRound(char selection)
 			*done = false;
 		else
 		{
-			if (playerSuffixEnchantment->getEnchantmentType() == "HealingEnchantment")
+            if (playerSuffixEnchantment->instanceOf("HealingEnchantment"))
 			{
 				auto healingEnchantment = std::static_pointer_cast<weapons::HealingEnchantment>(playerSuffixEnchantment);
-				//healingEnchantment->doHeal(player);
                 player->setHealthPoint(player->getHealthPoint() + healingEnchantment->get());
 				*done = true;
 			}

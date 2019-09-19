@@ -47,8 +47,8 @@ public:
 	CsvFile(std::istream &input);
 
     /**
-     * @brief parseRow
-     * @param line
+     * @brief parseRow 解析csv的一行内容
+     * @param line csv中的一行字符串
      * @return
      */
 	QStringList parseRow(QString line);
