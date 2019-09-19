@@ -229,7 +229,7 @@ private:
   /**
    * @brief endGame Returns to the main menu, ending the current game/run through the dungeon.
    */
-  void leaveDungeon();
+  void leaveDungeon(bool displayFailureMessage=true);
 
   /**
    * @brief confirm display and process the confirmation of an action.

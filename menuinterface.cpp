@@ -644,7 +644,7 @@ void MenuInterface::doAttack() {
 		_display << "You died. Game Over Man!" << std::endl << std::endl;
 		_display << "You died after exploring *" << Game::instance()->getSuccessTimes() << "* levels" << std::endl;
 		setMenu(Menu::Main);
-		leaveDungeon();
+        leaveDungeon(false);
 	}
     else if (!enemy->isAlive()) // 敌方死亡
 	{
@@ -669,11 +669,14 @@ void MenuInterface::useSpecialAbility() {
 	}
 }
 
-void MenuInterface::leaveDungeon() {
+void MenuInterface::leaveDungeon(bool displayFailureMessage) {
 	Game::instance()->exitDungeon();
-	_display << "After exploring *" << Game::instance()->getSuccessTimes() << "* levels, you run out of the cave as quickly as your legs can carry you." << std::endl;
-	_display << "As you emerge from the darkness you are startled by the bright light and pause while your eyes adjust." << std::endl;
-	setMenu(Menu::Main);
+    if (displayFailureMessage)
+    {
+        _display << "After exploring *" << Game::instance()->getSuccessTimes() << "* levels, you run out of the cave as quickly as your legs can carry you." << std::endl;
+        _display << "As you emerge from the darkness you are startled by the bright light and pause while your eyes adjust." << std::endl;
+    }
+    setMenu(Menu::Main);
 }
 
 bool MenuInterface::confirm(const std::string &confirmationPrompt) const {

@@ -131,9 +131,11 @@ void* Game::doActionRound(char selection)
 		}
 		return damagesHappened;
 	}
+    // 特殊技能模块
 	if (selection == 'l')
 	{
 		bool* done = new bool;
+        *done = false;
 		auto player = _character;
 		auto playerSuffixEnchantment = player->getWeapon()->getSuffixEnchantment();
 		if (playerSuffixEnchantment == nullptr)
