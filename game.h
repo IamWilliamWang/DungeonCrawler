@@ -9,6 +9,7 @@
 #include "character.h"
 #include "dungeon.h"
 #include "basicdungeon.h"
+#include "magicaldungeon.h"
 namespace core {
 
 /*-----------------------------------------------------------------------------------
@@ -52,6 +53,12 @@ public:
     * @return
     */
     std::shared_ptr<dungeon::BasicDungeon> getBasicDungeon();
+
+  /**
+	* @brief getBasicDungeon 获得地牢并转换为MagicalDungeon
+	* @return
+	*/
+	std::shared_ptr<dungeon::MagicalDungeon> getMagicalDungeon();
 
    /**
     * @brief createDungeon Initiates the creation of a new dungeon level.

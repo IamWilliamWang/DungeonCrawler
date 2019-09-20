@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "dungeon.h"
 #include "basicdungeon.h"
+#include "magicaldungeon.h"
 #include "csvfile.h"
 namespace core {
 namespace dungeon {
@@ -33,25 +34,6 @@ class BasicDungeonBuilder : public DungeonBuilder
 {
 public:
     /**
-     * @brief parseInt 转换字符串到整形
-     * @param intStr
-     * @return
-     */
-	int parseInt(std::string intStr);
-
-    /**
-     * @brief loadCreatures 加载所有满足条件的生物信息
-     * @return
-     */
-	bool loadCreatures();
-
-    /**
-     * @brief loadWeapons 加载所有满足条件的武器信息
-     * @return
-     */
-	bool loadWeapons();
-
-    /**
      * @brief buildDungeon 构建地牢
      * @return
      */
@@ -65,8 +47,59 @@ public:
 	std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon> dungeon);
 
 private:
+	/**
+	 * @brief parseInt 转换字符串到整形
+	 * @param intStr
+	 * @return
+	 */
+	int parseInt(std::string intStr);
+
+	/**
+	 * @brief loadCreatures 加载所有满足条件的生物信息
+	 * @return
+	 */
+	bool loadCreatures();
+
+	/**
+	 * @brief loadWeapons 加载所有满足条件的武器信息
+	 * @return
+	 */
+	bool loadWeapons();
+
 	std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList;
 	std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList;
+};
+
+class MagicalDungeonBuilder : public DungeonBuilder
+{
+public:
+
+    std::shared_ptr<Dungeon> buildDungeon();
+
+    std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon>);
+
+private:
+	/**
+	 * @brief parseInt 转换字符串到整形
+	 * @param intStr
+	 * @return
+	 */
+	int parseInt(std::string intStr);
+
+	/**
+	 * @brief loadCreatures 加载所有满足条件的生物信息
+	 * @return
+	 */
+	bool loadCreatures();
+
+	/**
+	 * @brief loadWeapons 加载所有满足条件的武器信息
+	 * @return
+	 */
+	bool loadWeapons();
+
+    std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList;
+    std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList;
 };
 }
 }

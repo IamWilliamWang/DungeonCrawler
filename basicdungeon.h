@@ -1,13 +1,8 @@
 #ifndef BASICDUNGEON_H
 #define BASICDUNGEON_H
-#include <memory>
-#include <list>
-#include "commondungeon.h"
+#include "dungeon.h"
 namespace core {
 namespace dungeon {
-
-class Dungeon;
-class Room; // predeclaration.
 
 // TODO: define component classes spcific to the BasicDungeon type
 
@@ -17,44 +12,9 @@ class Room; // predeclaration.
 class BasicDungeon : public Dungeon
 {
 public:
-    /**
-     * @brief BasicDungeon 基础牢笼
-     */
     BasicDungeon();
-
-	/**
-     * @brief 复制构造函数
-	 * @param nowRoom
-	 */
-	BasicDungeon(const BasicDungeon& oldDungeon);
-
-    /**
-     * @brief getEntranceRoom 获得牢笼的起始Room
-     * @return
-     */
-    std::shared_ptr<Room> getEntranceRoom();
-
-    /**
-     * @brief getNowRoom 获得当前玩家所在的Room
-     */
-    std::shared_ptr<Room> getNowRoom();
-
-    /**
-     * @brief setNowRoom 设置当前玩家所在的Room
-     * @param nowRoom
-     */
-    void setNowRoom(std::shared_ptr<Room> nowRoom);
-
-    /**
-     * @brief path 获得走过路径上第几个Room，index可正可负
-     * @param index
-     * @return
-     */
-    std::shared_ptr<Room> path(int index);
-
 private:
-	std::list<std::shared_ptr<Room>> _path;
-	std::shared_ptr<Room> _nowRoom;
+
 };
 
 /**

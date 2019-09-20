@@ -2,11 +2,14 @@
 #define DUNGEON_H
 #include <map>
 #include <memory>
+#include <list>
+#include "commondungeon.h"
 
 namespace core {
 namespace dungeon {
 
-class Room;
+class Dungeon;
+class Room; // predeclaration.
 
 /*-----------------------------------------------------------------------------------
  * NOTE: to students - DO NOT modify or remove EXISTING members of this class.
@@ -19,12 +22,46 @@ class Room;
 class Dungeon
 {
 public:
+  /**
+	 * @brief BasicDungeon 基础牢笼
+	 */
   Dungeon();
+
+  /**
+   * @brief 复制构造函数
+   * @param nowRoom
+   */
+  Dungeon(const Dungeon& oldDungeon);
+
+  /**
+   * @brief getEntranceRoom 获得牢笼的起始Room
+   * @return
+   */
+  std::shared_ptr<Room> getEntranceRoom();
+
+  /**
+   * @brief getNowRoom 获得当前玩家所在的Room
+   */
+  std::shared_ptr<Room> getNowRoom();
+
+  /**
+   * @brief setNowRoom 设置当前玩家所在的Room
+   * @param nowRoom
+   */
+  void setNowRoom(std::shared_ptr<Room> nowRoom);
+
+  /**
+   * @brief path 获得走过路径上第几个Room，index可正可负
+   * @param index
+   * @return
+   */
+  std::shared_ptr<Room> path(int index);
+
   virtual ~Dungeon() = default;
 
-private:
-//  int _anotherMember; //!< replace this with something real
-
+protected:
+	std::list<std::shared_ptr<Room>> _path;
+	std::shared_ptr<Room> _nowRoom;
 
 /*-----------------------------------------------------------------------------------
  * Original members below here, do not modify or remove them.

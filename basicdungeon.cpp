@@ -12,56 +12,6 @@ BasicDungeon::BasicDungeon()
 
 }
 
-BasicDungeon::BasicDungeon(const BasicDungeon& oldDungeon)
-{
-	memcpy(&this->_rooms, &oldDungeon._rooms, sizeof(oldDungeon._rooms));
-	memcpy(&this->_path, &oldDungeon._path, sizeof(oldDungeon._path));
-	memcpy(&this->_nowRoom, &oldDungeon._nowRoom, sizeof(oldDungeon._nowRoom));
-}
-
-std::shared_ptr<Room> BasicDungeon::getEntranceRoom()
-{
-    for (auto &pair : _rooms)
-    {
-        if (pair.second->getEntranceDirection() != '\0')
-            return pair.second;
-    }
-    return nullptr;
-}
-
-std::shared_ptr<Room> BasicDungeon::getNowRoom()
-{
-    return _nowRoom;
-}
-
-void BasicDungeon::setNowRoom(std::shared_ptr<Room> nowRoom)
-{
-    _nowRoom = nowRoom;
-    _path.emplace_back(nowRoom);
-}
-
-std::shared_ptr<Room> BasicDungeon::path(int index)
-{
-    if (index < 0)
-    {
-        auto it = _path.rbegin();
-        for (; index < -1 && it != _path.rend(); index++)
-            it++;
-        if (it == _path.rend())
-            return nullptr;
-        return *it;
-    }
-    else
-    {
-        auto it = _path.begin();
-        for (; index > 0 && it != _path.end(); index--)
-            it++;
-        if (it == _path.end())
-            return nullptr;
-        return *it;
-    }
-}
-
 /* ------------------------------------------------------------------------------
  * RockChamber member implementations
  * -----------------------------------------------------------------------------*/

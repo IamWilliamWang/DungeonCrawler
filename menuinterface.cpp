@@ -285,10 +285,18 @@ void MenuInterface::displayWeaponDetails(std::string title, std::shared_ptr<weap
 void MenuInterface::displayChamber() const {
 	_display << "Looking around you see... ";
 	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
-	if (currRoom->id() % 2 == 0)
-		_display << "a chamber that glitters like a thousand stars in the torchlight" << std::endl;
+	if (currRoom) 
+	{
+		if (currRoom->id() % 2 == 0)
+			_display << "a chamber that glitters like a thousand stars in the torchlight" << std::endl;
+		else
+			_display << "a dark and empty chamber" << std::endl;
+	}
 	else
-		_display << "a dark and empty chamber" << std::endl;
+	{
+		currRoom = Game::instance()->getMagicalDungeon()->getNowRoom();
+		_display << "your ears are filled with the sounds of numerous elixirs bubbling away over open flames" << std::endl;
+	}
 }
 
 void MenuInterface::actionMenu() const {
@@ -595,7 +603,10 @@ void MenuInterface::doAttack() {
     _display << std::endl;
     // 我方开始攻击
 	_display << "You attack the creature..." << std::endl;
-    _display << (damagesHappened[0] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*") << std::endl; // 战斗描述
+    _display << (damagesHappened[0] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*"); // 战斗描述
+	if (player->getWeapon()->getName() == "Wizard's Staff")
+		_display << " (the staff seems ineffective)";
+	_display << std::endl;
     if (damagesHappened[0] != 0) // 显示是否躲避
 		_display << "The attack deals *" << damagesHappened[0] << "* damage..." << std::endl;
 	else
@@ -615,10 +626,24 @@ void MenuInterface::doAttack() {
             _display << "A feeling of warmth flows through creature and it heals " << damagesHappened[0] / 2 << " health" << std::endl;
     }
 	_display << std::endl;
-
+	// 检查敌方死亡
+	if (!enemy->isAlive()) 
+	{
+		_display << std::endl;
+		_display << "You win the Fight!" << std::endl;
+		_display << "Digging through the remains of the creature you find something interesting." << std::endl;
+		auto room = Game::instance()->getBasicDungeon()->getNowRoom();
+		room->setWeapon(room->getCreature()->getWeapon());
+		room->setCreature(nullptr);
+		setMenu(Menu::Action);
+		return;
+	}
     // 敌方开始攻击
 	_display << "The creature attacks... ";
-    _display << (damagesHappened[1] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*") << std::endl; // 战斗描述
+    _display << (damagesHappened[1] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*"); // 战斗描述
+	if (enemy->getWeapon()->getName() == "Wizard's Staff")
+		_display << " (the staff seems ineffective)";
+	_display << std::endl;
     if (damagesHappened[1] != 0) // 显示是否躲避
 		_display << "The attack deals *" << damagesHappened[1] << "* damage..." << std::endl;
 	else
@@ -637,7 +662,7 @@ void MenuInterface::doAttack() {
         if (mySuffixEnchantment->instanceOf("VampirismEnchantment"))
             _display << "A feeling of warmth flows through you and you heal " << damagesHappened[1] / 2 << " health" << std::endl;
     }
-    // 检查双方是否死亡
+    // 检查我方是否死亡
     if (!player->isAlive()) // 我方死亡
 	{
         _display << std::endl;
@@ -645,23 +670,41 @@ void MenuInterface::doAttack() {
 		_display << "You died after exploring *" << Game::instance()->getSuccessTimes() << "* levels" << std::endl;
 		setMenu(Menu::Main);
         leaveDungeon(false);
-	}
-    else if (!enemy->isAlive()) // 敌方死亡
-	{
-        _display << std::endl;
-		_display << "You win the Fight!" << std::endl;
-		_display << "Digging through the remains of the creature you find something interesting." << std::endl;
-		auto room = Game::instance()->getBasicDungeon()->getNowRoom();
-		room->setWeapon(room->getCreature()->getWeapon());
-		room->setCreature(nullptr);
-        setMenu(Menu::Action);
+		return;
 	}
 }
 
 void MenuInterface::useSpecialAbility() {
 	auto player = Game::instance()->player();
-    if (*static_cast<bool*>(Game::instance()->doActionRound('l')))
-        _display << "An aura of light comes from within you. You are healed for 6 health points. Now your have " << player->getHealthPoint() << "/" << player->getMaxHealthPoint() << " health points" << std::endl;
+	if (*static_cast<bool*>(Game::instance()->doActionRound('l')))
+	{
+		if (player->getWeapon()->getSuffixEnchantment()->instanceOf("HealingEnchantment"))
+			_display << "An aura of light comes from within you. You are healed for 6 health points. Now your have " << player->getHealthPoint() << "/" << player->getMaxHealthPoint() << " health points" << std::endl;
+		else if (player->getWeapon()->getName() == "Wizard's Staff")
+		{
+			auto enemy = Game::instance()->getMagicalDungeon()->getNowRoom()->getCreature();
+			if (enemy)
+			{
+				auto damage = Game::instance()->randomIntBetweenInc(10, 20);
+				enemy->setHealthPoint(enemy->getHealthPoint() - damage);
+				_display << "A large fireball flies out from the top of the staff,\n charring everything in its path and dealing " << damage << " damage" << std::endl;
+				if (!enemy->isAlive()) // 敌方死亡
+				{
+					_display << std::endl;
+					_display << "You win the Fight!" << std::endl;
+					_display << "Digging through the remains of the creature you find something interesting." << std::endl;
+					auto room = Game::instance()->getMagicalDungeon()->getNowRoom();
+					room->setWeapon(room->getCreature()->getWeapon());
+					room->setCreature(nullptr);
+					setMenu(Menu::Action);
+				}
+			}
+			else
+			{
+				_display << "A large fireball flies out from the top of the staff and explodes against the wall." << std::endl;
+			}
+		}
+	}
 	else 
 	{
 		_display << "You hold your weapon high and shout..." << std::endl;

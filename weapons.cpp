@@ -158,12 +158,12 @@ int Weapon::getEnchantmentDamage()
 	{
         if (_prefixEnchantment->instanceOf("FlameEnchantment"))
 		{
-			auto flameEnchantment = std::static_pointer_cast<FlameEnchantment>(_prefixEnchantment);
+			auto flameEnchantment = std::dynamic_pointer_cast<FlameEnchantment>(_prefixEnchantment);
 			return flameEnchantment->get();
 		}
         else if (_prefixEnchantment->instanceOf("ElectricityEnchantment"))
 		{
-			auto electricityEnchantment = std::static_pointer_cast<ElectricityEnchantment>(_prefixEnchantment);
+			auto electricityEnchantment = std::dynamic_pointer_cast<ElectricityEnchantment>(_prefixEnchantment);
 			return electricityEnchantment->get();
 		}
 	}
@@ -221,7 +221,7 @@ MagicWand::MagicWand()
 {
 	setName("Magic Wand");
 	setDescription("birch with angel’s feather core and rubberised leather grip");
-	setLongDescription("Apparently, there is no other wand like this one in existence. The angel’s feather at its core allows the bearer to perform unbelievable feats of healing.");
+	setLongDescription("Apparently, there is no other wand like this one in existence.\nThe angel’s feather at its core allows the bearer to perform unbelievable feats of healing.");
 	setDamageRange(5, 10);
 	setSpecialAbilityDescription("Healing: returns character to full health.");
 }

@@ -5,7 +5,7 @@
 using namespace core;
 
 // TODO: Add additional implementation here
-std::shared_ptr<Game> Game::_game = std::shared_ptr<Game>(new Game());
+std::shared_ptr<Game> Game::_game = std::shared_ptr<Game>(new Game);
 
 std::shared_ptr<Character> Game::player()
 {
@@ -22,14 +22,22 @@ std::shared_ptr<dungeon::Dungeon> Game::dungeon()
 	return _dungeon;
 }
 
-std::shared_ptr<dungeon::BasicDungeon> Game::getBasicDungeon() // 便捷函数
+std::shared_ptr<dungeon::BasicDungeon> Game::getBasicDungeon()
 {
-	return std::static_pointer_cast<dungeon::BasicDungeon>(_dungeon);
+	return std::dynamic_pointer_cast<dungeon::BasicDungeon>(_dungeon);
+}
+
+std::shared_ptr<dungeon::MagicalDungeon> Game::getMagicalDungeon()
+{
+	return std::dynamic_pointer_cast<dungeon::MagicalDungeon>(_dungeon);
 }
 
 std::shared_ptr<dungeon::Room> Game::currentRoom()
 {
-    return getBasicDungeon()->getNowRoom();
+	if (getBasicDungeon())
+		return getBasicDungeon()->getNowRoom();
+	else
+		return getMagicalDungeon()->getNowRoom();
 }
 
 bool Game::createDungeon(std::string dungeonType)
@@ -41,6 +49,12 @@ bool Game::createDungeon(std::string dungeonType)
 		_dungeon = builder->buildDungeon();
 		return _dungeon != nullptr;
 	}
+	else if (dungeonType == "MagicalDungeon")
+	{
+		builder = std::make_shared<dungeon::MagicalDungeonBuilder>();
+		_dungeon = builder->buildDungeon();
+		return _dungeon != nullptr;
+	}
 	return false;
 }
 
@@ -48,29 +62,66 @@ bool Game::enterDungeon()
 {
 	if (_dungeon == nullptr)
 		return false;
-	auto entranceRoom = getBasicDungeon()->getEntranceRoom();
-	if (entranceRoom == nullptr)
-		return false;
-	getBasicDungeon()->setNowRoom(entranceRoom);
-	return true;
+	if (getBasicDungeon())
+	{
+		auto entranceRoom = getBasicDungeon()->getEntranceRoom();
+		if (entranceRoom == nullptr)
+			return false;
+		getBasicDungeon()->setNowRoom(entranceRoom);
+		return true;
+	}
+	else if (getMagicalDungeon())
+	{
+		auto entranceRoom = getMagicalDungeon()->getEntranceRoom();
+		if (entranceRoom == nullptr)
+			return false;
+		getMagicalDungeon()->setNowRoom(entranceRoom);
+		return true;
+	}
+	return false;
 }
 
 bool Game::navigate(char direction)
 {
-	auto basic_dungeon = getBasicDungeon();
-	auto room = currentRoom();
-	room->checkDirectionVaild(direction);
-	auto door = room->getDoor(direction);
-	if (door == nullptr)
-		return false;
-	basic_dungeon->setNowRoom(door->getNeighbourRoom(room));
-	return true;
+	if (getBasicDungeon())
+	{
+		auto basicDungeon = getBasicDungeon();
+		auto room = currentRoom();
+		room->checkDirectionVaild(direction);
+		auto door = room->getDoor(direction);
+		if (door == nullptr)
+			return false;
+		basicDungeon->setNowRoom(door->getNeighbourRoom(room));
+		return true;
+	}
+	else if (getMagicalDungeon())
+	{
+		auto magicalDungeon = getMagicalDungeon();
+		auto room = currentRoom();
+		room->checkDirectionVaild(direction);
+		auto door = room->getDoor(direction);
+		if (door == nullptr)
+			return false;
+		magicalDungeon->setNowRoom(door->getNeighbourRoom(room));
+		return true;
+	}
+	return false;
 }
 
 bool Game::navigateBack()
 {
-	auto basic_dungeon = getBasicDungeon();
-    basic_dungeon->setNowRoom(basic_dungeon->path(-2));
+	if (getBasicDungeon())
+	{
+		auto basicDungeon = getBasicDungeon();
+		basicDungeon->setNowRoom(basicDungeon->path(-2));
+		return true;
+	}
+	else if (getMagicalDungeon())
+	{
+		auto magicalDungeon = getMagicalDungeon();
+		magicalDungeon->setNowRoom(magicalDungeon->path(-2));
+		return true;
+	}
 	return true;
 }
 
@@ -110,7 +161,7 @@ void* Game::doActionRound(char selection)
             if (enemy->getWeapon()->getSuffixEnchantment()) // 附魔不为空
                 if (enemy->getWeapon()->getSuffixEnchantment()->instanceOf("VampirismEnchantment"))
                 {
-                    auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(enemy->getWeapon()->getSuffixEnchantment());
+                    auto vampirismEnchantment = std::dynamic_pointer_cast<weapons::VampirismEnchantment>(enemy->getWeapon()->getSuffixEnchantment());
                     enemy->setHealthPoint(enemy->getHealthPoint() + vampirismEnchantment->get(&damage));
                 }
             damagesHappened[0] = damage; // 储存我方造成的伤害（不考虑治疗）
@@ -124,7 +175,7 @@ void* Game::doActionRound(char selection)
             if (player->getWeapon()->getSuffixEnchantment()) // 附魔不为空
                 if (player->getWeapon()->getSuffixEnchantment()->instanceOf("VampirismEnchantment"))
                 {
-                    auto vampirismEnchantment = std::static_pointer_cast<weapons::VampirismEnchantment>(player->getWeapon()->getSuffixEnchantment());
+                    auto vampirismEnchantment = std::dynamic_pointer_cast<weapons::VampirismEnchantment>(player->getWeapon()->getSuffixEnchantment());
                     player->setHealthPoint(player->getHealthPoint() + vampirismEnchantment->getHealHealthPoints(damage));
                 }
             damagesHappened[1] = damage; // 储存敌方造成的伤害（不考虑治疗）
@@ -137,6 +188,18 @@ void* Game::doActionRound(char selection)
 		bool* done = new bool;
         *done = false;
 		auto player = _character;
+		if (player->getWeapon()->getName() == "Magic Wand")
+		{
+			player->setHealthPoint(player->getMaxHealthPoint());
+			*done = true;
+			return done;
+		}
+		else if (player->getWeapon()->getName() == "Wizard's Staff")
+		{
+			*done = true;
+			return done;
+		}
+
 		auto playerSuffixEnchantment = player->getWeapon()->getSuffixEnchantment();
 		if (playerSuffixEnchantment == nullptr)
 			*done = false;
@@ -144,7 +207,7 @@ void* Game::doActionRound(char selection)
 		{
             if (playerSuffixEnchantment->instanceOf("HealingEnchantment"))
 			{
-				auto healingEnchantment = std::static_pointer_cast<weapons::HealingEnchantment>(playerSuffixEnchantment);
+				auto healingEnchantment = std::dynamic_pointer_cast<weapons::HealingEnchantment>(playerSuffixEnchantment);
                 player->setHealthPoint(player->getHealthPoint() + healingEnchantment->get());
 				*done = true;
 			}

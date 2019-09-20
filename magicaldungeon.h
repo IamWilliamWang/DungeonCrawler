@@ -1,7 +1,7 @@
 #ifndef MAGICALDUNGEON_H
 #define MAGICALDUNGEON_H
 #include "commondungeon.h"
-
+#include "dungeon.h"
 namespace core {
 namespace dungeon {
 
@@ -10,13 +10,16 @@ namespace dungeon {
 /**
  * @brief The MagicalDungeon class
  */
-class MagicalDungeon
+class MagicalDungeon : public Dungeon
 {
 public:
- /**
-  * @brief MagicalDungeon
-  */
-  MagicalDungeon();
+   /**
+	* @brief BasicDungeon 基础牢笼
+	*/
+	MagicalDungeon();
+
+private:
+
 };
 
 /**
