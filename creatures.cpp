@@ -54,14 +54,17 @@ bool Creature::isAlive()
 	return _health > 0; 
 }
 
-bool Creature::setAttribute(int strength, int dexterity, int wisdom)
+bool Creature::setAttribute(int strength, int dexterity, int wisdom, bool checkVaild)
 {
-	if (strength < 1 || strength > 6)
-		return false;
-	if (dexterity < 1 || dexterity > 6)
-		return false;
-	if (wisdom < 1 || wisdom > 6)
-		return false;
+    if (checkVaild)
+    {
+        if (strength < 1 || strength > 6)
+            return false;
+        if (dexterity < 1 || dexterity > 6)
+            return false;
+        if (wisdom < 1 || wisdom > 6)
+            return false;
+    }
 	_strength = strength;
 	_dexterity = dexterity;
 	_wisdom = wisdom;

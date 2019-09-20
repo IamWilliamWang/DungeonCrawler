@@ -17,9 +17,8 @@ public:
 	* @brief BasicDungeon 基础牢笼
 	*/
 	MagicalDungeon();
-
 private:
-
+    std::string typeName = "MagicalDungeon";
 };
 
 /**

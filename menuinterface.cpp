@@ -138,7 +138,7 @@ void MenuInterface::playGame() {
 	}
 	else
 	{
-		Game::instance()->createDungeon("BasicDungeon");
+        Game::instance()->createDungeon();
 		Game::instance()->enterDungeon();
 		setMenu(Menu::Action);
 	}
@@ -197,7 +197,7 @@ void MenuInterface::createCharacter() {
 	}
 	std::shared_ptr<Character> myCharacter = std::shared_ptr<Character>(new Character(name));
 	if (!myCharacter->setAttribute(strength+1, dexterity+1, wisdom+1))
-		_display << "Create player failed!" << std::endl;
+        _display << "Create player failed!" << std::endl;
     Game::instance()->setPlayer(myCharacter);
     switchToCharacterMenu(_currentMenu);
 }
@@ -284,23 +284,28 @@ void MenuInterface::displayWeaponDetails(std::string title, std::shared_ptr<weap
 
 void MenuInterface::displayChamber() const {
 	_display << "Looking around you see... ";
-	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
-	if (currRoom) 
-	{
-		if (currRoom->id() % 2 == 0)
-			_display << "a chamber that glitters like a thousand stars in the torchlight" << std::endl;
-		else
-			_display << "a dark and empty chamber" << std::endl;
-	}
-	else
-	{
-		currRoom = Game::instance()->getMagicalDungeon()->getNowRoom();
-		_display << "your ears are filled with the sounds of numerous elixirs bubbling away over open flames" << std::endl;
-	}
+    std::shared_ptr<dungeon::Room> currRoom;
+    if (isBasicDungeon())
+    {
+        currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+        if (currRoom->id() % 2 == 0)
+            _display << "a chamber that glitters like a thousand stars in the torchlight" << std::endl;
+        else
+            _display << "a dark and empty chamber" << std::endl;
+    }
+    else
+    {
+        _display << "your ears are filled with the sounds of numerous elixirs bubbling away over open flames" << std::endl;
+    }
 }
 
 void MenuInterface::actionMenu() const {
-	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+    std::shared_ptr<dungeon::Room> currRoom;
+    if (isBasicDungeon())
+        currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+    else if (isMagicalDungeon())
+        currRoom = Game::instance()->getMagicalDungeon()->getNowRoom();
+
 	displayChamber();
 	// initialize output lines.
     std::vector<std::string> outputs(4);
@@ -352,7 +357,11 @@ void MenuInterface::actionMenu() const {
 		else _display << "Unsuspected error occurred!" << std::endl;
 	}
 	// output doors
-	auto doorDirections = Game::instance()->getBasicDungeon()->getNowRoom()->getDoorDirections();
+    std::list<char> doorDirections;
+    if (isBasicDungeon())
+        doorDirections = Game::instance()->getBasicDungeon()->getNowRoom()->getDoorDirections();
+    else
+        doorDirections = Game::instance()->getMagicalDungeon()->getNowRoom()->getDoorDirections();
 	for (auto direction : doorDirections)
 	{
 		switch (direction)
@@ -402,7 +411,11 @@ void MenuInterface::processAction(char selection) {
 
 	selection = tolower(selection);
 	// get selection
-	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+    std::shared_ptr<dungeon::Room> currRoom;
+    if (isBasicDungeon())
+        currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+    else
+        currRoom = Game::instance()->getMagicalDungeon()->getNowRoom();
 	if (selection == 'n')
 		_display << "Heading North..." << std::endl;
 	else if (selection == 's')
@@ -485,8 +498,15 @@ void MenuInterface::processAction(char selection) {
 		_display << "You pass through the doorway..." << std::endl;
 	}
 	// if player will combat in the next room, switch Menu
-	if (Game::instance()->getBasicDungeon()->getNowRoom()->getCreature() != nullptr)
-		setMenu(Menu::Combat);
+    if (isBasicDungeon())
+    {
+        if (Game::instance()->getBasicDungeon()->getNowRoom()->getCreature() != nullptr)
+            setMenu(Menu::Combat);
+    }
+    else {
+        if (Game::instance()->getMagicalDungeon()->getNowRoom()->getCreature() != nullptr)
+            setMenu(Menu::Combat);
+    }
 }
 
 void MenuInterface::combatMenu() const {
@@ -561,13 +581,20 @@ void MenuInterface::doNavigateBack()
         _display << "NavigateBack failed!" << std::endl;
         return;
     }
-    setMenu(Game::instance()->getBasicDungeon()->getNowRoom()->getCreature() ? Menu::Combat : Menu::Action);
+    if (isBasicDungeon())
+        setMenu(Game::instance()->getBasicDungeon()->getNowRoom()->getCreature() ? Menu::Combat : Menu::Action);
+    else
+        setMenu(Game::instance()->getMagicalDungeon()->getNowRoom()->getCreature() ? Menu::Combat : Menu::Action);
     _display << "You head back the way you came..." << std::endl;
     _display << "You pass through the doorway..." << std::endl;
 }
 
 void MenuInterface::pickupWeapon() {
-	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+    std::shared_ptr<dungeon::Room> currRoom;
+    if (isBasicDungeon())
+        currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+    else
+        currRoom = Game::instance()->getMagicalDungeon()->getNowRoom();
 	_display << "This action will drop your current item. Are you sure? (y/n)" << std::endl;
 	char selection = tolower(getCharacterInput());
 	if (selection == 'y')
@@ -583,7 +610,11 @@ void MenuInterface::pickupWeapon() {
 }
 
 void MenuInterface::compareWeapons() {
-	auto currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+    std::shared_ptr<dungeon::Room> currRoom;
+    if (isBasicDungeon())
+        currRoom = Game::instance()->getBasicDungeon()->getNowRoom();
+    else
+        currRoom = Game::instance()->getMagicalDungeon()->getNowRoom();
 	displayWeaponDetails("***Weapon Comparison***\n--Room", currRoom->getWeapon());
 	_display << std::endl;
 	displayWeaponDetails("--Equipped");
@@ -594,7 +625,11 @@ void MenuInterface::doAttack() {
     auto player = Game::instance()->player(); // 我方
     auto myPrefixEnchantment = player->getWeapon()->getPrefixEnchantment();
     auto mySuffixEnchantment = player->getWeapon()->getSuffixEnchantment();
-    auto enemy = Game::instance()->getBasicDungeon()->getNowRoom()->getCreature(); // 敌方
+    std::shared_ptr<creatures::Creature> enemy;
+    if (isBasicDungeon())
+        enemy = Game::instance()->getBasicDungeon()->getNowRoom()->getCreature(); // 敌方
+    else
+        enemy = Game::instance()->getMagicalDungeon()->getNowRoom()->getCreature();
     auto enemyPrefixEnchantment = enemy->getWeapon()->getPrefixEnchantment();
     auto enemySuffixEnchantment = enemy->getWeapon()->getSuffixEnchantment();
 
@@ -611,6 +646,10 @@ void MenuInterface::doAttack() {
 		_display << "The attack deals *" << damagesHappened[0] << "* damage..." << std::endl;
 	else
         _display << "Creature dodged the attack" << std::endl;
+    // 不合理武器提示
+    if (!isMagicalDungeon() && (player->getWeapon()->getName() == "Wizard's Staff"
+                             || player->getWeapon()->getName() == "Magic Wand"))
+        _display << "Warning: you are in a basic dungeon, but you are holding a magical dungeon weapon" << std::endl;
     // 我方攻击时前缀附魔显示
     if (damagesHappened[0] != 0 && myPrefixEnchantment)
     {
@@ -632,7 +671,11 @@ void MenuInterface::doAttack() {
 		_display << std::endl;
 		_display << "You win the Fight!" << std::endl;
 		_display << "Digging through the remains of the creature you find something interesting." << std::endl;
-		auto room = Game::instance()->getBasicDungeon()->getNowRoom();
+        std::shared_ptr<dungeon::Room> room;
+        if (isBasicDungeon())
+            room = Game::instance()->getBasicDungeon()->getNowRoom();
+        else
+            room = Game::instance()->getMagicalDungeon()->getNowRoom();
 		room->setWeapon(room->getCreature()->getWeapon());
 		room->setCreature(nullptr);
 		setMenu(Menu::Action);
@@ -678,16 +721,19 @@ void MenuInterface::useSpecialAbility() {
 	auto player = Game::instance()->player();
 	if (*static_cast<bool*>(Game::instance()->doActionRound('l')))
 	{
-		if (player->getWeapon()->getSuffixEnchantment()->instanceOf("HealingEnchantment"))
-			_display << "An aura of light comes from within you. You are healed for 6 health points. Now your have " << player->getHealthPoint() << "/" << player->getMaxHealthPoint() << " health points" << std::endl;
-		else if (player->getWeapon()->getName() == "Wizard's Staff")
+        if (player->getWeapon()->getSuffixEnchantment())
+        {
+            if (player->getWeapon()->getSuffixEnchantment()->instanceOf("HealingEnchantment"))
+                _display << "An aura of light comes from within you. You are healed for 6 health points. Now your have " << player->getHealthPoint() << "/" << player->getMaxHealthPoint() << " health points" << std::endl;
+        }
+        else if (player->getWeapon()->getName() == "Wizard's Staff")
 		{
 			auto enemy = Game::instance()->getMagicalDungeon()->getNowRoom()->getCreature();
 			if (enemy)
 			{
 				auto damage = Game::instance()->randomIntBetweenInc(10, 20);
 				enemy->setHealthPoint(enemy->getHealthPoint() - damage);
-				_display << "A large fireball flies out from the top of the staff,\n charring everything in its path and dealing " << damage << " damage" << std::endl;
+                _display << "A large fireball flies out from the top of the staff, charring everything in its path and dealing " << damage << " damage" << std::endl;
 				if (!enemy->isAlive()) // 敌方死亡
 				{
 					_display << std::endl;
@@ -698,12 +744,16 @@ void MenuInterface::useSpecialAbility() {
 					room->setCreature(nullptr);
 					setMenu(Menu::Action);
 				}
-			}
-			else
-			{
-				_display << "A large fireball flies out from the top of the staff and explodes against the wall." << std::endl;
-			}
+            }
+            else
+            {
+                _display << "A large fireball flies out from the top of the staff and explodes against the wall." << std::endl;
+            }
 		}
+        else if (player->getWeapon()->getName() == "Magic Wand")
+        {
+            _display << "A bright light fills you entire being. As it subsides you feel fully restored." << std::endl;
+        }
 	}
 	else 
 	{
@@ -735,4 +785,14 @@ char MenuInterface::tolower(const char ch)
 	if (c >= 'A' && c <= 'Z')
 		c -= 'a' - 'A';
 	return c;
+}
+
+bool MenuInterface::isBasicDungeon() const
+{
+    return Game::instance()->getBasicDungeon() != nullptr;
+}
+
+bool MenuInterface::isMagicalDungeon() const
+{
+    return Game::instance()->getMagicalDungeon() != nullptr;
 }

@@ -9,25 +9,8 @@ using namespace core::weapons;
  * Weapon member implementations
  * -----------------------------------------------------------------------------*/
 
-Weapon::Weapon() 
-{
-    createEnchantmentOrNot();
-}
-
-Weapon::Weapon(std::string &name, std::string &description)
-    : _name(name), _description(description)
-{
-    createEnchantmentOrNot();
-}
-
-Weapon::Weapon(std::string &name, std::string &description, std::string &longDescription)
-    : _name(name), _description(description), _longDescription(longDescription)
-{
-    createEnchantmentOrNot();
-}
-
-Weapon::Weapon(std::string &name, std::string &description, std::string &longDescription, int minDamage, int maxDamage)
-    : _name(name), _description(description), _longDescription(longDescription), _minDamage(minDamage), _maxDamage(maxDamage)
+Weapon::Weapon(std::string name)
+    : _name(name)
 {
     createEnchantmentOrNot();
 }
@@ -39,7 +22,7 @@ std::string Weapon::getName()
 
 void Weapon::setName(std::string name)
 {
-	_name = name;
+    _name = name;
 }
 
 std::string Weapon::getFullName()
@@ -135,6 +118,9 @@ bool Weapon::createEnchantment(int enchantmentCount)
     if (enchantmentCount < 0 || enchantmentCount > 2)
         return false;
 
+    if (_name == "Fists")
+        return true;
+
     if (enchantmentCount >= 1)
     {
         if (Game::instance()->randomIntBetweenInc(0, 1))
@@ -144,10 +130,11 @@ bool Weapon::createEnchantment(int enchantmentCount)
     }
     if (enchantmentCount >= 2)
     {
-        if (Game::instance()->randomIntBetweenInc(0, 1))
-            _suffixEnchantment = std::make_shared<HealingEnchantment>();
-        else
+        if (_name == "Wizard's Staff" || _name == "Magic Wand"
+                || Game::instance()->randomIntBetweenInc(0, 1))
             _suffixEnchantment = std::make_shared<VampirismEnchantment>();
+        else // 不允许HealingEnchantment与WizardsStaff or MagicWand共存
+            _suffixEnchantment = std::make_shared<HealingEnchantment>();
     }
     return true;
 }
@@ -176,52 +163,46 @@ int Weapon::get(void* args)
     return Game::instance()->randomIntBetweenInc(range[0], range[1]);
 }
 
-Fists::Fists()
+Fists::Fists() : Weapon("Fists")
 {
-	setName("Fists");
 	setDescription("you look down at your fists and shrug, \"these will do\"");
 	setLongDescription("Fists are the weapon of choice for someone who has nothing else.");
 	setDamageRange(4, 4);
 }
 
-Boomerang::Boomerang()
+Boomerang::Boomerang() : Weapon("Boomerang")
 {
-	setName("Boomerang");
 	setDescription("an effective ranged weapon that returns to your hand when used");
 	setLongDescription("You scratch your head struggling to understand how this weapon can return even *after* it hits its target?");
 	setDamageRange(6, 8);
 }
 
-ShortSword::ShortSword()
+ShortSword::ShortSword() : Weapon("Short Sword")
 {
-	setName("Short Sword");
 	setDescription("a sharp and pointy instrument, good for stabbing");
 	setLongDescription("Not very large, but with a sharp point. Short swords are designed more for stabbing than for slicing. The hilt is surprisingly ornate for such an inconspicuous weapon.");
 	setDamageRange(5, 10);
 }
 
-BattleAxe::BattleAxe()
+BattleAxe::BattleAxe() : Weapon("Battle Axe")
 {
-	setName("Battle Axe");
 	setDescription("heavy, but effective");
 	setLongDescription("A large and heavy weapon. The battle axe must be wielded with two hands but even then you are almost as likely to cut off your own limbs as those of an enemy.");
 	setDamageRange(10, 15);
 }
 
-WizardsStaff::WizardsStaff()
+WizardsStaff::WizardsStaff() : Weapon("Wizard's Staff")
 {
-	setName("Wizard's Staff");
-	setDescription("it would break if you leant on it, but it shoots fireballs so that’s something");
+    setDescription("it would break if you leant on it, but it shoots fireballs so that's something");
 	setLongDescription("Not a very sturdy staff, but the swirl of magical fire around its top belies a magical secret: it shoots fireballs!");
 	setDamageRange(1, 2);
-	setSpecialAbilityDescription("Fireball: deals 10 - 20 damage to the opponent (plus the bonus from the creature or character’s Wisdom stat). Always hits, regardless of dodge chance.");
+    setSpecialAbilityDescription("Fireball: deals 10 - 20 damage to the opponent (plus the bonus from the creature or character's Wisdom stat). Always hits, regardless of dodge chance.");
 }
 
-MagicWand::MagicWand()
+MagicWand::MagicWand() : Weapon("Magic Wand")
 {
-	setName("Magic Wand");
-	setDescription("birch with angel’s feather core and rubberised leather grip");
-	setLongDescription("Apparently, there is no other wand like this one in existence.\nThe angel’s feather at its core allows the bearer to perform unbelievable feats of healing.");
+    setDescription("birch with angel's feather core and rubberised leather grip");
+    setLongDescription("Apparently, there is no other wand like this one in existence.\nThe angel's feather at its core allows the bearer to perform unbelievable feats of healing.");
 	setDamageRange(5, 10);
 	setSpecialAbilityDescription("Healing: returns character to full health.");
 }

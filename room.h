@@ -162,6 +162,4 @@ private:
 
 } // namespace dungeon
 } // namespace core
-
-
 #endif // ROOM_H

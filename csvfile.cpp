@@ -34,7 +34,6 @@ CsvFile::CsvFile(std::istream &input)
 
 QStringList CsvFile::parseRow(QString line)
 {
-	//return line.split(QRegularExpression(",|\""), QString::SkipEmptyParts); // split(",\"")获得单行内容的每一个部分
 	QStringList splitList; // 存放每一块String的List
 	int start = 0, end = -1; // 每一块所在的开始和结束位置
 	bool quote = false; // 是否处于双引号内

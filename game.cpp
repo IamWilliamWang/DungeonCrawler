@@ -5,7 +5,7 @@
 using namespace core;
 
 // TODO: Add additional implementation here
-std::shared_ptr<Game> Game::_game = std::shared_ptr<Game>(new Game);
+std::shared_ptr<Game> Game::_game = std::shared_ptr<Game>(new Game); // 这里不能使用make_shared
 
 std::shared_ptr<Character> Game::player()
 {
@@ -36,24 +36,37 @@ std::shared_ptr<dungeon::Room> Game::currentRoom()
 {
 	if (getBasicDungeon())
 		return getBasicDungeon()->getNowRoom();
-	else
+    else if(getMagicalDungeon())
 		return getMagicalDungeon()->getNowRoom();
+    return nullptr;
 }
 
 bool Game::createDungeon(std::string dungeonType)
 {
+    static std::string previousDungeonType = "";
+    if (previousDungeonType != "")
+        dungeonType = previousDungeonType;
+
 	std::shared_ptr<dungeon::DungeonBuilder> builder;
 	if (dungeonType == "BasicDungeon")
 	{
 		builder = std::make_shared<dungeon::BasicDungeonBuilder>();
 		_dungeon = builder->buildDungeon();
-		return _dungeon != nullptr;
+        if (_dungeon != nullptr)
+        {
+            previousDungeonType = "BasicDungeon";
+            return true;
+        }
 	}
 	else if (dungeonType == "MagicalDungeon")
 	{
 		builder = std::make_shared<dungeon::MagicalDungeonBuilder>();
 		_dungeon = builder->buildDungeon();
-		return _dungeon != nullptr;
+        if (_dungeon != nullptr)
+        {
+            previousDungeonType = "MagicalDungeon";
+            return true;
+        }
 	}
 	return false;
 }
@@ -151,7 +164,11 @@ void* Game::doActionRound(char selection)
 		damagesHappened[0] = damagesHappened[1] = 0;
 
 		auto player = _character;
-        auto enemy = getBasicDungeon()->getNowRoom()->getCreature();
+        std::shared_ptr<creatures::Creature> enemy;
+        if (getBasicDungeon())
+            enemy = getBasicDungeon()->getNowRoom()->getCreature();
+        else
+            enemy = getMagicalDungeon()->getNowRoom()->getCreature();
         // 如果敌方无法躲避
         if (!canDodge(enemy))
 		{

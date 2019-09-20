@@ -27,7 +27,7 @@ bool BasicDungeonBuilder::loadCreatures()
 			continue;
 		auto creature = std::make_shared<core::creatures::Creature>(csv.at(row, nameI));
         creature->setHealthPoint(parseInt(csv.at(row, healthI))); // set health point and max health point first
-		creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI)), parseInt(csv.at(row, wisdomI)));
+        creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI)), parseInt(csv.at(row, wisdomI)), false);
 		creature->setDescription(csv.at(row, descriptionI));
 
 		auto weaponName = csv.at(row, weaponI);
@@ -177,7 +177,7 @@ bool MagicalDungeonBuilder::loadCreatures()
 			continue;
 		auto creature = std::make_shared<core::creatures::Creature>(csv.at(row, nameI));
 		creature->setHealthPoint(parseInt(csv.at(row, healthI))); // set health point and max health point first
-		creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI)), parseInt(csv.at(row, wisdomI)));
+        creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI)), parseInt(csv.at(row, wisdomI)), false);
 		creature->setDescription(csv.at(row, descriptionI));
 
 		auto weaponName = csv.at(row, weaponI);

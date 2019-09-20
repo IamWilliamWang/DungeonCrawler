@@ -73,9 +73,10 @@ public:
      * @param strength
      * @param dexterity
      * @param wisdom
+     * @param checkVaild
      * @return
      */
-	bool setAttribute(int strength, int dexterity, int wisdom);
+    bool setAttribute(int strength, int dexterity, int wisdom, bool checkVaild=true);
 
     /**
      * @brief damage 获得基础伤害值

@@ -3,7 +3,6 @@
 #include <map>
 #include <memory>
 #include <list>
-#include "commondungeon.h"
 
 namespace core {
 namespace dungeon {
@@ -23,35 +22,35 @@ class Dungeon
 {
 public:
   /**
-	 * @brief BasicDungeon »ù´¡ÀÎÁı
+	 * @brief BasicDungeon åŸºç¡€ç‰¢ç¬¼
 	 */
   Dungeon();
 
   /**
-   * @brief ¸´ÖÆ¹¹Ôìº¯Êı
+   * @brief å¤åˆ¶æ„é€ å‡½æ•°
    * @param nowRoom
    */
   Dungeon(const Dungeon& oldDungeon);
 
   /**
-   * @brief getEntranceRoom »ñµÃÀÎÁıµÄÆğÊ¼Room
+   * @brief getEntranceRoom è·å¾—ç‰¢ç¬¼çš„èµ·å§‹Room
    * @return
    */
   std::shared_ptr<Room> getEntranceRoom();
 
   /**
-   * @brief getNowRoom »ñµÃµ±Ç°Íæ¼ÒËùÔÚµÄRoom
+   * @brief getNowRoom è·å¾—å½“å‰ç©å®¶æ‰€åœ¨çš„Room
    */
   std::shared_ptr<Room> getNowRoom();
 
   /**
-   * @brief setNowRoom ÉèÖÃµ±Ç°Íæ¼ÒËùÔÚµÄRoom
+   * @brief setNowRoom è®¾ç½®å½“å‰ç©å®¶æ‰€åœ¨çš„Room
    * @param nowRoom
    */
   void setNowRoom(std::shared_ptr<Room> nowRoom);
 
   /**
-   * @brief path »ñµÃ×ß¹ıÂ·¾¶ÉÏµÚ¼¸¸öRoom£¬index¿ÉÕı¿É¸º
+   * @brief path è·å¾—èµ°è¿‡è·¯å¾„ä¸Šç¬¬å‡ ä¸ªRoomï¼Œindexå¯æ­£å¯è´Ÿ
    * @param index
    * @return
    */

@@ -1,6 +1,7 @@
 #ifndef BASICDUNGEON_H
 #define BASICDUNGEON_H
 #include "dungeon.h"
+#include "commondungeon.h"
 namespace core {
 namespace dungeon {
 
@@ -14,7 +15,7 @@ class BasicDungeon : public Dungeon
 public:
     BasicDungeon();
 private:
-
+    std::string typeName = "BasicDungeon";
 };
 
 /**

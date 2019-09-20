@@ -34,13 +34,13 @@ class BasicDungeonBuilder : public DungeonBuilder
 {
 public:
     /**
-     * @brief buildDungeon 构建地牢
+     * @brief buildDungeon 构建基础地牢
      * @return
      */
 	std::shared_ptr<Dungeon> buildDungeon();
 
     /**
-     * @brief clone 克隆地牢
+     * @brief clone 克隆基础地牢
      * @param dungeon
      * @return
      */
@@ -73,9 +73,16 @@ private:
 class MagicalDungeonBuilder : public DungeonBuilder
 {
 public:
-
+    /**
+     * @brief buildDungeon 构建魔法地牢
+     * @return
+     */
     std::shared_ptr<Dungeon> buildDungeon();
 
+    /**
+     * @brief clone 克隆魔法地牢
+     * @return
+     */
     std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon>);
 
 private:

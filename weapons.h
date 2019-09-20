@@ -152,33 +152,9 @@ class Weapon : public Interface
 public:
     /**
      * @brief Weapon 武器的构造函数
-     */
-	Weapon();
-
-    /**
-     * @brief Weapon 武器的构造函数
      * @param name
-     * @param description
      */
-	Weapon(std::string &name, std::string &description);
-
-    /**
-     * @brief Weapon 武器的构造函数
-     * @param name
-     * @param description
-     * @param longDescription
-     */
-	Weapon(std::string &name, std::string &description, std::string &longDescription);
-
-    /**
-     * @brief Weapon 武器的构造函数
-     * @param name
-     * @param description
-     * @param longDescription
-     * @param minDamage
-     * @param maxDamage
-     */
-	Weapon(std::string &name, std::string &description, std::string &longDescription, int minDamage, int maxDamage);
+    Weapon(std::string name);
 
     /**
      * @brief getName 获得名字
@@ -186,6 +162,10 @@ public:
      */
 	std::string getName();
 
+    /**
+     * @brief getFullName 获得带有前缀后缀的全名
+     * @return
+     */
 	std::string getFullName();
 
     /**

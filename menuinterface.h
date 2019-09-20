@@ -245,6 +245,10 @@ private:
    */
   char tolower(const char ch);
 
+  bool isBasicDungeon() const;
+
+  bool isMagicalDungeon() const;
+
   // The functions below should not be modified.
 
   /**
