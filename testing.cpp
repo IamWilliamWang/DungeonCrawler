@@ -163,8 +163,7 @@ std::string Testing::testGame() {
   auto door = std::make_shared<Door>(room1, room2);
   equal(true, room1->addDoor('E', door), "Failed to add door.");
   equal(true, room2->addDoor('W', door), "Failed to add door.");
-  equal(true, game.getMagicalDungeon()->addRoom(room1), "Failed to add room.");
-  equal(true, game.getMagicalDungeon()->addRoom(room2), "Failed to add room.");
+  equal(false, game.getMagicalDungeon()->addRoom(room1), "You cannot add rooms with id from 1 to 9, because the id is unique");
   equal(true, game.enterDungeon(), "Failed to enter dungeon.");
   equal(true, game.navigate('E'), "Failed to navigate to east.");
   equal(true, game.navigateBack(), "Failed to navigate back.");
@@ -221,8 +220,8 @@ std::string Testing::testWeapon() {
   // test Weapon.getDamageRange
   auto battleAxe = std::make_shared<weapons::BattleAxe>();
   auto damageRange = battleAxe->getDamageRange();
-  equal(10, damageRange[0], "Failed to get min damage of Battle Axe.");
-  equal(15, damageRange[1], "Failed to get max damage of Battle Axe.");
+  equal(true, damageRange[0] >= 10, "Minimum damage of Battle Axe doesn't have a reasonable value.");
+  equal(true, damageRange[1] >= 15, "Maximum damage of Battle Axe doesn't have a reasonable value.");
 
   // test Weapon.setPrefixEnchantment&setSuffixEnchantment&getFullName&getSpecialAbilityDescription
   auto magicWand = std::make_shared<weapons::MagicWand>();
