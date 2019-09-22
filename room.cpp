@@ -46,7 +46,7 @@ std::shared_ptr<Door> Room::getDoor(char direction)
 	return _doors[direction];
 }
 
-std::list<char> Room::findDoorDirections()
+std::list<char> Room::getDoorDirections()
 {
 	std::list<char> directionList;
 	for (auto& pair : _doors)
@@ -54,11 +54,6 @@ std::list<char> Room::findDoorDirections()
 		directionList.emplace_back(pair.first);
 	}
 	return directionList;
-}
-
-std::list<char> Room::getDoorDirections()
-{
-	return findDoorDirections();
 }
 
 bool Room::existEntranceOrExit()

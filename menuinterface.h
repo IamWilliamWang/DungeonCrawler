@@ -41,7 +41,13 @@ namespace core {
  */
 class MenuInterface {
 public:
+  /**
+   * @brief MenuInterface default constructor accept output and input streams
+   * @param display output stream
+   * @param input input stream
+   */
   MenuInterface(std::ostream &display, std::istream &input);
+
   /**
    * @brief displayWelcome display an intial welcome message including the
    * student's name and game title.
@@ -64,9 +70,9 @@ private:
    */
   enum class Menu { Main, DungeonSelect, CharacterDetails, Action, Combat };
 
-  std::ostream &_display; ///< the stream to pass all display output to
-  std::istream &_input;   ///< the stream to read all input from
-  Menu _currentMenu;      ///< keeps track of the current menu being displayed/processed
+  std::ostream &_display; // the stream to pass all display output to
+  std::istream &_input;   // the stream to read all input from
+  Menu _currentMenu;      // keeps track of the current menu being displayed/processed
 
   /**
    * @brief displayMenu write the current menu to the display device
@@ -197,11 +203,12 @@ private:
 
   /**
    * @brief doNavigate Navigates the player's character according to their input.
+   * @param navigateDirection navigate direction
    */
   void doNavigate(char navigateDirection);
 
   /**
-   * @brief doNavigateBack Navigates the player's character to where it comes.
+   * @brief doNavigateBack Navigates the player's character to where he comes.
    */
   void doNavigateBack();
 
@@ -239,14 +246,22 @@ private:
   bool confirm(const std::string &confirmationPrompt) const;
 
   /**
-   * @brief toLower Make ch lowercase
-   * @param ch
+   * @brief toLower Changes the ch to lowercase
+   * @param ch any char
    * @return
    */
   char tolower(const char ch);
 
+  /**
+   * @brief isBasicDungeon Judges if it is a basic dungeon
+   * @return
+   */
   bool isBasicDungeon() const;
 
+  /**
+   * @brief isMagicalDungeon Judges if it is a magical dungeon
+   * @return
+   */
   bool isMagicalDungeon() const;
 
   // The functions below should not be modified.

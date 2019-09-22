@@ -15,13 +15,13 @@ class Wall;
 class Door; //predeclaration
 
 /**
- * @brief The Room class
+ * @brief The Room class represents room
  */
 class Room
 {
 public:
     /**
-     * @brief Room 创建房间
+     * @brief Room Create room with specific id
      * @param id
      */
 	Room(int id);
@@ -33,131 +33,125 @@ public:
 	int id();
 
     /**
-     * @brief addWall 给Room的某个方向增加一堵墙
-     * @param direction
-     * @param wall
+     * @brief addWall Adds a wall at specific direcion in this room
+     * @param direction direction
+     * @param wall a new wall
      * @return
      */
     bool addWall(char direction, std::shared_ptr<Wall> wall = std::make_shared<Wall>());
 
     /**
-     * @brief addDoor 给Room的某个方向增加一扇门
-     * @param direction
-     * @param door
+     * @brief addDoor Adds a door at specific direcion in this room
+     * @param direction direction
+     * @param door a door connecting the other rooms
      * @return
      */
 	bool addDoor(char direction, std::shared_ptr<Door> door);
 
     /**
-     * @brief getDoor 获得Room特定位置上的门
-     * @param direction
-     * @return
+     * @brief getDoor Gets the door at specific direction in this room
+     * @param direction direction
+     * @return found door
      */
 	std::shared_ptr<dungeon::Door> getDoor(char direction);
     
     /**
-     * @brief findDoorDirections 找门所在的方向，返回char list
-     * @return
+     * @brief getDoorDirections Finds the direction of the doors
+     * @return a char list contains directions
      */
-	std::list<char> findDoorDirections();
-
-	/**
-	 * @brief getDoorDirections findDoorDirections便捷函数，开发结束时会删除
-	 * @return
-	 */
     std::list<char> getDoorDirections();
 
     /**
-     * @brief existEntranceOrExit 如果存在入口或者出口
+     * @brief existEntranceOrExit If there is an entrance or exit
      * @return
      */
 	bool existEntranceOrExit();
 
     /**
-     * @brief addEntranceOrExit 为房间添加入口或者出口
-     * @param direction 需要添加的方向
-     * @param addEntrance 是否要添加的是入口
+     * @brief addEntranceOrExit Adds an entrance or exit to this room
+     * @param direction The direction that needs to be added
+     * @param addEntrance Whether to add is the entrance
      */
 	void addEntranceOrExit(char direction, bool addEntrance);
 
     /**
-     * @brief getEntranceDirection 获得入口所在的方向
+     * @brief getEntranceDirection Gets the direction of the entrance in this room
      * @return
      */
 	char getEntranceDirection();
 
     /**
-     * @brief getExitDirection 获得出口所在的方向
+     * @brief getExitDirection Gets the direction of the exit in this room
      * @return
      */
 	char getExitDirection();
 
     /**
-     * @brief checkDirection 检查方向char是否合法
-     * @param direction
+     * @brief checkDirectionVaild Checks whether the direction char is valid
+     * @param direction direction char
      * @return
      */
 	bool checkDirectionVaild(char& direction);
 
     /**
-     * @brief createCreature 使用可能的生物列表随机创建生物
-     * @param possibleCreatures
+     * @brief createCreature Creates a creature at random using a list of possible creatures
+     * @param possibleCreatures possible creatures list
      * @return
      */
 	bool createCreature(std::vector<std::shared_ptr<core::creatures::Creature>> possibleCreatures);
 
     /**
-     * @brief createWeapon 根据武器列表为房间随机添加一个武器
-     * @param possibleWeapons
+     * @brief createWeapon Creates a creature at random using a list of possible weapons
+     * @param possibleWeapons possible weapons list
      * @return
      */
 	bool createWeapon(std::vector<std::shared_ptr<core::weapons::Weapon>> possibleWeapons);
 
     /**
-     * @brief getCreature 获得房间内的生物
+     * @brief getCreature Gets the creature in this room
      * @return
      */
     std::shared_ptr<core::creatures::Creature> getCreature();
 
     /**
-     * @brief setCreature 设置房间内的生物
+     * @brief setCreature Sets the creature in this room
      * @param creature
      */
 	void setCreature(std::shared_ptr<core::creatures::Creature> creature);
 
     /**
-     * @brief getWeapon 获得房间内的武器（或生物手持的武器）
+     * @brief getWeapon Gets weapons in the room (or weapons held by creature)
      * @return
      */
     std::shared_ptr<core::weapons::Weapon> getWeapon();
 
     /**
-     * @brief setWeapon 设置房间内的武器
+     * @brief setWeapon Places weapon in the room and cover them if weapon is already there
      * @param weapon
      */
     void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon);
 
 private:
 	/**
-	 * @brief setEntrance 设置Room的特定方向为牢笼入口
-	 * @param direction
+     * @brief setEntrance Sets the specific direction of the Room as the dungeon's entrance
+     * @param direction direction
 	 * @return
 	 */
 	bool setEntrance(char direction);
 
 	/**
-	 * @brief setExit 设置Room的特定方向为牢笼出口
-	 * @param direction
+     * @brief setExit Sets the specific direction of the Room as the dungeon's exit
+     * @param direction direction
 	 * @return
 	 */
 	bool setExit(char direction);
 
-    int _id;
+    int _id; // room's id
     std::map<char, std::shared_ptr<Wall>> _walls; // the walls of this room
-    std::map<char, std::shared_ptr<Door>> _doors;
-    std::map<char, std::string> _entranceOrExit; // save the direction of entrance or exit in this room
-	std::shared_ptr<core::creatures::Creature> _creature; 
-    std::shared_ptr<core::weapons::Weapon> _weapon;
+    std::map<char, std::shared_ptr<Door>> _doors; // the doors of this room
+    std::map<char, std::string> _entranceOrExit; // the direction of entrance or exit in this room
+    std::shared_ptr<core::creatures::Creature> _creature; // the creature in this room
+    std::shared_ptr<core::weapons::Weapon> _weapon; // the weapon in this room
 };
 
 } // namespace dungeon

@@ -8,14 +8,14 @@ namespace core {
 // TODO: define Character class.
 
 /**
- * @brief The Complete the Character class, following is just a small example
+ * @brief The Character class represents the player
  */
 class Character : public creatures::Creature
 {
 public:
     /**
-     * @brief Character 玩家角色
-     * @param name
+     * @brief Character default constructor with Character's name
+     * @param name character's name
      */
 	Character(const std::string &name);
 

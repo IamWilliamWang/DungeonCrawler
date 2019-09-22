@@ -11,15 +11,15 @@ namespace dungeon {
 // TODO: define concrete components classes common to all dungeon types
 
 /**
- * @brief The OpenDoorway class
+ * @brief The OpenDoorway class represents open doorway
  */
 class OpenDoorway : public Door
 {
 public:
     /**
-     * @brief OpenDoorway 连接两个房间的门
-     * @param room1
-     * @param room2
+     * @brief OpenDoorway default constructor
+     * @param room1 Left side of the open door
+     * @param room2 Right side of the open door
      */
 	OpenDoorway(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2);
 };

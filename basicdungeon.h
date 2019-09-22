@@ -8,23 +8,26 @@ namespace dungeon {
 // TODO: define component classes spcific to the BasicDungeon type
 
 /**
- * @brief The BasicDungeon class
+ * @brief The BasicDungeon class represents the basic dungeon
  */
 class BasicDungeon : public Dungeon
 {
 public:
+    /**
+     * @brief BasicDungeon default constructor
+     */
     BasicDungeon();
 private:
 };
 
 /**
- * @brief TODO The RockChamber class
+ * @brief The RockChamber class represents the rock chamber
  */
 class RockChamber : public Chamber
 {
 public:
     /**
-     * @brief RockChamber
+     * @brief RockChamber default constructor
      */
 	RockChamber();
 };
@@ -36,7 +39,7 @@ class QuartzChamber : public Chamber
 {
 public:
     /**
-     * @brief QuartzChamber
+     * @brief QuartzChamber default constructor
      */
 	QuartzChamber();
 };
@@ -48,7 +51,7 @@ class RockWall
 {
 public:
     /**
-     * @brief RockWall
+     * @brief RockWall default constructor
      */
 	RockWall();
 };

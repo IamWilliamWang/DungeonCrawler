@@ -9,136 +9,143 @@ namespace creatures {
 // There is some example code in here, but it can be modified if desired.
 
 /**
- * @brief The Creature class
+ * @brief The Creature class represents all creatures in this game
  */
 class Creature
 {
 public:
     /**
-     * @brief Creature 生物类
-     * @param name
+     * @brief Creature default constructor with creature's name
+     * @param name creature's name
      */
 	Creature(const std::string &name);
 
     /**
-     * @brief name 获得名字
-     * @return
+     * @brief name Gets the name of creature
+     * @return name of creature
      */
     std::string& name();
 
     /**
-     * @brief getStrength 获得力量值
-     * @return
+     * @brief getStrength Gets the strength of creature
+     * @return strength of creature
      */
 	int getStrength();
 
     /**
-     * @brief getDexterity 获得敏捷值
-     * @return
+     * @brief getDexterity Gets the dexterity of creature
+     * @return dexterity of creature
      */
 	int getDexterity();
 
     /**
-     * @brief getWisdom 获得智力值
-     * @return
+     * @brief getWisdom Gets the wisdom of creature
+     * @return wisdom of creature
      */
 	int getWisdom();
 
     /**
-     * @brief getHealthPoint 获得生命点数
-     * @return
+     * @brief getHealthPoint Gets the health points of creature
+     * @return health points of creature
      */
 	int getHealthPoint();
     
     /**
-     * @brief setHealthPoint 设置生命点数
-     * @param healthPoint
+     * @brief setHealthPoint Sets the health points of creature
+     * @param healthPoint health points of creature
      */
 	void setHealthPoint(int healthPoint);
 
     /**
-     * @brief getMaxHealthPoint 设置最大生命值
-     * @return
+     * @brief getMaxHealthPoint Gets health points' max value
+     * @return health points' max value
      */
 	int getMaxHealthPoint();
 
 	/**
-	 * @brief isAlive 判断是否存活
-	 * @return
+     * @brief isAlive Determines whether an creature is alive
+     * @return Whether an creature is alive
 	 */
 	bool isAlive();
 
     /**
-     * @brief setAttribute 设置生物的基本属性
-     * @param strength
-     * @param dexterity
-     * @param wisdom
-     * @param checkVaild
+     * @brief setAttribute Sets basic properties (including strength, dexterity, wisdom) of creature
+     * @param strength Sets strength of creature
+     * @param dexterity Sets dexterity of creature
+     * @param wisdom Sets wisdom of creature
+     * @param checkVaild Decides whether to judge the validity of values
      * @return
      */
     bool setAttribute(int strength, int dexterity, int wisdom, bool checkVaild=true);
 
     /**
-     * @brief damage 获得基础伤害值
-     * @return
+     * @brief damage Gets the damage from not using a weapon
+     * @return damage without weapon
      */
 	int damage();
 
     /**
-     * @brief damageWeaponed 获得武器(带附魔)的伤害值（在伤害范围内随机取值）
-     * @return
+     * @brief damageWeaponed Gets the damage of a enchanted weapon
+     * @return Random value within the damage range
      */
 	int damageWeaponed();
 
 	/**
-     * @brief damageWeaponedRange 武器(带附魔)的伤害返回
-	 * @return 返回int[2]，包含[最低伤害,最高伤害]
+     * @brief damageWeaponedRange Gets the damage range of a enchanted weapon
+     * @return An int[2], contains [minimum damage, maximum damage]
 	 */
 	int* damageWeaponedRange();
 
     /**
-     * @brief dodgeChance 获得躲避概率，0为不可能躲避，100为一定躲避
-     * @return
+     * @brief dodgeChance Gets the probability of avoiding, 0 is impossible to avoid, 100 is certain to avoid
+     * @return dodge change
      */
 	int dodgeChance();
 
     /**
-     * @brief setDescription 设置描述
-     * @param description
+     * @brief setDescription Sets the description of creature
+     * @param description Description of creature
      */
 	void setDescription(std::string description);
 
     /**
-     * @brief getDescription 获取描述
-     * @return
+     * @brief getDescription Gets the description of creature
+     * @return description
      */
 	std::string getDescription();
 
 	/**
-	 * @brief getWeapon 获得武器
+     * @brief getWeapon Gets the weapon of creature
+     * @return weapon
 	 */
     std::shared_ptr<core::weapons::Weapon> getWeapon();
 
 	/**
-	 * @brief setWeapon 设置武器
-	 * @param weapon
+     * @brief setWeapon Sets the weapon of creature
+     * @param weapon weapon of creature
 	 */
 	void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon);
 
 private:
-  std::string _name;
-  std::string _description;
-  int _strength;
-  int _dexterity;
-  int _wisdom;
-  int _health;
-  int _maxHealth = -1;
-  std::shared_ptr<core::weapons::Weapon> _weapon;
+  std::string _name; // creature's name
+  std::string _description; // creature's description
+  int _strength; // creature's strength
+  int _dexterity; // creature's dexterity
+  int _wisdom; // creature's wisdom
+  int _health; // creature's health
+  int _maxHealth = -1; // creature's maximum health
+  std::shared_ptr<core::weapons::Weapon> _weapon; // creature's weapon
 };
 
 } // namespace creatures
 } // namespace core
 
+/**
+ * @brief operator << output the creature's information to the output stream
+ * @param stream output stream
+ * @param creature the creature
+ * @return output stream
+ */
 std::ostream& operator<<(std::ostream &stream, core::creatures::Creature &creature);
 
 #endif // CREATURE_H

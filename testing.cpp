@@ -50,8 +50,6 @@ void Testing::runTests() {
   cout << setw(72) << "Wall class tests "      << testWall()       << endl;
 }
 
-// This is an example of a simple way of performing your tests.
-// It is incomplete, so you will need to extend it if you intend to continue with it.
 std::string Testing::testCharacter() {
   _failure = false; // ensure this is at the beggining of each test
 
@@ -61,25 +59,25 @@ std::string Testing::testCharacter() {
   equal<std::string>(name, c.name(),   "Character .name() does not match constructor value");
   // test Character.setAttribute
   c.setAttribute(3, 2, 1);
-  equal<int>(3, c.getStrength(), "设置strength失败！");
-  equal<int>(2, c.getDexterity(), "设置dexterity失败！");
-  equal<int>(1, c.getWisdom(), "设置wisdom失败！");
+  equal(3, c.getStrength(), "Failed to set/get strength.");
+  equal(2, c.getDexterity(), "Failed to set/get dexterity.");
+  equal(1, c.getWisdom(), "Failed to set/get wisdom.");
   // test Character.setAttribute without vaild checking
   c.setAttribute(100, 90, 200, false);
-  equal<int>(100, c.getStrength(), "设置strength失败！");
-  equal<int>(90, c.getDexterity(), "设置dexterity失败！");
-  equal<int>(200, c.getWisdom(), "设置wisdom失败！");
+  equal(100, c.getStrength(), "Failed to set/get strength without vaild judgment.");
+  equal(90, c.getDexterity(), "Failed to set/get dexterity without vaild judgment.");
+  equal(200, c.getWisdom(), "Failed to set/get wisdom without vaild judgment.");
   // test Character.setDescription
   c.setDescription("Character description.");
-  equal<std::string>("Character description.", c.getDescription(), "description设置错误！");
+  equal<std::string>("Character description.", c.getDescription(), "Failed to get description.");
   // test Character.setWeapon
   c.setWeapon(std::make_shared<weapons::MagicWand>());
-  equal<std::string>("Magic Wand", c.getWeapon()->getName(), "武器设置错误！");
+  equal<std::string>("Magic Wand", c.getWeapon()->getName(), "Failed to get name of Magic Wand.");
   c.setWeapon(std::make_shared<weapons::WizardsStaff>());
-  equal<std::string>("Wizard's Staff", c.getWeapon()->getName(), "武器设置错误！");
+  equal<std::string>("Wizard's Staff", c.getWeapon()->getName(), "Failed to get name of Wizard's Staff.");
   // test Character.isAlive
   c.setHealthPoint(-1);
-  equal<bool>(false, c.isAlive(), "生命设置错误！");
+  equal<bool>(false, c.isAlive(), "Failed to die.");
 
   return passFailText();
 }
@@ -87,20 +85,21 @@ std::string Testing::testCharacter() {
 std::string Testing::testCreature() {
   _failure = false; // ensure this is at the beggining of each test
 
+  // test Creature.name
   std::string name{"Creature Name"};
   Creature c{name};
   equal<std::string>(name, c.name(),   "Creature .name() does not match constructor value");
   // test Creature.setAttribute
   c.setAttribute(100, 90, 200, false);
-  equal<int>(100, c.getStrength(), "设置strength失败！");
-  equal<int>(90, c.getDexterity(), "设置dexterity失败！");
-  equal<int>(200, c.getWisdom(), "设置wisdom失败！");
+  equal(100, c.getStrength(), "Failed to get/set strength.");
+  equal(90, c.getDexterity(), "Failed to get/set dexterity.");
+  equal(200, c.getWisdom(), "Failed to get/set wisdom.");
   // test Creature.setDescription
   c.setDescription("Creature description.");
-  equal<std::string>("Creature description.", c.getDescription(), "description设置错误！");
+  equal<std::string>("Creature description.", c.getDescription(), "Failed to get description.");
   // test Creature.isAlive
   c.setHealthPoint(-1);
-  equal<bool>(false, c.isAlive(), "生命设置错误！");
+  equal(false, c.isAlive(), "Failed to die.");
 
   return passFailText();
 }
@@ -110,8 +109,8 @@ std::string Testing::testDoor() {
   // test Door.getNeighbourRoom
   std::shared_ptr<dungeon::Room> room1 = std::make_shared<dungeon::Room>(1), room2 = std::make_shared<dungeon::Room>(2);
   dungeon::Door door{room1, room2};
-  equal<int>(room1->id(), door.getNeighbourRoom(room2)->id(), "有误");
-  equal<int>(room2->id(), door.getNeighbourRoom(room1)->id(), "有误");
+  equal(room1->id(), door.getNeighbourRoom(room2)->id(), "Failed to get neighbour room.");
+  equal(room2->id(), door.getNeighbourRoom(room1)->id(), "Failed to get neighbour room.");
 
   return passFailText();
 }
@@ -128,13 +127,13 @@ std::string Testing::testDungeon() {
   equal(room, dungeon.retrieveRoom(roomId), "Dungeon .add/.retrieveRoom() failure, does not return room that was added");
   // test Dungeon.getEntranceRoom
   room->addEntranceOrExit('N', true);
-  equal(1, dungeon.getEntranceRoom()->id(), "");
+  equal(1, dungeon.getEntranceRoom()->id(), "Failed to get entrance room.");
   // test Dungeon.setNowRoom&getNowRoom
   dungeon.setNowRoom(room);
-  equal(1, dungeon.getNowRoom()->id(), "");
+  equal(1, dungeon.getNowRoom()->id(), "Failed to get now room or room's id.");
   // test Dungeon.path
-  equal(1, dungeon.path(-1)->id(), "");
-  equal(1, dungeon.path(0)->id(), "");
+  equal(1, dungeon.path(-1)->id(), "Failed to get last room in path.");
+  equal(1, dungeon.path(1)->id(), "Failed to get first room in path.");
 
   return passFailText();
 }
@@ -146,7 +145,7 @@ std::string Testing::testGame() {
 
   // test Game.setPlayer&player
   game.setPlayer(std::shared_ptr<Character>(new Character("testing")));
-  equal<std::string>("testing", game.player()->name(), "The saved player has no name");
+  equal<std::string>("testing", game.player()->name(), "The saved player has no name.");
 
   // test Game.createDungeon&getBasicDungeon&&getMagicalDungeon
   equal(true, game.createDungeon("BasicDungeon"), "Create basic dungeon failed.");
@@ -162,19 +161,19 @@ std::string Testing::testGame() {
   // test Game.getMagicalDungeon&enterDungeon&navigate&navigateBack&currentRoom
   auto room1 = std::make_shared<Room>(1), room2 = std::make_shared<Room>(2);
   auto door = std::make_shared<Door>(room1, room2);
-  room1->addDoor('E', door);
-  room2->addDoor('W', door);
-  game.getMagicalDungeon()->addRoom(room1);
-  game.getMagicalDungeon()->addRoom(room2);
-  game.enterDungeon();
-  game.navigate('E');
-  game.navigateBack();
-  equal(1, game.currentRoom()->id(), "");
+  equal(true, room1->addDoor('E', door), "Failed to add door.");
+  equal(true, room2->addDoor('W', door), "Failed to add door.");
+  equal(true, game.getMagicalDungeon()->addRoom(room1), "Failed to add room.");
+  equal(true, game.getMagicalDungeon()->addRoom(room2), "Failed to add room.");
+  equal(true, game.enterDungeon(), "Failed to enter dungeon.");
+  equal(true, game.navigate('E'), "Failed to navigate to east.");
+  equal(true, game.navigateBack(), "Failed to navigate back.");
+  equal(1, game.currentRoom()->id(), "Failed to get current room.");
 
   // test Game.exitDungeon
   game.exitDungeon();
-  equal(true, game.player() == nullptr, "");
-  equal(true, game.dungeon() == nullptr, "");
+  equal(true, game.player() == nullptr, "Not cleaning up player after exiting the dungeon.");
+  equal(true, game.dungeon() == nullptr, "Not cleaning up dungeon after exiting the dungeon.");
 
   // The following tests the random number generation.
   int value{game.randomIntBetweenInc(5, 0)};
@@ -215,22 +214,22 @@ std::string Testing::testWeapon() {
 
   // test Weapon.getDescription&getLongDescription&get
   auto fists = std::make_shared<weapons::Fists>();
-  equal<std::string>("you look down at your fists and shrug, \"these will do\"", fists->getDescription(), "");
-  equal<std::string>("Fists are the weapon of choice for someone who has nothing else.", fists->getLongDescription(), "");
-  equal(4, fists->get(), "");
+  equal<std::string>("you look down at your fists and shrug, \"these will do\"", fists->getDescription(), "Failed to get description of Fists.");
+  equal<std::string>("Fists are the weapon of choice for someone who has nothing else.", fists->getLongDescription(), "Failed to get long description of Fists.");
+  equal(4, fists->get(), "Failed to get damage of Fists.");
 
   // test Weapon.getDamageRange
   auto battleAxe = std::make_shared<weapons::BattleAxe>();
   auto damageRange = battleAxe->getDamageRange();
-  equal(10, damageRange[0], "");
-  equal(15, damageRange[1], "");
+  equal(10, damageRange[0], "Failed to get min damage of Battle Axe.");
+  equal(15, damageRange[1], "Failed to get max damage of Battle Axe.");
 
   // test Weapon.setPrefixEnchantment&setSuffixEnchantment&getFullName&getSpecialAbilityDescription
   auto magicWand = std::make_shared<weapons::MagicWand>();
   magicWand->setPrefixEnchantment(std::make_shared<weapons::ElectricityEnchantment>());
   magicWand->setSuffixEnchantment(std::make_shared<weapons::VampirismEnchantment>());
-  equal<std::string>("Electrified Magic Wand of Vampirism", magicWand->getFullName(), "");
-  equal<std::string>("Healing: returns character to full health.", magicWand->getSpecialAbilityDescription(), "");
+  equal<std::string>("Electrified Magic Wand of Vampirism", magicWand->getFullName(), "Failed to get full name of Magic Wand.");
+  equal<std::string>("Healing: returns character to full health.", magicWand->getSpecialAbilityDescription(), "Failed to get special ability desccription of Magic Wand");
 
   return passFailText();
 }
@@ -246,10 +245,10 @@ std::string Testing::testRoom() {
     // test Room.addEntranceOrExit&getEntranceDirection&existEntranceOrExit&addDoor&findDoorDirections
     auto room1 = std::make_shared<Room>(1), room2 = std::make_shared<Room>(2), room3 = std::make_shared<Room>(3), room4 = std::make_shared<Room>(4);
     room1->addEntranceOrExit('N', true);
-    equal('N', room1->getEntranceDirection(), "");
-    equal(true, room1->existEntranceOrExit(), "");
+    equal('N', room1->getEntranceDirection(), "Failed to get entrance direction.");
+    equal(true, room1->existEntranceOrExit(), "Failed to set entrance direcion.");
     room.addDoor('S', std::shared_ptr<Door>(new Door(room1, room2)));
-    equal('S', room.findDoorDirections().front(), "");
+    equal<int>(1, static_cast<int>(room.getDoorDirections().size()), "Can't find direction of door(s).");
 
     return passFailText();
 }

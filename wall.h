@@ -11,7 +11,7 @@ class Wall
 {
 public:
    /**
-    * @brief Wall
+    * @brief Wall represents the wall
     */
 	Wall();
 };

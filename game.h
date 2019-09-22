@@ -27,7 +27,7 @@ namespace core {
  *-----------------------------------------------------------------------------------*/
 
 /**
- * @brief The Game class
+ * @brief The Game class represents a number of specific processing operations in the game
  */
 class Game
 {
@@ -49,13 +49,13 @@ public:
     std::shared_ptr<dungeon::Dungeon> dungeon();
 
    /**
-    * @brief getBasicDungeon 获得地牢并转换为BasicDungeon
+    * @brief getBasicDungeon Casts the existing dungeon to basic dungeon and return
     * @return
     */
     std::shared_ptr<dungeon::BasicDungeon> getBasicDungeon();
 
   /**
-	* @brief getBasicDungeon 获得地牢并转换为MagicalDungeon
+    * @brief getMagicalDungeon Casts the existing dungeon to magical dungeon and return
 	* @return
 	*/
 	std::shared_ptr<dungeon::MagicalDungeon> getMagicalDungeon();
@@ -79,33 +79,33 @@ public:
     std::shared_ptr<dungeon::Room> currentRoom();
 
    /**
-    * @brief navigate Move the player's character to a neighbouring
-    * @param direction
+    * @brief navigate Moves the game character to one direction
+    * @param direction direction char of "NSWE"
     * @return
     */
 	bool navigate(char direction);
 
    /**
-    * @brief navigateBack Move the character to the previous room.
+    * @brief navigateBack Moves the character to the previous room.
     */
 	bool navigateBack();
 
    /**
-    * @brief exitLevel update the game state with successful completion
+    * @brief exitLevel Updates the game state with successful completion
     * of the current level.
     */
 	void exitLevel();
 
    /**
-    * @brief exitDungeon update the game to the state where the character
+    * @brief exitDungeon Updates the game to the state where the character
     * has completely left the dungeon, ready for a completely new dungeon
     * to be created.
     */
 	void exitDungeon();
 
    /**
-    * @brief canDodge 生物是否可以躲避本次攻击
-    * @param creature
+    * @brief canDodge Determines if the creature can dodge this attack
+    * @param creature creature
     * @return
     */
     bool canDodge(std::shared_ptr<creatures::Creature> creature);
@@ -117,19 +117,19 @@ public:
 	void* doActionRound(char selection);
 
    /**
-    * @brief setDungeon 设置牢笼
+    * @brief setDungeon Forces to set dungeon
     * @param dungeon
     */
     void setDungeon(std::shared_ptr<dungeon::Dungeon> dungeon);
 
    /**
-    * @brief getSuccessTimes 获得探索完毕的层数
+    * @brief getSuccessTimes Gets the number of levels explored completely
     * @return
     */
 	int getSuccessTimes();
 
    /**
-    * @brief instance 获得Game实例
+    * @brief instance Gets the singleton instance of Game class
     * @return
     */
 	static std::shared_ptr<Game> instance();
@@ -175,12 +175,12 @@ public:
 
 private:
   Game();
-  std::mt19937 _randomGenerator; //!< Mersenne Twister random number generator seeded by current time
-  std::uniform_real_distribution<double> _realDistribution; //!< For random numbers between 0.0 & 1.0
-  static std::shared_ptr<Game> _game;
-  std::shared_ptr<dungeon::Dungeon> _dungeon;
-  std::shared_ptr<Character> _character;
-  int _dungeonLevel = 1;
+  std::mt19937 _randomGenerator; // Mersenne Twister random number generator seeded by current time
+  std::uniform_real_distribution<double> _realDistribution; // For random numbers between 0.0 & 1.0
+  static std::shared_ptr<Game> _game; // singleton instance of Game class
+  std::shared_ptr<dungeon::Dungeon> _dungeon; // currently available dungeon
+  std::shared_ptr<Character> _character; // currently available player
+  int _dungeonLevel = 1; // dungeon level's count
 };
 
 } // namespace core

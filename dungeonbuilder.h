@@ -12,101 +12,109 @@ namespace dungeon {
 class Dungeon;
 
 /**
- * @brief The DungeonBuilder class
+ * @brief The DungeonBuilder virtual class represents the dungeon builder, need subclasses to implement.
  */
 class DungeonBuilder
 {
 public:
     /**
-     * @brief buildDungeon 创建牢笼
-     * @return
+     * @brief buildDungeon Builds a dungeon
+     * @return a new dungeon
      */
     virtual std::shared_ptr<Dungeon> buildDungeon() = 0;
     /**
-     * @brief clone 克隆牢笼
-     * @return
+     * @brief clone Clones a dungeon
+     * @param dungeon old dungeon
+     * @return a new cloned dungeon
      */
-    virtual std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon>) = 0;
+    virtual std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon> dungeon) = 0;
     virtual ~DungeonBuilder() = default;
 };
 
+/**
+ * @brief The BasicDungeonBuilder class represents basic dungeon builder
+ */
 class BasicDungeonBuilder : public DungeonBuilder
 {
 public:
     /**
-     * @brief buildDungeon 构建基础地牢
-     * @return
+     * @brief buildDungeon Builds basic dungeon
+     * @return a new basic dungeon
      */
 	std::shared_ptr<Dungeon> buildDungeon();
 
     /**
-     * @brief clone 克隆基础地牢
-     * @param dungeon
-     * @return
+     * @brief clone Clones a basic dungeon
+     * @param dungeon old basic dungeon
+     * @return a new cloned basic dungeon
      */
 	std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon> dungeon);
 
 private:
 	/**
-	 * @brief parseInt 转换字符串到整形
-	 * @param intStr
-	 * @return
+     * @brief parseInt Converts string to int
+     * @param intStr A string representing an integer
+     * @return parsed int
 	 */
 	int parseInt(std::string intStr);
 
 	/**
-	 * @brief loadCreatures 加载所有满足条件的生物信息
-	 * @return
+     * @brief loadCreatures Loads all basic dungeon creatures
+     * @return
 	 */
 	bool loadCreatures();
 
 	/**
-	 * @brief loadWeapons 加载所有满足条件的武器信息
+     * @brief loadWeapons Loads all basic dungeon weapons
 	 * @return
 	 */
 	bool loadWeapons();
 
-	std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList;
-	std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList;
+    std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList; // all basic dungeon creatures' list
+    std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList; // all basic dungeon weapons' list
 };
 
+/**
+ * @brief The MagicalDungeonBuilder class represents magical dungeon builder
+ */
 class MagicalDungeonBuilder : public DungeonBuilder
 {
 public:
     /**
-     * @brief buildDungeon 构建魔法地牢
-     * @return
+     * @brief buildDungeon Builds magical dungeon
+     * @return a new magical dungeon
      */
     std::shared_ptr<Dungeon> buildDungeon();
 
     /**
-     * @brief clone 克隆魔法地牢
-     * @return
+     * @brief clone Clones a magical dungeon
+     * @param dungeon old magical dungeon
+     * @return a new cloned magical dungeon
      */
-    std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon>);
+    std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon> dungeon);
 
 private:
-	/**
-	 * @brief parseInt 转换字符串到整形
-	 * @param intStr
-	 * @return
-	 */
+    /**
+     * @brief parseInt Converts string to int
+     * @param intStr a string representing an integer
+     * @return parsed int
+     */
 	int parseInt(std::string intStr);
 
-	/**
-	 * @brief loadCreatures 加载所有满足条件的生物信息
-	 * @return
-	 */
+    /**
+     * @brief loadCreatures Loads all magical dungeon creatures
+     * @return
+     */
 	bool loadCreatures();
 
-	/**
-	 * @brief loadWeapons 加载所有满足条件的武器信息
-	 * @return
-	 */
+    /**
+     * @brief loadCreatures Loads all magical dungeon weapons
+     * @return
+     */
 	bool loadWeapons();
 
-    std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList;
-    std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList;
+    std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList; // all magical dungeon creatures' list
+    std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList; // all magical dungeon weapons' list
 };
 }
 }

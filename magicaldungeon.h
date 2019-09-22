@@ -9,50 +9,50 @@ namespace dungeon {
 class EnchantedLibrary;
 
 /**
- * @brief The MagicalDungeon class
+ * @brief The MagicalDungeon class represents magical dungeon
  */
 class MagicalDungeon : public Dungeon
 {
 public:
    /**
-	* @brief BasicDungeon 基础牢笼
+    * @brief MagicalDungeon default constructor of magical dungeon
 	*/
 	MagicalDungeon();
 private:
 };
 
 /**
- * @brief TODO The EnchantedLibrary class
+ * @brief The EnchantedLibrary class represents enchanted library
  */
 class EnchantedLibrary
 {
 public:
  /**
-  * @brief EnchantedLibrary
+  * @brief EnchantedLibrary default constructor
   */
   EnchantedLibrary();
 };
 
 /**
- * @brief TODO The AlchemistsLaboratory class
+ * @brief The AlchemistsLaboratory class represents alchemists laboratory
  */
 class AlchemistsLaboratory
 {
 public:
 /**
- * @brief AlchemistsLaboratory
+ * @brief AlchemistsLaboratory default constructor
  */
   AlchemistsLaboratory();
 };
 
 /**
- * @brief TODO The MagicWall class
+ * @brief The MagicWall class represents magic wall
  */
 class MagicWall
 {
 public:
 /**
- * @brief MagicWall
+ * @brief MagicWall default constructor
  */
   MagicWall();
 };

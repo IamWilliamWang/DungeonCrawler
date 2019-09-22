@@ -47,15 +47,16 @@ std::shared_ptr<Room> Dungeon::path(int index)
 			return nullptr;
 		return *it;
 	}
-	else
+    else if(index > 0)
 	{
 		auto it = _path.begin();
-		for (; index > 0 && it != _path.end(); index--)
+        for (; index > 1 && it != _path.end(); index--)
 			it++;
 		if (it == _path.end())
 			return nullptr;
 		return *it;
 	}
+    return nullptr;
 }
 
 bool Dungeon::instanceOf(std::string dungeonName)

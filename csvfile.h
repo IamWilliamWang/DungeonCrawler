@@ -47,9 +47,9 @@ public:
 	CsvFile(std::istream &input);
 
     /**
-     * @brief parseRow 解析csv的一行内容
-     * @param line csv中的一行字符串
-     * @return
+     * @brief parseRow parse one line of the CSV file
+     * @param line a line of (Q)string in csv file
+     * @return parsed list of (Q)strings
      */
 	QStringList parseRow(QString line);
     
@@ -72,10 +72,10 @@ public:
 	int numberOfRows();
 
     /**
-     * @brief replaceAll
-     * @param original
-     * @param old
-     * @param newOne
+     * @brief replaceAll Replaces "old" in the original string with "newOne"
+     * @param original original string
+     * @param old the string to be replaced
+     * @param newOne new string
      * @return
      */
 	QString replaceAll(QString original, QString old, QString newOne);
@@ -117,8 +117,9 @@ public:
 	int columnIndexOf(const std::string &columnName);
 
 private:
-    std::shared_ptr<QVector<QStringList>> _dataTable;
-    QVector<QVector<bool>> _quotedTable; // 储存所有_dataTable每一个对应的块是不是被双括号包着(使用原因：field WITHOUT '\\n' replaced with newline, since it is unquoted)
+    std::shared_ptr<QVector<QStringList>> _dataTable; // save the parsed table
+    QVector<QVector<bool>> _quotedTable; // store whether each piece is wrapped in double parentheses in a CSV file
+    // (usage: field WITHOUT '\\n' replaced with newline, since it is unquoted)
 };
 
 } // namespace data

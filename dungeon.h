@@ -16,54 +16,60 @@ class Room; // predeclaration.
  *-----------------------------------------------------------------------------------*/
 
 /**
- * @brief The Dungeon class
+ * @brief The Dungeon class represents the dungeon
  */
 class Dungeon
 {
 public:
   /**
-	 * @brief BasicDungeon 基础牢笼
-	 */
+   * @brief BasicDungeon default constructor
+   */
   Dungeon();
 
   /**
-   * @brief 复制构造函数
-   * @param nowRoom
+   * @brief copy constructor
+   * @param oldDungeon old dungeon
+   * @return the cloned dungeon
    */
   Dungeon(const Dungeon& oldDungeon);
 
   /**
-   * @brief getEntranceRoom 获得牢笼的起始Room
+   * @brief getEntranceRoom Gets the entrance room in this dungeon
    * @return
    */
   std::shared_ptr<Room> getEntranceRoom();
 
   /**
-   * @brief getNowRoom 获得当前玩家所在的Room
+   * @brief getNowRoom Gets player's now room
    */
   std::shared_ptr<Room> getNowRoom();
 
   /**
-   * @brief setNowRoom 设置当前玩家所在的Room
+   * @brief setNowRoom Sets player's now room
    * @param nowRoom
    */
   void setNowRoom(std::shared_ptr<Room> nowRoom);
 
   /**
-   * @brief path 获得走过路径上第几个Room，index可正可负
-   * @param index
+   * @brief path Gets index-th room in the path the player has traveled
+   * @param index Room index in the path (supporting negative index). 0 is not allowed here.
    * @return
    */
   std::shared_ptr<Room> path(int index);
 
+  /**
+   * @brief instanceOf Determines if it is an instance of this dungeon name
+   * @param dungeonName dungeon name
+   * @return If it is an instance of this dungeon name
+   */
   bool instanceOf(std::string dungeonName);
 
   virtual ~Dungeon() = default;
 
 protected:
-	std::list<std::shared_ptr<Room>> _path;
-	std::shared_ptr<Room> _nowRoom;
-    std::string _dungeonType;
+    std::list<std::shared_ptr<Room>> _path; // the path the player has traveled
+    std::shared_ptr<Room> _nowRoom; // player's now room
+    std::string _dungeonType; // dungeon's type name
 
 /*-----------------------------------------------------------------------------------
  * Original members below here, do not modify or remove them.
@@ -85,7 +91,7 @@ public:
   bool addRoom(std::shared_ptr<Room> newRoom);
 
 protected:
-  std::map<int, std::shared_ptr<Room>> _rooms; //!< stores the rooms of the Dungeon
+  std::map<int, std::shared_ptr<Room>> _rooms; // stores the rooms of the Dungeon
 };
 
 } // namespace dungeon
