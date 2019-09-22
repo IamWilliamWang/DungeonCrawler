@@ -58,6 +58,11 @@ std::shared_ptr<Room> Dungeon::path(int index)
 	}
 }
 
+bool Dungeon::instanceOf(std::string dungeonName)
+{
+    return dungeonName == _dungeonType;
+}
+
 // DO NOT modify implementation below this comment
 
 std::shared_ptr<Room> Dungeon::retrieveRoom(int id) {

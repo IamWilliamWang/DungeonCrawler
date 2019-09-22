@@ -15,7 +15,6 @@ class BasicDungeon : public Dungeon
 public:
     BasicDungeon();
 private:
-    std::string typeName = "BasicDungeon";
 };
 
 /**

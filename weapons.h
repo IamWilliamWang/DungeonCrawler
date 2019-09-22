@@ -229,11 +229,15 @@ public:
      */
     std::shared_ptr<Enchantment> getPrefixEnchantment();
 
+    void setPrefixEnchantment(std::shared_ptr<Enchantment> prefixEnchantment);
+
     /**
      * @brief getSuffixEnchantment 获得后缀附魔
      * @return
      */
     std::shared_ptr<Enchantment> getSuffixEnchantment();
+
+    void setSuffixEnchantment(std::shared_ptr<Enchantment> suffixEnchantment);
 
     /**
      * @brief get 使用getDamageRange()的结果随机取一个伤害值

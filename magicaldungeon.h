@@ -6,6 +6,7 @@ namespace core {
 namespace dungeon {
 
 // TODO: define component classes spcific to the MagicalDungeon type
+class EnchantedLibrary;
 
 /**
  * @brief The MagicalDungeon class
@@ -18,7 +19,6 @@ public:
 	*/
 	MagicalDungeon();
 private:
-    std::string typeName = "MagicalDungeon";
 };
 
 /**

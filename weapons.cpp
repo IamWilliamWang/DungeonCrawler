@@ -90,13 +90,25 @@ void Weapon::setSpecialAbilityDescription(std::string specialAbilityDescription)
 {
 	_specialAbilityDescription = specialAbilityDescription;
 }
+
 std::shared_ptr<Enchantment> Weapon::getPrefixEnchantment()
 {
 	return _prefixEnchantment;
 }
+
+void Weapon::setPrefixEnchantment(std::shared_ptr<Enchantment> prefixEnchantment)
+{
+    _prefixEnchantment = prefixEnchantment;
+}
+
 std::shared_ptr<Enchantment> Weapon::getSuffixEnchantment()
 {
 	return _suffixEnchantment;
+}
+
+void Weapon::setSuffixEnchantment(std::shared_ptr<Enchantment> suffixEnchantment)
+{
+    _suffixEnchantment = suffixEnchantment;
 }
 
 bool Weapon::createEnchantmentOrNot()

@@ -8,7 +8,7 @@ using namespace core::dungeon;
 
 MagicalDungeon::MagicalDungeon()
 {
-
+    _dungeonType = "MagicalDungeon";
 }
 
 /* ------------------------------------------------------------------------------

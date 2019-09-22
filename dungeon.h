@@ -56,11 +56,14 @@ public:
    */
   std::shared_ptr<Room> path(int index);
 
+  bool instanceOf(std::string dungeonName);
+
   virtual ~Dungeon() = default;
 
 protected:
 	std::list<std::shared_ptr<Room>> _path;
 	std::shared_ptr<Room> _nowRoom;
+    std::string _dungeonType;
 
 /*-----------------------------------------------------------------------------------
  * Original members below here, do not modify or remove them.

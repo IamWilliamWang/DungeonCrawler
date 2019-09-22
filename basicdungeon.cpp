@@ -9,7 +9,7 @@ using namespace core::dungeon;
 
 BasicDungeon::BasicDungeon()
 {
-
+    _dungeonType = "BasicDungeon";
 }
 
 /* ------------------------------------------------------------------------------

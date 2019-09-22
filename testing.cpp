@@ -7,6 +7,7 @@
 #include "csvfile.h"
 #include "door.h"
 #include "dungeon.h"
+#include "dungeonbuilder.h"
 #include "game.h"
 #include "weapons.h"
 #include "magicaldungeon.h"
@@ -54,13 +55,31 @@ void Testing::runTests() {
 std::string Testing::testCharacter() {
   _failure = false; // ensure this is at the beggining of each test
 
+  // test Character.name
   std::string name{"Character Name"};
-
   Character c{name};
-
   equal<std::string>(name, c.name(),   "Character .name() does not match constructor value");
-
-  // TODO: complete the testing of the Character class
+  // test Character.setAttribute
+  c.setAttribute(3, 2, 1);
+  equal<int>(3, c.getStrength(), "设置strength失败！");
+  equal<int>(2, c.getDexterity(), "设置dexterity失败！");
+  equal<int>(1, c.getWisdom(), "设置wisdom失败！");
+  // test Character.setAttribute without vaild checking
+  c.setAttribute(100, 90, 200, false);
+  equal<int>(100, c.getStrength(), "设置strength失败！");
+  equal<int>(90, c.getDexterity(), "设置dexterity失败！");
+  equal<int>(200, c.getWisdom(), "设置wisdom失败！");
+  // test Character.setDescription
+  c.setDescription("Character description.");
+  equal<std::string>("Character description.", c.getDescription(), "description设置错误！");
+  // test Character.setWeapon
+  c.setWeapon(std::make_shared<weapons::MagicWand>());
+  equal<std::string>("Magic Wand", c.getWeapon()->getName(), "武器设置错误！");
+  c.setWeapon(std::make_shared<weapons::WizardsStaff>());
+  equal<std::string>("Wizard's Staff", c.getWeapon()->getName(), "武器设置错误！");
+  // test Character.isAlive
+  c.setHealthPoint(-1);
+  equal<bool>(false, c.isAlive(), "生命设置错误！");
 
   return passFailText();
 }
@@ -69,22 +88,32 @@ std::string Testing::testCreature() {
   _failure = false; // ensure this is at the beggining of each test
 
   std::string name{"Creature Name"};
-
   Creature c{name};
-
   equal<std::string>(name, c.name(),   "Creature .name() does not match constructor value");
-
-  // TODO: complete the testing of the Creature class(es): can be removed
+  // test Creature.setAttribute
+  c.setAttribute(100, 90, 200, false);
+  equal<int>(100, c.getStrength(), "设置strength失败！");
+  equal<int>(90, c.getDexterity(), "设置dexterity失败！");
+  equal<int>(200, c.getWisdom(), "设置wisdom失败！");
+  // test Creature.setDescription
+  c.setDescription("Creature description.");
+  equal<std::string>("Creature description.", c.getDescription(), "description设置错误！");
+  // test Creature.isAlive
+  c.setHealthPoint(-1);
+  equal<bool>(false, c.isAlive(), "生命设置错误！");
 
   return passFailText();
 }
 std::string Testing::testDoor() {
   _failure = false; // ensure this is at the beggining of each test
 
-  // TODO: complete the testing of the Door class(es): can be removed
+  // test Door.getNeighbourRoom
+  std::shared_ptr<dungeon::Room> room1 = std::make_shared<dungeon::Room>(1), room2 = std::make_shared<dungeon::Room>(2);
+  dungeon::Door door{room1, room2};
+  equal<int>(room1->id(), door.getNeighbourRoom(room2)->id(), "有误");
+  equal<int>(room2->id(), door.getNeighbourRoom(room1)->id(), "有误");
 
-//  return passFailText();
-  return "Skipped";
+  return passFailText();
 }
 std::string Testing::testDungeon() {
   _failure = false; // ensure this is at the beggining of each test
@@ -94,22 +123,58 @@ std::string Testing::testDungeon() {
 
   Dungeon dungeon{};
 
+  // test Dungeon.addRoom&retrieveRoom
   dungeon.addRoom(room);
   equal(room, dungeon.retrieveRoom(roomId), "Dungeon .add/.retrieveRoom() failure, does not return room that was added");
+  // test Dungeon.getEntranceRoom
+  room->addEntranceOrExit('N', true);
+  equal(1, dungeon.getEntranceRoom()->id(), "");
+  // test Dungeon.setNowRoom&getNowRoom
+  dungeon.setNowRoom(room);
+  equal(1, dungeon.getNowRoom()->id(), "");
+  // test Dungeon.path
+  equal(1, dungeon.path(-1)->id(), "");
+  equal(1, dungeon.path(0)->id(), "");
 
-  // TODO: complete the testing of the Dungeon class(es): can be removed
-
-//  return passFailText();
-  return "Skipped";
+  return passFailText();
 }
 
 std::string Testing::testGame() {
   _failure = false;
 
-  Game game = *Game::instance(); //changed to singleton
+  Game game = *Game::instance();
 
-  // TODO: implement the testing of the Game class
+  // test Game.setPlayer&player
+  game.setPlayer(std::shared_ptr<Character>(new Character("testing")));
+  equal<std::string>("testing", game.player()->name(), "The saved player has no name");
 
+  // test Game.createDungeon&getBasicDungeon&&getMagicalDungeon
+  equal(true, game.createDungeon("BasicDungeon"), "Create basic dungeon failed.");
+  equal(true, game.getBasicDungeon() != nullptr, "Get basic dungeon failed.");
+  equal(false, game.getMagicalDungeon() != nullptr, "Converte basic dungeon to magical dungeon is not allowed.");
+
+  // test DungeonBuilder.buildDungeon
+  auto magicalDungeonBulider = std::make_shared<MagicalDungeonBuilder>();
+  game.setDungeon(magicalDungeonBulider->buildDungeon());
+  equal(false, game.getBasicDungeon() != nullptr, "Converte magical dungeon to basic dungeon is not allowed.");
+  equal(true, game.getMagicalDungeon() != nullptr, "Get magical dungeon failed.");
+
+  // test Game.getMagicalDungeon&enterDungeon&navigate&navigateBack&currentRoom
+  auto room1 = std::make_shared<Room>(1), room2 = std::make_shared<Room>(2);
+  auto door = std::make_shared<Door>(room1, room2);
+  room1->addDoor('E', door);
+  room2->addDoor('W', door);
+  game.getMagicalDungeon()->addRoom(room1);
+  game.getMagicalDungeon()->addRoom(room2);
+  game.enterDungeon();
+  game.navigate('E');
+  game.navigateBack();
+  equal(1, game.currentRoom()->id(), "");
+
+  // test Game.exitDungeon
+  game.exitDungeon();
+  equal(true, game.player() == nullptr, "");
+  equal(true, game.dungeon() == nullptr, "");
 
   // The following tests the random number generation.
   int value{game.randomIntBetweenInc(5, 0)};
@@ -148,22 +213,43 @@ std::string Testing::testGame() {
 std::string Testing::testWeapon() {
   _failure = false; // ensure this is at the beggining of each test
 
-  // TODO: complete the testing of the Item class(es): can be removed
+  // test Weapon.getDescription&getLongDescription&get
+  auto fists = std::make_shared<weapons::Fists>();
+  equal<std::string>("you look down at your fists and shrug, \"these will do\"", fists->getDescription(), "");
+  equal<std::string>("Fists are the weapon of choice for someone who has nothing else.", fists->getLongDescription(), "");
+  equal(4, fists->get(), "");
 
-//  return passFailText();
-  return "Skipped";
+  // test Weapon.getDamageRange
+  auto battleAxe = std::make_shared<weapons::BattleAxe>();
+  auto damageRange = battleAxe->getDamageRange();
+  equal(10, damageRange[0], "");
+  equal(15, damageRange[1], "");
+
+  // test Weapon.setPrefixEnchantment&setSuffixEnchantment&getFullName&getSpecialAbilityDescription
+  auto magicWand = std::make_shared<weapons::MagicWand>();
+  magicWand->setPrefixEnchantment(std::make_shared<weapons::ElectricityEnchantment>());
+  magicWand->setSuffixEnchantment(std::make_shared<weapons::VampirismEnchantment>());
+  equal<std::string>("Electrified Magic Wand of Vampirism", magicWand->getFullName(), "");
+  equal<std::string>("Healing: returns character to full health.", magicWand->getSpecialAbilityDescription(), "");
+
+  return passFailText();
 }
 
 std::string Testing::testRoom() {
     _failure = false;
 
+    // test Room.id
     int roomId{1};
-
     Room room{roomId};
-
     equal(roomId, room.id(), "Room .id() does not match constructor value");
 
-    // TODO: complete the testing of the Character class
+    // test Room.addEntranceOrExit&getEntranceDirection&existEntranceOrExit&addDoor&findDoorDirections
+    auto room1 = std::make_shared<Room>(1), room2 = std::make_shared<Room>(2), room3 = std::make_shared<Room>(3), room4 = std::make_shared<Room>(4);
+    room1->addEntranceOrExit('N', true);
+    equal('N', room1->getEntranceDirection(), "");
+    equal(true, room1->existEntranceOrExit(), "");
+    room.addDoor('S', std::shared_ptr<Door>(new Door(room1, room2)));
+    equal('S', room.findDoorDirections().front(), "");
 
     return passFailText();
 }
@@ -171,10 +257,8 @@ std::string Testing::testRoom() {
 std::string Testing::testWall() {
   _failure = false; // ensure this is at the beggining of each test
 
-  // TODO: complete the testing of the Wall class(es): can be removed
-
-//  return passFailText();
-  return "Skipped";
+  Wall wall{};
+  return passFailText();
 }
 
 // TODO: implement the rest of your tests here
