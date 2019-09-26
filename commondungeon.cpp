@@ -7,3 +7,8 @@ OpenDoorway::OpenDoorway(std::shared_ptr<Room> room1, std::shared_ptr<Room> room
 { 
 
 }
+
+Chamber::Chamber()
+{
+
+}

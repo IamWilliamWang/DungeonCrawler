@@ -145,7 +145,7 @@ bool Weapon::createEnchantment(int enchantmentCount)
         if (_name == "Wizard's Staff" || _name == "Magic Wand"
                 || Game::instance()->randomIntBetweenInc(0, 1))
             _suffixEnchantment = std::make_shared<VampirismEnchantment>();
-        else // 不允许HealingEnchantment与WizardsStaff or MagicWand共存
+        else // HealingEnchantment is not allowed to coexist with WizardsStaff or MagicWand
             _suffixEnchantment = std::make_shared<HealingEnchantment>();
     }
     return true;

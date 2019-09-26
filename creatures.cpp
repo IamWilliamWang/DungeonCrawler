@@ -41,7 +41,7 @@ void Creature::setHealthPoint(int healthPoint)
 {
 	if (_maxHealth == -1)
 		_maxHealth = healthPoint;
-	_health = healthPoint > _maxHealth ? _maxHealth : healthPoint; // can not higher than the max value.
+    _health = healthPoint > _maxHealth ? _maxHealth : healthPoint; // prevent health point higher than the max value.
 }
 
 int Creature::getMaxHealthPoint()

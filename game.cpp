@@ -5,7 +5,7 @@
 using namespace core;
 
 // TODO: Add additional implementation here
-std::shared_ptr<Game> Game::_game = std::shared_ptr<Game>(new Game); // 这里不能使用make_shared
+std::shared_ptr<Game> Game::_game = std::shared_ptr<Game>(new Game); // mustn't use std::make_shared
 
 std::shared_ptr<Character> Game::player()
 {
@@ -157,10 +157,10 @@ bool Game::canDodge(std::shared_ptr<creatures::Creature> creature)
 
 void* Game::doActionRound(char selection)
 {
-    // 进攻模块
+    // Attack module
 	if (selection == 'a')
 	{
-        int* damagesHappened = new int[2]; // 储存我方造成的伤害和敌方造成的伤害
+        int* damagesHappened = new int[2]; // Store damage done by us and damage done by the enemy
 		damagesHappened[0] = damagesHappened[1] = 0;
 
 		auto player = _character;
@@ -169,37 +169,37 @@ void* Game::doActionRound(char selection)
             enemy = getBasicDungeon()->getNowRoom()->getCreature();
         else
             enemy = getMagicalDungeon()->getNowRoom()->getCreature();
-        // 如果敌方无法躲避
+        // If the enemy cannot dodge
         if (!canDodge(enemy))
 		{
-            int damage = player->damageWeaponed(); // 获得附魔伤害值
-            enemy->setHealthPoint(enemy->getHealthPoint() - damage); // 敌方掉血
-            // 敌方有VampirismEnchantment则治疗敌方
-            if (enemy->getWeapon()->getSuffixEnchantment()) // 附魔不为空
+            int damage = player->damageWeaponed(); // Get enchantment damage
+            enemy->setHealthPoint(enemy->getHealthPoint() - damage); // Enemy health reduced
+            // If the enemy has VampirismEnchantment, treat him
+            if (enemy->getWeapon()->getSuffixEnchantment()) // Enchantment is not empty
                 if (enemy->getWeapon()->getSuffixEnchantment()->instanceOf("VampirismEnchantment"))
                 {
                     auto vampirismEnchantment = std::dynamic_pointer_cast<weapons::VampirismEnchantment>(enemy->getWeapon()->getSuffixEnchantment());
                     enemy->setHealthPoint(enemy->getHealthPoint() + vampirismEnchantment->get(&damage));
                 }
-            damagesHappened[0] = damage; // 储存我方造成的伤害（不考虑治疗）
+            damagesHappened[0] = damage; // Store the damage player caused (without regard to treatment)
 		}
-        // 如果我方无法躲避
+        // If player can't dodge
 		if (!canDodge(player))
 		{
-            int damage = enemy->damageWeaponed(); // 获得附魔伤害值
-            player->setHealthPoint(player->getHealthPoint() - damage); // 我方掉血
-            // 我方有VampirismEnchantment则治疗敌方
-            if (player->getWeapon()->getSuffixEnchantment()) // 附魔不为空
+            int damage = enemy->damageWeaponed(); // Get enchantment damage
+            player->setHealthPoint(player->getHealthPoint() - damage); // Player health reduced
+            // If the player has VampirismEnchantment, treat him
+            if (player->getWeapon()->getSuffixEnchantment()) // Enchantment is not empty
                 if (player->getWeapon()->getSuffixEnchantment()->instanceOf("VampirismEnchantment"))
                 {
                     auto vampirismEnchantment = std::dynamic_pointer_cast<weapons::VampirismEnchantment>(player->getWeapon()->getSuffixEnchantment());
                     player->setHealthPoint(player->getHealthPoint() + vampirismEnchantment->getHealHealthPoints(damage));
                 }
-            damagesHappened[1] = damage; // 储存敌方造成的伤害（不考虑治疗）
+            damagesHappened[1] = damage; // Store the damage enemy caused (without regard to treatment)
 		}
 		return damagesHappened;
 	}
-    // 特殊技能模块
+    // Special ability module
 	if (selection == 'l')
 	{
 		bool* done = new bool;

@@ -24,9 +24,16 @@ public:
 	OpenDoorway(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2);
 };
 
+/**
+ * @brief The Chamber class represents chamber
+ */
 class Chamber
 {
-
+public:
+    /**
+     * @brief Chamber default constructor
+     */
+    Chamber();
 };
 } // namespace dungeon
 } // namespace core

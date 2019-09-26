@@ -236,8 +236,12 @@ void MenuInterface::processDungeonType(char selection) {
 		setMenu(Menu::Main);
 		return;
 	}
-	Game::instance()->enterDungeon();
-	_display << std::endl << "You enter a dark cave." << std::endl;
+    Game::instance()->enterDungeon();
+    _display << std::endl;
+    if (isBasicDungeon())
+        _display << "You enter a dark cave." << std::endl;
+    else if (isMagicalDungeon())
+        _display << "You pass through a glowing doorway..." << std::endl;
 	setMenu(Menu::Action);
 }
 
@@ -295,7 +299,10 @@ void MenuInterface::displayChamber() const {
     }
     else
     {
-        _display << "your ears are filled with the sounds of numerous elixirs bubbling away over open flames" << std::endl;
+        if (currRoom->id() % 2 == 0)
+            _display << "your ears are filled with the sounds of numerous elixirs bubbling away over open flames" << std::endl;
+        else
+            _display << "the smell of musty pages and the tingle of magic fills the air" << std::endl;
     }
 }
 
@@ -622,35 +629,36 @@ void MenuInterface::compareWeapons() {
 }
 
 void MenuInterface::doAttack() {
-    auto player = Game::instance()->player(); // 我方
+    auto player = Game::instance()->player();
     auto myPrefixEnchantment = player->getWeapon()->getPrefixEnchantment();
     auto mySuffixEnchantment = player->getWeapon()->getSuffixEnchantment();
     std::shared_ptr<creatures::Creature> enemy;
     if (isBasicDungeon())
-        enemy = Game::instance()->getBasicDungeon()->getNowRoom()->getCreature(); // 敌方
+        enemy = Game::instance()->getBasicDungeon()->getNowRoom()->getCreature();
     else
         enemy = Game::instance()->getMagicalDungeon()->getNowRoom()->getCreature();
     auto enemyPrefixEnchantment = enemy->getWeapon()->getPrefixEnchantment();
     auto enemySuffixEnchantment = enemy->getWeapon()->getSuffixEnchantment();
 
-    // 执行攻击并获得各造成伤害点数
+    // Execute each attack and get damage points
     int* damagesHappened = static_cast<int*>(Game::instance()->doActionRound('a'));
+    // Display battle results section
     _display << std::endl;
-    // 我方开始攻击
+    // Player start to attack
 	_display << "You attack the creature..." << std::endl;
-    _display << (damagesHappened[0] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*"); // 战斗描述
+    _display << (damagesHappened[0] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*"); // Fighting description
 	if (player->getWeapon()->getName() == "Wizard's Staff")
 		_display << " (the staff seems ineffective)";
 	_display << std::endl;
-    if (damagesHappened[0] != 0) // 显示是否躲避
+    if (damagesHappened[0] != 0) // Show dodge or not
 		_display << "The attack deals *" << damagesHappened[0] << "* damage..." << std::endl;
 	else
         _display << "Creature dodged the attack" << std::endl;
-    // 不合理武器提示
+    // Unreasonable weapon tips
     if (!isMagicalDungeon() && (player->getWeapon()->getName() == "Wizard's Staff"
                              || player->getWeapon()->getName() == "Magic Wand"))
         _display << "Warning: you are in a basic dungeon, but you are holding a magical dungeon weapon" << std::endl;
-    // 我方攻击时前缀附魔显示
+    // Player attack when prefix enchant display
     if (damagesHappened[0] != 0 && myPrefixEnchantment)
     {
         if (myPrefixEnchantment->instanceOf("FlameEnchantment"))
@@ -658,14 +666,14 @@ void MenuInterface::doAttack() {
         else if (myPrefixEnchantment->instanceOf("ElectricityEnchantment"))
             _display << "As the weapon connects, a bolt of lightning strikes the target dealing 5 damage" << std::endl;
     }
-    // 我方攻击时敌方后缀附魔显示
+    // Enchant enemy suffix when player attack
     if (damagesHappened[0] != 0 && enemySuffixEnchantment)
     {
         if (enemySuffixEnchantment->instanceOf("VampirismEnchantment"))
             _display << "A feeling of warmth flows through creature and it heals " << damagesHappened[0] / 2 << " health" << std::endl;
     }
 	_display << std::endl;
-	// 检查敌方死亡
+    // Check enemy death
 	if (!enemy->isAlive()) 
 	{
 		_display << std::endl;
@@ -681,17 +689,17 @@ void MenuInterface::doAttack() {
 		setMenu(Menu::Action);
 		return;
 	}
-    // 敌方开始攻击
+    // Enemy attack
 	_display << "The creature attacks... ";
-    _display << (damagesHappened[1] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*"); // 战斗描述
+    _display << (damagesHappened[1] < 15 ? "*jab* *jab* *cross*" : "*hu, ahhhhhhhh, smash*"); // Fighting description
 	if (enemy->getWeapon()->getName() == "Wizard's Staff")
 		_display << " (the staff seems ineffective)";
 	_display << std::endl;
-    if (damagesHappened[1] != 0) // 显示是否躲避
+    if (damagesHappened[1] != 0) // Show dodge or not
 		_display << "The attack deals *" << damagesHappened[1] << "* damage..." << std::endl;
 	else
         _display << Game::instance()->player()->name() << " dodged the attack" << std::endl;
-    // 敌方攻击时前缀附魔显示
+    // Prefix enchant when enemy attacks
     if (damagesHappened[1] != 0 && enemyPrefixEnchantment)
     {
         if (enemyPrefixEnchantment->instanceOf("FlameEnchantment"))
@@ -699,14 +707,14 @@ void MenuInterface::doAttack() {
         else if (enemyPrefixEnchantment->instanceOf("ElectricityEnchantment"))
             _display << "As the weapon connects, a bolt of lightning strikes you dealing 5 damage" << std::endl;
     }
-    // 敌方攻击时我方后缀附魔显示
+    // Player's suffix enchant display when enemy attacks
     if (damagesHappened[1] != 0 && mySuffixEnchantment)
     {
         if (mySuffixEnchantment->instanceOf("VampirismEnchantment"))
             _display << "A feeling of warmth flows through you and you heal " << damagesHappened[1] / 2 << " health" << std::endl;
     }
-    // 检查我方是否死亡
-    if (!player->isAlive()) // 我方死亡
+    // Check if player is dead
+    if (!player->isAlive()) // player died
 	{
         _display << std::endl;
 		_display << "You died. Game Over Man!" << std::endl << std::endl;
@@ -734,7 +742,7 @@ void MenuInterface::useSpecialAbility() {
 				auto damage = Game::instance()->randomIntBetweenInc(10, 20);
 				enemy->setHealthPoint(enemy->getHealthPoint() - damage);
                 _display << "A large fireball flies out from the top of the staff, charring everything in its path and dealing " << damage << " damage" << std::endl;
-				if (!enemy->isAlive()) // 敌方死亡
+                if (!enemy->isAlive()) // The enemy killed
 				{
 					_display << std::endl;
 					_display << "You win the Fight!" << std::endl;
