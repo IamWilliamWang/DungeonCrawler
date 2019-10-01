@@ -133,7 +133,7 @@ private:
   /**
    * @brief createCharacter display and process the create character task.
    */
-  void createCharacter();
+  bool createCharacter();
 
   /**
    * @brief dungeonTypeMenu display the select dungeon type task.
@@ -175,7 +175,7 @@ private:
   void displayWeaponDetails(std::string title = "", std::shared_ptr<weapons::Weapon> weapon = Game::instance()->player()->getWeapon());
 
   /**
-   * @brief displayChamber 输出Chamber提示语
+   * @brief displayChamber Output Chamber prompt
    */
   void displayChamber() const;
 
@@ -263,6 +263,15 @@ private:
    * @return
    */
   bool isMagicalDungeon() const;
+
+  /**
+   * @brief getVaildInt Get int in a range, return the input's validity
+   * @param value The value that is assigned
+   * @param min minimum value
+   * @param max maximum value
+   * @return
+   */
+  bool getVaildInt(int& value, int min, int max);
 
   // The functions below should not be modified.
 

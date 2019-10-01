@@ -133,18 +133,17 @@ bool MenuInterface::processMainMenu(char selection) {
 void MenuInterface::playGame() {
 	if (Game::instance()->getSuccessTimes() == 0)
 	{
-		createCharacter();
+        if (createCharacter())
 		setMenu(Menu::DungeonSelect);
 	}
 	else
 	{
-        Game::instance()->createDungeon();
-		Game::instance()->enterDungeon();
-		setMenu(Menu::Action);
+        if (Game::instance()->createDungeon() && Game::instance()->enterDungeon())
+            setMenu(Menu::Action);
 	}
 }
 
-void MenuInterface::createCharacter() {
+bool MenuInterface::createCharacter() {
 	_display << std::endl << "You need to create a character... what is your name?" << std::endl;
 	std::string name;
 	std::getline(_input, name);
@@ -155,31 +154,36 @@ void MenuInterface::createCharacter() {
 	{
 		_display << "A high Strength stat will boost your damage in combat." << std::endl;
 		_display << "How many points do you want to add to your Strength (cannot exceed 5)?" << std::endl;
-		int strength_tmp = getIntInput();
+        int strength_tmp;
+        while(!getVaildInt(strength_tmp, 1, restPoints)); // Loop through when the input is incorrect
 		strength += strength_tmp;
 		restPoints -= strength_tmp;
 		if (restPoints <= 0)
 		{
-			_display << "Create player failed! You dont have enough points." << std::endl;
-			break;
+            _display << "Create player failed! You don't have enough points." << std::endl;
+            setMenu(Menu::Main);
+            return false;
 		}
 		_display << std::endl;
 		_display << "You have *" << restPoints << "* stat points remaining." << std::endl;
 		_display << "A high Dexterity stat will increase your ability to dodge creature attacks." << std::endl;
 		_display << "How many points do you want to add to your Dexterity (cannot exceed 5)?" << std::endl;
-		int dexterity_tmp = getIntInput();
+        int dexterity_tmp;
+        while(!getVaildInt(dexterity_tmp, 1, restPoints)); // Loop through when the input is incorrect
 		dexterity += dexterity_tmp;
 		restPoints -= dexterity_tmp;
 		_display << std::endl;
 		if (restPoints <= 0)
 		{
             _display << "Create player failed! You don't have enough points." << std::endl;
-			break;
+            setMenu(Menu::Main);
+            return false;
 		}
 		_display << "You have *" << restPoints << "* stat points remaining." << std::endl;
 		_display << "A high Wisdom stat will boost the effectiveness of magical items." << std::endl;
 		_display << "How many points do you want to add to your Wisdom (cannot exceed 5)?" << std::endl;
-		int wisdom_tmp = getIntInput();
+        int wisdom_tmp;
+        while(!getVaildInt(wisdom_tmp, 1, restPoints)); // Loop through when the input is incorrect
 		wisdom += wisdom_tmp;
 		restPoints -= wisdom_tmp;
 		if (restPoints <= 0)
@@ -200,6 +204,7 @@ void MenuInterface::createCharacter() {
         _display << "Create player failed!" << std::endl;
     Game::instance()->setPlayer(myCharacter);
     switchToCharacterMenu(_currentMenu);
+    return true;
 }
 
 void MenuInterface::dungeonTypeMenu() const {
@@ -374,23 +379,22 @@ void MenuInterface::actionMenu() const {
 		switch (direction)
 		{
 		case 'N':
-			outputs[0] = "To the NORTH you see you see an opening to another chamber";
+            outputs[0] = "To the NORTH you see an opening to another chamber";
 			break;
 		case 'S':
-			outputs[1] = "To the SOUTH you see you see an opening to another chamber";
+            outputs[1] = "To the SOUTH you see an opening to another chamber";
 			break;
 		case 'W':
-			outputs[2] = "To the WEST you see you see an opening to another chamber";
+            outputs[2] = "To the WEST you see an opening to another chamber";
 			break;
 		case 'E':
-			outputs[3] = "To the EAST you see you see an opening to another chamber";
+            outputs[3] = "To the EAST you see an opening to another chamber";
 			break;
 		default:
 			break;
 		}
 	}
-	// write down into screen
-	
+    // write down into screen
 	for (int i = 0; i < 4; i++)
 	{
         if (outputs[static_cast<unsigned>(i)] != "")
@@ -803,4 +807,21 @@ bool MenuInterface::isBasicDungeon() const
 bool MenuInterface::isMagicalDungeon() const
 {
     return Game::instance()->getMagicalDungeon() != nullptr;
+}
+
+bool MenuInterface::getVaildInt(int& value, int min, int max)
+{
+    int tmpValue = getIntInput();
+    if (tmpValue < min)
+    {
+        _display << "Warning: the number cannot be less than " << min << ", please input again." << std::endl;
+        return false;
+    }
+    if (tmpValue > max)
+    {
+        _display << "Warning: the number cannot be more than " << max << ", please input again." << std::endl;
+        return false;
+    }
+    value = tmpValue;
+    return true;
 }
