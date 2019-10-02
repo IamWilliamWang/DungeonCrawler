@@ -41,34 +41,34 @@ public:
      * @brief buildDungeon Builds basic dungeon
      * @return a new basic dungeon
      */
-	std::shared_ptr<Dungeon> buildDungeon();
+    std::shared_ptr<Dungeon> buildDungeon();
 
     /**
      * @brief clone Clones a basic dungeon
      * @param dungeon old basic dungeon
      * @return a new cloned basic dungeon
      */
-	std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon> dungeon);
+    std::shared_ptr<Dungeon> clone(std::shared_ptr<Dungeon> dungeon);
 
 private:
-	/**
+    /**
      * @brief parseInt Converts string to int
      * @param intStr A string representing an integer
      * @return parsed int
-	 */
-	int parseInt(std::string intStr);
+     */
+    int parseInt(std::string intStr);
 
-	/**
+    /**
      * @brief loadCreatures Loads all basic dungeon creatures
      * @return
-	 */
-	bool loadCreatures();
+     */
+    bool loadCreatures();
 
-	/**
+    /**
      * @brief loadWeapons Loads all basic dungeon weapons
-	 * @return
-	 */
-	bool loadWeapons();
+     * @return
+     */
+    bool loadWeapons();
 
     std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList; // all basic dungeon creatures' list
     std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList; // all basic dungeon weapons' list
@@ -99,19 +99,19 @@ private:
      * @param intStr a string representing an integer
      * @return parsed int
      */
-	int parseInt(std::string intStr);
+    int parseInt(std::string intStr);
 
     /**
      * @brief loadCreatures Loads all magical dungeon creatures
      * @return
      */
-	bool loadCreatures();
+    bool loadCreatures();
 
     /**
      * @brief loadCreatures Loads all magical dungeon weapons
      * @return
      */
-	bool loadWeapons();
+    bool loadWeapons();
 
     std::vector<std::shared_ptr<core::creatures::Creature>> _creatureList; // all magical dungeon creatures' list
     std::vector<std::shared_ptr<core::weapons::Weapon>> _weaponList; // all magical dungeon weapons' list

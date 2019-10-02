@@ -19,14 +19,14 @@ public:
      * @param room1 Left side of the door
      * @param room2 Right side of the door
      */
-	Door(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2);
+    Door(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2);
 
     /**
      * @brief getNeighbourRoom Gets neighbour room of thisRoom
      * @param thisRoom this room
      * @return
      */
-	std::shared_ptr<Room> getNeighbourRoom(std::shared_ptr<Room> thisRoom);
+    std::shared_ptr<Room> getNeighbourRoom(std::shared_ptr<Room> thisRoom);
 
 private:
     std::shared_ptr<Room> _room1; // left room of the door

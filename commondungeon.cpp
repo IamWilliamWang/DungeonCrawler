@@ -3,12 +3,10 @@
 using namespace core::dungeon;
 
 OpenDoorway::OpenDoorway(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2) 
-	: Door(room1, room2) 
-{ 
+    : Door(room1, room2) {
 
 }
 
-Chamber::Chamber()
-{
+Chamber::Chamber() {
 
 }

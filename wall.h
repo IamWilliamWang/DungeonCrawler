@@ -10,10 +10,10 @@ namespace dungeon {
 class Wall
 {
 public:
-   /**
+    /**
     * @brief Wall represents the wall
     */
-	Wall();
+    Wall();
 };
 
 } // namespace dungeon

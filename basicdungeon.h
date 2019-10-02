@@ -29,11 +29,11 @@ public:
     /**
      * @brief RockChamber default constructor
      */
-	RockChamber();
+    RockChamber();
 };
 
 /**
- * @brief TODO The QuartzChamber class
+ * @brief The QuartzChamber class represents the quartz chamber
  */
 class QuartzChamber : public Chamber
 {
@@ -41,11 +41,11 @@ public:
     /**
      * @brief QuartzChamber default constructor
      */
-	QuartzChamber();
+    QuartzChamber();
 };
 
 /**
- * @brief TODO The BasicWall class
+ * @brief The RockWall class represents the rock wall
  */
 class RockWall
 {
@@ -53,7 +53,7 @@ public:
     /**
      * @brief RockWall default constructor
      */
-	RockWall();
+    RockWall();
 };
 
 } // namespace dungeon

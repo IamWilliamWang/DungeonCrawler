@@ -18,7 +18,7 @@ public:
      * @brief Creature default constructor with creature's name
      * @param name creature's name
      */
-	Creature(const std::string &name);
+    Creature(const std::string &name);
 
     /**
      * @brief name Gets the name of creature
@@ -30,43 +30,43 @@ public:
      * @brief getStrength Gets the strength of creature
      * @return strength of creature
      */
-	int getStrength();
+    int getStrength();
 
     /**
      * @brief getDexterity Gets the dexterity of creature
      * @return dexterity of creature
      */
-	int getDexterity();
+    int getDexterity();
 
     /**
      * @brief getWisdom Gets the wisdom of creature
      * @return wisdom of creature
      */
-	int getWisdom();
+    int getWisdom();
 
     /**
      * @brief getHealthPoint Gets the health points of creature
      * @return health points of creature
      */
-	int getHealthPoint();
+    int getHealthPoint();
     
     /**
      * @brief setHealthPoint Sets the health points of creature
      * @param healthPoint health points of creature
      */
-	void setHealthPoint(int healthPoint);
+    void setHealthPoint(int healthPoint);
 
     /**
      * @brief getMaxHealthPoint Gets health points' max value
      * @return health points' max value
      */
-	int getMaxHealthPoint();
+    int getMaxHealthPoint();
 
-	/**
+    /**
      * @brief isAlive Determines whether an creature is alive
      * @return Whether an creature is alive
-	 */
-	bool isAlive();
+     */
+    bool isAlive();
 
     /**
      * @brief setAttribute Sets basic properties (including strength, dexterity, wisdom) of creature
@@ -82,59 +82,59 @@ public:
      * @brief damage Gets the damage from not using a weapon
      * @return damage without weapon
      */
-	int damage();
+    int damage();
 
     /**
      * @brief damageWeaponed Gets the damage of a enchanted weapon
      * @return Random value within the damage range
      */
-	int damageWeaponed();
+    int damageWeaponed();
 
-	/**
+    /**
      * @brief damageWeaponedRange Gets the damage range of a enchanted weapon
      * @return An int[2], contains [minimum damage, maximum damage]
-	 */
-	int* damageWeaponedRange();
+     */
+    int* damageWeaponedRange();
 
     /**
      * @brief dodgeChance Gets the probability of avoiding, 0 is impossible to avoid, 100 is certain to avoid
      * @return dodge change
      */
-	int dodgeChance();
+    int dodgeChance();
 
     /**
      * @brief setDescription Sets the description of creature
      * @param description Description of creature
      */
-	void setDescription(std::string description);
+    void setDescription(std::string description);
 
     /**
      * @brief getDescription Gets the description of creature
      * @return description
      */
-	std::string getDescription();
+    std::string getDescription();
 
-	/**
+    /**
      * @brief getWeapon Gets the weapon of creature
      * @return weapon
-	 */
+     */
     std::shared_ptr<core::weapons::Weapon> getWeapon();
 
-	/**
+    /**
      * @brief setWeapon Sets the weapon of creature
      * @param weapon weapon of creature
-	 */
-	void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon);
+     */
+    void setWeapon(std::shared_ptr<core::weapons::Weapon> weapon);
 
 private:
-  std::string _name; // creature's name
-  std::string _description; // creature's description
-  int _strength; // creature's strength
-  int _dexterity; // creature's dexterity
-  int _wisdom; // creature's wisdom
-  int _health; // creature's health
-  int _maxHealth = -1; // creature's maximum health
-  std::shared_ptr<core::weapons::Weapon> _weapon; // creature's weapon
+    std::string _name; // creature's name
+    std::string _description; // creature's description
+    int _strength; // creature's strength
+    int _dexterity; // creature's dexterity
+    int _wisdom; // creature's wisdom
+    int _health; // creature's health
+    int _maxHealth = -1; // creature's maximum health
+    std::shared_ptr<core::weapons::Weapon> _weapon; // creature's weapon
 };
 
 } // namespace creatures

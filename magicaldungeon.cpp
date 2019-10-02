@@ -5,35 +5,27 @@ using namespace core::dungeon;
 /* ------------------------------------------------------------------------------
  * MagicalDungeon member implementations
  * -----------------------------------------------------------------------------*/
-
-MagicalDungeon::MagicalDungeon()
-{
+MagicalDungeon::MagicalDungeon() {
     _dungeonType = "MagicalDungeon";
 }
 
 /* ------------------------------------------------------------------------------
  * EnchantedLibrary member implementations
  * -----------------------------------------------------------------------------*/
-
-EnchantedLibrary::EnchantedLibrary()
-{
+EnchantedLibrary::EnchantedLibrary() {
 
 }
 
 /* ------------------------------------------------------------------------------
  * AlchemistsLaboratory member implementations
  * -----------------------------------------------------------------------------*/
-
-AlchemistsLaboratory::AlchemistsLaboratory()
-{
+AlchemistsLaboratory::AlchemistsLaboratory() {
 
 }
 
 /* ------------------------------------------------------------------------------
  * MagicWall member implementations
  * -----------------------------------------------------------------------------*/
-
-MagicWall::MagicWall()
-{
+MagicWall::MagicWall() {
 
 }

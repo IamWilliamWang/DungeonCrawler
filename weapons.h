@@ -14,7 +14,7 @@ class Interface
      * @param args Any parameters that need to be passed in
      * @return Desired integer data
      */
-    virtual int get(void* args = nullptr) = 0;
+    virtual int get(void *args = nullptr) = 0;
 };
 
 /**
@@ -70,7 +70,7 @@ public:
      * @param args No need to pass any args
      * @return
      */
-    int get(void* args = nullptr);
+    int get(void *args = nullptr);
 };
 
 /**
@@ -94,7 +94,7 @@ public:
      * @param args No need to pass any args
      * @return
      */
-    int get(void* args = nullptr);
+    int get(void *args = nullptr);
 };
 
 /**
@@ -119,7 +119,7 @@ public:
      * @param args No need to pass any args
      * @return
      */
-    int get(void* args = nullptr);
+    int get(void *args = nullptr);
 };
 
 /**
@@ -145,7 +145,7 @@ public:
      * @param args An integer pointer that represents the damage taken this turn
      * @return
      */
-    int get(void* args = nullptr);
+    int get(void *args = nullptr);
 };
 
 /**
@@ -164,19 +164,19 @@ public:
      * @brief getName Gets the weapon's name
      * @return
      */
-	std::string getName();
+    std::string getName();
 
     /**
      * @brief getFullName Gets the full name with prefix and suffix
      * @return
      */
-	std::string getFullName();
+    std::string getFullName();
 
     /**
      * @brief setName Sets the weapon's name
      * @param name weapon's name
      */
-	void setName(std::string name);
+    void setName(std::string name);
 
     /**
      * @brief getDescription Gets the short description of weapon
@@ -213,13 +213,13 @@ public:
      * @param minDamage minDamage of weapon
      * @param maxDamage maxDamage of weapon
      */
-	void setDamageRange(int minDamage, int maxDamage);
+    void setDamageRange(int minDamage, int maxDamage);
 
     /**
      * @brief getSpecialAbilityDescription Gets special ability description
      * @return
      */
-	std::string getSpecialAbilityDescription();
+    std::string getSpecialAbilityDescription();
 
     /**
      * @brief setSpecialAbilityDescription Sets special ability description
@@ -256,7 +256,7 @@ public:
      * @param args No need to pass any args
      * @return
      */
-    int get(void* args = nullptr);
+    int get(void *args = nullptr);
 private:
 
     /**
@@ -282,7 +282,7 @@ private:
      * @brief getEnchantmentDamage Gets additional damage from enchantment
      * @return
      */
-	int getEnchantmentDamage();
+    int getEnchantmentDamage();
 
     std::string _name = ""; // weapon's name
     std::string _description = ""; // weapon's description
@@ -303,7 +303,7 @@ public:
     /**
      * @brief Fists default constructor
      */
-	Fists();
+    Fists();
 };
 
 /**
@@ -315,7 +315,7 @@ public:
     /**
      * @brief Boomerang default constructor
      */
-	Boomerang();
+    Boomerang();
 };
 
 /**
@@ -327,7 +327,7 @@ public:
     /**
      * @brief ShortSword default constructor
      */
-	ShortSword();
+    ShortSword();
 };
 
 /**
@@ -339,7 +339,7 @@ public:
     /**
      * @brief BattleAxe default constructor
      */
-	BattleAxe();
+    BattleAxe();
 };
 
 /**
@@ -351,7 +351,7 @@ public:
     /**
      * @brief WizardsStaff default constructor
      */
-	WizardsStaff();
+    WizardsStaff();
 };
 
 /**
@@ -363,7 +363,7 @@ public:
     /**
      * @brief MagicWand default constructor
      */
-	MagicWand();
+    MagicWand();
 };
 
 } // namespace items

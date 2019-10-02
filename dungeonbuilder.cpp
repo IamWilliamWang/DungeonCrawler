@@ -1,17 +1,16 @@
 #include "dungeonbuilder.h"
 using namespace core::dungeon;
 
-int BasicDungeonBuilder::parseInt(std::string intStr)
-{
+int BasicDungeonBuilder::parseInt(std::string intStr) {
 	return atoi(intStr.c_str());
 }
 
-bool BasicDungeonBuilder::loadCreatures()
-{
+bool BasicDungeonBuilder::loadCreatures() {
 	std::ifstream inputStream("creature_types.csv");
 	data::CsvFile csv(inputStream);
-	if (csv.numberOfRows() == -1)
+    if (csv.numberOfRows() == -1) {
 		return false;
+    }
 
 	int nameI = csv.columnIndexOf("Name");
 	int healthI = csv.columnIndexOf("Maximum Health");
@@ -21,34 +20,38 @@ bool BasicDungeonBuilder::loadCreatures()
 	int wisdomI = csv.columnIndexOf("Wisdom");
 	int weaponI = csv.columnIndexOf("Weapon");
 	int dungeonTypeI = csv.columnIndexOf("Dungeon Type");
-	for (int row = 1; row <= csv.numberOfRows(); row++)
-	{
-        if (csv.at(row, dungeonTypeI) == "MagicalDungeon" || csv.at(row, dungeonTypeI) == "")
+	for (int row = 1; row <= csv.numberOfRows(); row++) {
+        if (csv.at(row, dungeonTypeI) == "MagicalDungeon" || csv.at(row, dungeonTypeI) == "") {
 			continue;
+        }
 		auto creature = std::make_shared<core::creatures::Creature>(csv.at(row, nameI));
-        creature->setHealthPoint(parseInt(csv.at(row, healthI))); // set health point and max health point first
-        creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI)), parseInt(csv.at(row, wisdomI)), false);
+		creature->setHealthPoint(parseInt(csv.at(row, healthI))); // set health point and max health point first
+        creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI))
+                               , parseInt(csv.at(row, wisdomI)), false);
 		creature->setDescription(csv.at(row, descriptionI));
 
 		auto weaponName = csv.at(row, weaponI);
-		if (weaponName == "Fists")
+        if (weaponName == "Fists") {
 			creature->setWeapon(std::make_shared<core::weapons::Fists>());
-		else if (weaponName == "Boomerang")
+        }
+        else if (weaponName == "Boomerang") {
 			creature->setWeapon(std::make_shared<core::weapons::Boomerang>());
-		else if (weaponName == "ShortSword")
+        }
+        else if (weaponName == "ShortSword") {
 			creature->setWeapon(std::make_shared<core::weapons::ShortSword>());
-		else if (weaponName == "BattleAxe")
+        }
+        else if (weaponName == "BattleAxe") {
 			creature->setWeapon(std::make_shared<core::weapons::BattleAxe>());
-		else // A creature in basic dungeon using magical dungeon's weapon.
+        }
+        else { // A creature in basic dungeon using magical dungeon's weapon.
 			return false;
-
+        }
 		_creatureList.emplace_back(creature);
 	}
 	return true;
 }
 
-bool BasicDungeonBuilder::loadWeapons()
-{
+bool BasicDungeonBuilder::loadWeapons() {
 	_weaponList.emplace_back(std::make_shared<weapons::Fists>());
 	_weaponList.emplace_back(std::make_shared<weapons::Boomerang>());
 	_weaponList.emplace_back(std::make_shared<weapons::ShortSword>());
@@ -56,10 +59,10 @@ bool BasicDungeonBuilder::loadWeapons()
 	return true;
 }
 
-std::shared_ptr<Dungeon> BasicDungeonBuilder::buildDungeon()
-{
-	if (!loadCreatures() || !loadWeapons())
+std::shared_ptr<Dungeon> BasicDungeonBuilder::buildDungeon() {
+    if (!loadCreatures() || !loadWeapons()) {
 		return nullptr;
+    }
 
 	// create objects
 	auto basicDungeon = std::make_shared<BasicDungeon>();
@@ -142,26 +145,24 @@ std::shared_ptr<Dungeon> BasicDungeonBuilder::buildDungeon()
 	basicDungeon->addRoom(room7);
 	basicDungeon->addRoom(room8);
 	basicDungeon->addRoom(room9);
-    return std::dynamic_pointer_cast<Dungeon>(basicDungeon);
+	return std::dynamic_pointer_cast<Dungeon>(basicDungeon);
 }
 
-std::shared_ptr<Dungeon> BasicDungeonBuilder::clone(std::shared_ptr<Dungeon> dungeon)
-{
-    auto basicDungeon = std::dynamic_pointer_cast<BasicDungeon>(dungeon);
+std::shared_ptr<Dungeon> BasicDungeonBuilder::clone(std::shared_ptr<Dungeon> dungeon) {
+	auto basicDungeon = std::dynamic_pointer_cast<BasicDungeon>(dungeon);
 	return basicDungeon ? std::make_shared<BasicDungeon>(*basicDungeon) : nullptr;
 }
 
-int MagicalDungeonBuilder::parseInt(std::string intStr)
-{
+int MagicalDungeonBuilder::parseInt(std::string intStr) {
 	return atoi(intStr.c_str());
 }
 
-bool MagicalDungeonBuilder::loadCreatures()
-{
+bool MagicalDungeonBuilder::loadCreatures() {
 	std::ifstream inputStream("creature_types.csv");
 	data::CsvFile csv(inputStream);
-	if (csv.numberOfRows() == -1)
+    if (csv.numberOfRows() == -1) {
 		return false;
+    }
 
 	int nameI = csv.columnIndexOf("Name");
 	int healthI = csv.columnIndexOf("Maximum Health");
@@ -171,38 +172,44 @@ bool MagicalDungeonBuilder::loadCreatures()
 	int wisdomI = csv.columnIndexOf("Wisdom");
 	int weaponI = csv.columnIndexOf("Weapon");
 	int dungeonTypeI = csv.columnIndexOf("Dungeon Type");
-	for (int row = 1; row <= csv.numberOfRows(); row++)
-	{
-		if (csv.at(row, dungeonTypeI) == "")
+	for (int row = 1; row <= csv.numberOfRows(); row++) {
+        if (csv.at(row, dungeonTypeI) == "") {
 			continue;
+        }
 		auto creature = std::make_shared<core::creatures::Creature>(csv.at(row, nameI));
 		creature->setHealthPoint(parseInt(csv.at(row, healthI))); // set health point and max health point first
-        creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI)), parseInt(csv.at(row, wisdomI)), false);
+        creature->setAttribute(parseInt(csv.at(row, strengthI)), parseInt(csv.at(row, dexterityI))
+                               , parseInt(csv.at(row, wisdomI)), false);
 		creature->setDescription(csv.at(row, descriptionI));
 
 		auto weaponName = csv.at(row, weaponI);
-		if (weaponName == "Fists")
+        if (weaponName == "Fists") {
 			creature->setWeapon(std::make_shared<core::weapons::Fists>());
-		else if (weaponName == "Boomerang")
+        }
+        else if (weaponName == "Boomerang") {
 			creature->setWeapon(std::make_shared<core::weapons::Boomerang>());
-		else if (weaponName == "ShortSword")
+        }
+        else if (weaponName == "ShortSword") {
 			creature->setWeapon(std::make_shared<core::weapons::ShortSword>());
-		else if (weaponName == "BattleAxe")
+        }
+        else if (weaponName == "BattleAxe") {
 			creature->setWeapon(std::make_shared<core::weapons::BattleAxe>());
-		else if (weaponName == "WizardsStaff")
+        }
+        else if (weaponName == "WizardsStaff") {
 			creature->setWeapon(std::make_shared<core::weapons::WizardsStaff>());
-		else if (weaponName == "MagicWand")
+        }
+        else if (weaponName == "MagicWand") {
 			creature->setWeapon(std::make_shared<core::weapons::MagicWand>());
-		else // Unknown weapon.
+        }
+        else { // Unknown weapon.
 			return false;
-
+        }
 		_creatureList.emplace_back(creature);
 	}
 	return true;
 }
 
-bool MagicalDungeonBuilder::loadWeapons()
-{
+bool MagicalDungeonBuilder::loadWeapons() {
 	_weaponList.emplace_back(std::make_shared<weapons::Fists>());
 	_weaponList.emplace_back(std::make_shared<weapons::Boomerang>());
 	_weaponList.emplace_back(std::make_shared<weapons::ShortSword>());
@@ -212,10 +219,10 @@ bool MagicalDungeonBuilder::loadWeapons()
 	return true;
 }
 
-std::shared_ptr<Dungeon> MagicalDungeonBuilder::buildDungeon()
-{
-	if (!loadCreatures() || !loadWeapons())
+std::shared_ptr<Dungeon> MagicalDungeonBuilder::buildDungeon() {
+    if (!loadCreatures() || !loadWeapons()) {
 		return nullptr;
+    }
 
 	// create objects
 	auto magicalDungeon = std::make_shared<MagicalDungeon>();
@@ -298,11 +305,10 @@ std::shared_ptr<Dungeon> MagicalDungeonBuilder::buildDungeon()
 	magicalDungeon->addRoom(room7);
 	magicalDungeon->addRoom(room8);
 	magicalDungeon->addRoom(room9);
-    return std::dynamic_pointer_cast<Dungeon>(magicalDungeon);
+	return std::dynamic_pointer_cast<Dungeon>(magicalDungeon);
 }
 
-std::shared_ptr<Dungeon> MagicalDungeonBuilder::clone(std::shared_ptr<Dungeon> dungeon)
-{
-    auto magicalDungeon = std::dynamic_pointer_cast<MagicalDungeon>(dungeon);
+std::shared_ptr<Dungeon> MagicalDungeonBuilder::clone(std::shared_ptr<Dungeon> dungeon) {
+	auto magicalDungeon = std::dynamic_pointer_cast<MagicalDungeon>(dungeon);
 	return magicalDungeon ? std::make_shared<MagicalDungeon>(*magicalDungeon) : nullptr;
 }

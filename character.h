@@ -17,7 +17,7 @@ public:
      * @brief Character default constructor with Character's name
      * @param name character's name
      */
-	Character(const std::string &name);
+    Character(const std::string &name);
 
 private:
 

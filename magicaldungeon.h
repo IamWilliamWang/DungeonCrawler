@@ -14,11 +14,12 @@ class EnchantedLibrary;
 class MagicalDungeon : public Dungeon
 {
 public:
-   /**
-    * @brief MagicalDungeon default constructor of magical dungeon
-	*/
-	MagicalDungeon();
+    /**
+     * @brief MagicalDungeon default constructor of magical dungeon
+     */
+    MagicalDungeon();
 private:
+
 };
 
 /**
@@ -27,10 +28,10 @@ private:
 class EnchantedLibrary
 {
 public:
- /**
-  * @brief EnchantedLibrary default constructor
-  */
-  EnchantedLibrary();
+    /**
+     * @brief EnchantedLibrary default constructor
+     */
+    EnchantedLibrary();
 };
 
 /**
@@ -39,10 +40,10 @@ public:
 class AlchemistsLaboratory
 {
 public:
-/**
- * @brief AlchemistsLaboratory default constructor
- */
-  AlchemistsLaboratory();
+    /**
+     * @brief AlchemistsLaboratory default constructor
+     */
+    AlchemistsLaboratory();
 };
 
 /**
@@ -51,10 +52,10 @@ public:
 class MagicWall
 {
 public:
-/**
- * @brief MagicWall default constructor
- */
-  MagicWall();
+    /**
+     * @brief MagicWall default constructor
+     */
+    MagicWall();
 };
 
 } // namespace dungeon

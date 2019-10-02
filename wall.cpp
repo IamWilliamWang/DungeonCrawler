@@ -2,7 +2,6 @@
 
 using namespace core::dungeon;
 
-Wall::Wall()
-{
+Wall::Wall() {
 
 }

@@ -21,7 +21,7 @@ public:
      * @param room1 Left side of the open door
      * @param room2 Right side of the open door
      */
-	OpenDoorway(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2);
+    OpenDoorway(std::shared_ptr<Room> room1, std::shared_ptr<Room> room2);
 };
 
 /**

@@ -35,23 +35,22 @@ namespace data {
 class CsvFile
 {
 public:
-  /**
-    * @brief CsvFile constructor, initialises internal data structures
-    * with CSV content from the input stream.
-    *
-    * Assumes the first row is a header row. If the input contains no
-    * content, the CsvFile is considered to have failed to load.
-    *
-    * @param input the stream from which to read the data
-    */
-	CsvFile(std::istream &input);
+    /**
+     * @brief CsvFile CsvFile constructor, initialises internal data structures
+     * with CSV content from the input stream.
+     *
+     * Assumes the first row is a header row. If the input contains no
+     * content, the CsvFile is considered to have failed to load.
+     * @param input the stream from which to read the data
+     */
+    CsvFile(std::istream &input);
 
     /**
      * @brief parseRow parse one line of the CSV file
      * @param line a line of (Q)string in csv file
      * @return parsed list of (Q)strings
      */
-	QStringList parseRow(QString line);
+    QStringList parseRow(QString line);
     
     /**
      * @brief numberOfColumns Returns the number of columns in the CSV file,
@@ -59,7 +58,7 @@ public:
      *
      * @return number of columns or -1
      */
-	int numberOfColumns();
+    int numberOfColumns();
 
     /**
      * @brief numberOfRows returns the number of rows in the CSV file,
@@ -69,7 +68,7 @@ public:
      *
      * @return number of rows or -1
      */
-	int numberOfRows();
+    int numberOfRows();
 
     /**
      * @brief replaceAll Replaces "old" in the original string with "newOne"
@@ -78,7 +77,7 @@ public:
      * @param newOne new string
      * @return
      */
-	QString replaceAll(QString original, QString old, QString newOne);
+    QString replaceAll(QString original, QString old, QString newOne);
 
     /**
      * @brief at Returns the content of the cell at the given row, column.
@@ -91,7 +90,7 @@ public:
      * @param column the column from whcih to retrieve the data
      * @return the cell data at row, column
      */
-	std::string at(int row, int column);
+    std::string at(int row, int column);
 
     /**
      * @brief headerAt Returns the column name at the given index.
@@ -103,7 +102,7 @@ public:
      * @param column the index of the column
      * @return the column name
      */
-	std::string headerAt(int column);
+    std::string headerAt(int column);
 
     /**
      * @brief columnIndexOf Returns the column index for the given column name.
@@ -114,7 +113,7 @@ public:
      * @param columnName the name of the column
      * @return the index of the named column, or -1
      */
-	int columnIndexOf(const std::string &columnName);
+    int columnIndexOf(const std::string &columnName);
 
 private:
     std::shared_ptr<QVector<QStringList>> _dataTable; // save the parsed table

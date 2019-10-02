@@ -55,12 +55,12 @@ using core::MenuInterface;
  */
 int main()
 {
-  MenuInterface m{std::cout, std::cin};
+    MenuInterface m{std::cout, std::cin};
 
-  m.displayWelcome(AUTHOR, TITLE);
-  m.run();
+    m.displayWelcome(AUTHOR, TITLE);
+    m.run();
 
-  return 0;
+    return 0;
 }
 
 #else
@@ -73,34 +73,34 @@ int main()
  */
 int main()
 {
-  // Using QDir to provide sensible error useful error message
-  // if the script file cannot be found.
-  QDir path{SCRIPT_PATH};
-  std::fstream in{path.absolutePath().toStdString()};
-  if (in.fail()) {
-    std::cout << "Unable to find file: " << path.absolutePath().toStdString() << std::endl
-              << "Current path: " << QDir::currentPath().toStdString() << std::endl;
-    return 1;
-  }
+    // Using QDir to provide sensible error useful error message
+    // if the script file cannot be found.
+    QDir path{SCRIPT_PATH};
+    std::fstream in{path.absolutePath().toStdString()};
+    if (in.fail()) {
+        std::cout << "Unable to find file: " << path.absolutePath().toStdString() << std::endl
+                  << "Current path: " << QDir::currentPath().toStdString() << std::endl;
+        return 1;
+    }
 
 #if OUTPUT_SCRIPT
-  QDir outPath{OUT_FILE_PATH};
-  std::ofstream out{outPath.absolutePath().toStdString()};
-  if (out.fail()) {
-    std::cout << "Unable to open out file: " << outPath.absolutePath().toStdString() << std::endl
-              << "Current path: " << QDir::currentPath().toStdString() << std::endl;
-    return 1;
-  }
+    QDir outPath{OUT_FILE_PATH};
+    std::ofstream out{outPath.absolutePath().toStdString()};
+    if (out.fail()) {
+        std::cout << "Unable to open out file: " << outPath.absolutePath().toStdString() << std::endl
+                  << "Current path: " << QDir::currentPath().toStdString() << std::endl;
+        return 1;
+    }
 #else
-  std::ostream& out = std::cout;
+    std::ostream& out = std::cout;
 #endif
 
-  MenuInterface m{out, in};
+    MenuInterface m{out, in};
 
-  m.displayWelcome(AUTHOR, TITLE);
-  m.run();
+    m.displayWelcome(AUTHOR, TITLE);
+    m.run();
 
-  return 0;
+    return 0;
 }
 
 #endif
@@ -114,11 +114,11 @@ int main()
  * @return
  */
 int main() {
-  Testing test{};
-  std::cout << "Running tests ..." << std::endl;
-  test.runTests(); // Modify which tests are run in the implementation of runTests()
-  test.printTestResults(std::cout);
-  return 0;
+    Testing test{};
+    std::cout << "Running tests ..." << std::endl;
+    test.runTests(); // Modify which tests are run in the implementation of runTests()
+    test.printTestResults(std::cout);
+    return 0;
 }
 
 #endif
