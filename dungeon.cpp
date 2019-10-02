@@ -31,8 +31,8 @@ void Dungeon::setNowRoom(std::shared_ptr<Room> nowRoom) {
 std::shared_ptr<Room> Dungeon::path(int index) {
 	if (index < 0) {
 		auto it = _path.rbegin();
-        for (; index < -1 && it != _path.rend(); index++) {
-            it++;
+        for (; index < -1 && it != _path.rend(); ++index) {
+            ++it;
         }
         if (it == _path.rend()) {
 			return nullptr;
@@ -40,8 +40,8 @@ std::shared_ptr<Room> Dungeon::path(int index) {
 		return *it;
 	} else if (index > 0) {
 		auto it = _path.begin();
-        for (; index > 1 && it != _path.end(); index--) {
-			it++;
+        for (; index > 1 && it != _path.end(); --index) {
+            ++it;
         }
         if (it == _path.end()) {
 			return nullptr;

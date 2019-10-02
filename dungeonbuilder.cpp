@@ -20,7 +20,7 @@ bool BasicDungeonBuilder::loadCreatures() {
 	int wisdomI = csv.columnIndexOf("Wisdom");
 	int weaponI = csv.columnIndexOf("Weapon");
 	int dungeonTypeI = csv.columnIndexOf("Dungeon Type");
-	for (int row = 1; row <= csv.numberOfRows(); row++) {
+    for (int row = 1; row <= csv.numberOfRows(); ++row) {
         if (csv.at(row, dungeonTypeI) == "MagicalDungeon" || csv.at(row, dungeonTypeI) == "") {
 			continue;
         }
@@ -172,7 +172,7 @@ bool MagicalDungeonBuilder::loadCreatures() {
 	int wisdomI = csv.columnIndexOf("Wisdom");
 	int weaponI = csv.columnIndexOf("Weapon");
 	int dungeonTypeI = csv.columnIndexOf("Dungeon Type");
-	for (int row = 1; row <= csv.numberOfRows(); row++) {
+    for (int row = 1; row <= csv.numberOfRows(); ++row) {
         if (csv.at(row, dungeonTypeI) == "") {
 			continue;
         }

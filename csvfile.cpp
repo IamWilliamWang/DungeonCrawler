@@ -41,7 +41,7 @@ QStringList CsvFile::parseRow(QString line) {
 	bool quote = false; // Whether the current state is in double quotes
 	line.append(','); // Since the last element is not processed without a double quotation mark, adding a comma allows the last element to be processed
 	QVector<bool> quotedList;
-	for (int i = 0; i < line.size(); i++) {
+    for (int i = 0; i < line.size(); ++i) {
 		QChar ch = line[i]; // Traverse
         if (ch == '"') { // Encounter double quotation marks
             if (quote == false) { // If it's the opening quote
@@ -103,10 +103,10 @@ QString CsvFile::replaceAll(QString original, QString old, QString newOne) {
 		fromIndex = index + 1;
 	}
 	// remove old and insert new one.
-	for (auto it = fromIndexes.rbegin(); it != fromIndexes.rend(); it++) {
+    for (auto it = fromIndexes.rbegin(); it != fromIndexes.rend(); ++it) {
 		auto removeStartIndex = *it;
 		chars.remove(removeStartIndex, old.size());
-        for (auto it2 = newOne.rbegin(); it2 != newOne.rend(); it2++) {
+        for (auto it2 = newOne.rbegin(); it2 != newOne.rend(); ++it2) {
 			chars.insert(removeStartIndex, *it2);
         }
 	}

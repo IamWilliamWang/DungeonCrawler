@@ -395,7 +395,7 @@ void MenuInterface::actionMenu() const {
 		}
 	}
 	// write down into screen
-	for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; ++i) {
         if (outputs[static_cast<unsigned>(i)] != "") {
 			_display << outputs[static_cast<unsigned>(i)] << std::endl;
         }

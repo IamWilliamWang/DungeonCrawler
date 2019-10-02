@@ -123,7 +123,7 @@ bool Game::navigateBack() {
 }
 
 void Game::exitLevel() {
-	_dungeonLevel++;
+    ++_dungeonLevel;
 }
 
 void Game::exitDungeon() {
