@@ -21,6 +21,7 @@
 #include <memory>
 #include <string>
 
+
 /*
  * IMPLEMENT your tests in this file as required.
  *
@@ -320,8 +321,8 @@ std::string Testing::testLoadSuccessForHeaderButNoDataCsvFile()
 std::string Testing::testOutOfRangeReturnsEmptyString()
 {
     std::stringstream data{R":(Header1,Header2
-                           Cell 1,Cell 2
-                           ):"};
+Cell 1,Cell 2
+):"};
     CsvFile csvFile{data};
 
     equal<std::string>("", csvFile.headerAt(3), "headerAt() must return empty string when index out of range");
@@ -331,7 +332,7 @@ std::string Testing::testOutOfRangeReturnsEmptyString()
     equal<std::string>("", csvFile.at(1,3), "at() must return empty string when column index out of range");
     equal<std::string>("", csvFile.at(1,0), "at() must return empty string when column index out of range (zero is out of range)");
 
-    return  passFailText();
+    return passFailText();
 }
 
 std::string Testing::testHeaderFieldsCorrectlyRead()
@@ -351,7 +352,7 @@ std::string Testing::testHeaderFieldsCorrectlyRead()
 std::string Testing::testCommaSeparatedRowDataAccessible()
 {
     std::stringstream data{R":(Header1,Header2,Header3
-                           Field1,Field2,Field3):"};
+Field1,Field2,Field3):"};
     CsvFile csvFile{data};
 
     equal(1, csvFile.numberOfRows(), "numberOfRows() must indicate 1, as the header + 1 row is present");
@@ -366,9 +367,9 @@ std::string Testing::testCommaSeparatedRowDataAccessible()
 std::string Testing::testMultipleRowsOfData()
 {
     std::stringstream data{R":(Header1,Header2,Header3
-                           Row1Field1,Row1Field2,Row1Field3
-                           Row2Field1,Row2Field2,Row2Field3
-                           Row3Field1,Row3Field2,Row3Field3):"};
+Row1Field1,Row1Field2,Row1Field3
+Row2Field1,Row2Field2,Row2Field3
+Row3Field1,Row3Field2,Row3Field3):"};
     CsvFile csvFile{data};
 
     equal(3, csvFile.numberOfRows(), "numberOfRows() must indicate 3, as the header + 3 rows are present");
@@ -392,14 +393,14 @@ std::string Testing::testMultipleRowsOfData()
 std::string Testing::testLoadFailureOnRowWithDifferingNumberOfColumns()
 {
     std::stringstream dataExtraColumnInRow{R":(Header1,Header2
-                                           Field1,Field2,Field3Error):"};
+Field1,Field2,Field3Error):"};
     CsvFile csvFile{dataExtraColumnInRow};
 
     equal(-1, csvFile.numberOfRows(), "numberOfRows() must indicate load failure for row with extra column");
     equal(-1, csvFile.numberOfColumns(), "numberOfColumns() must indicate load failure for row with extra column");
 
     std::stringstream dataMissingColumnInRow{R":(Header1,Header2
-                                             Field1):"};
+Field1):"};
     csvFile = CsvFile{dataMissingColumnInRow};
 
     equal(-1, csvFile.numberOfRows(), "numberOfRows() must indicate load failure for row with missing column");
@@ -411,7 +412,7 @@ std::string Testing::testLoadFailureOnRowWithDifferingNumberOfColumns()
 std::string Testing::testPreservationOfWhitespaceInFields()
 {
     std::stringstream data{"  Header1,  Header2,Header3  ,Header  4,  Header  5  ,Header6  \n"
-                           "  Field1,  Field2,Field3  ,Field  4,  Field  5  ,Field6  "};
+"  Field1,  Field2,Field3  ,Field  4,  Field  5  ,Field6  "};
     CsvFile csvFile{data};
 
     equal(1, csvFile.numberOfRows(), "numberOfRows() must be 1 for whitespace test");
@@ -437,15 +438,15 @@ std::string Testing::testPreservationOfWhitespaceInFields()
 std::string Testing::testLineEndingOnLastLine()
 {
     std::stringstream data{R":(Header1
-                           Field1):"};
+Field1):"};
     CsvFile csvFile{data};
 
     equal(1, csvFile.numberOfRows(), "numberOfRows() must be 1 for line ending test, without extra CRLF");
     equal(1, csvFile.numberOfColumns(), "numberOfColumns() must be 1 for line ending test, without extra CRLF");
 
     data = std::stringstream{R":(Header1
-                             Field1
-                             ):"};
+Field1
+):"};
     csvFile = CsvFile{data};
 
     equal(1, csvFile.numberOfRows(), "numberOfRows() must be 1 for line ending test, WITH extra CRLF");
@@ -457,7 +458,7 @@ std::string Testing::testLineEndingOnLastLine()
 std::string Testing::testDoubleQuotedFields()
 {
     std::stringstream data{R":("Header,1","Header,2","Header,3","  Header  4  "
-                           "Field,1","Field,2","Field,3","  Field  4  "):"};
+"Field,1","Field,2","Field,3","  Field  4  "):"};
     CsvFile csvFile{data};
 
     equal(1, csvFile.numberOfRows(), "numberOfRows() must indicate 1, as the header + 1 row is present (double quote test)");
@@ -474,14 +475,14 @@ std::string Testing::testDoubleQuotedFields()
     equal<std::string>("  Field  4  ", csvFile.at(1,4), "at(1,4) must return the fourth field without quotes, preserving whitespace");
 
     data = std::stringstream{R":( "Header1"
-                             "Field1"):"};
+  "Field1"):"};
     csvFile = CsvFile{data};
 
     equal(-1, csvFile.numberOfRows(), "numberOfRows() must indicate load failure for whitespace outside double quotes (before quote)");
     equal(-1, csvFile.numberOfColumns(), "numberOfColumns() must indicate load failure for whitespace outside double quotes (before quote)");
 
     data = std::stringstream{R":("Header1"  ,Header2
-                             "Field1"  ,Field2):"};
+"Field1"  ,Field2):"};
     csvFile = CsvFile{data};
 
     equal(-1, csvFile.numberOfRows(), "numberOfRows() must indicate load failure for whitespace outside double quotes (after quote)");
@@ -493,7 +494,7 @@ std::string Testing::testDoubleQuotedFields()
 std::string Testing::testDoubleQuotedFieldsMixedWithUnquoted()
 {
     std::stringstream data{R":("Header,1",Header2,"Header,3",Header4
-                           "Field,1",Field2,"Field,3",Field4):"};
+"Field,1",Field2,"Field,3",Field4):"};
     CsvFile csvFile{data};
 
     equal(1, csvFile.numberOfRows(), "numberOfRows() must indicate 1, as the header + 1 row is present (mixed test)");
@@ -515,7 +516,7 @@ std::string Testing::testDoubleQuotedFieldsMixedWithUnquoted()
 std::string Testing::testReplacementOfBlackslashNInQuotedFieldsWithNewline()
 {
     std::stringstream data{R":("Header\n1","He\nader\n2",Header\n3
-                           "Field\n1","Fi\neld\n2",Field\n3):"};
+"Field\n1","Fi\neld\n2",Field\n3):"};
     CsvFile csvFile{data};
 
     equal<std::string>("Header\n1", csvFile.headerAt(1), "headerAt(1) must return the first header with '\\n' replaced with newline");
@@ -532,7 +533,7 @@ std::string Testing::testReplacementOfBlackslashNInQuotedFieldsWithNewline()
 std::string Testing::testDoubleQuotesWithinFields()
 {
     std::stringstream data{R":("Header""1"
-                           "Field""1"):"};
+"Field""1"):"};
     CsvFile csvFile{data};
 
     equal(1, csvFile.numberOfRows(), "numberOfRows() must indicate 1, as the header + 1 row is present (double quote test)");
@@ -542,7 +543,7 @@ std::string Testing::testDoubleQuotesWithinFields()
     equal<std::string>("Field\"1", csvFile.at(1,1), "at(1,1) must return the first field with internal quotes maintained, no outer quotes");
 
     data = std::stringstream{R":("Header"",""1"
-                             "Field"",""1"):"};
+"Field"",""1"):"};
     csvFile = CsvFile{data};
 
     equal(1, csvFile.numberOfRows(), "numberOfRows() must indicate 1, as the header + 1 row is present (double quote test with comma)");
